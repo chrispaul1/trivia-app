@@ -1,23 +1,39 @@
-import React,{useState,useEffect, Children} from "react";
+import React,{useState,useEffect,useRef} from "react";
 import {DropdownContent } from ".";
 import { StyledDropdownOutline, 
   StyledDropdown, 
   StyledChevronDown,
   StyledChevronUp } from ".";
 
-export function DropDown({text,content}) {
-  const [toggleDown,setToggleDown] = useState(false)
+export function DropDown({question,handleAnswer,setAnswers}) {
+  const [isOpen,setIsOpen] = useState(false)
+  const dropdownRef = useRef(null)
+
+  useEffect(()=>{
+    function handleClickOutside(event){
+      if(dropdownRef.current && !dropdownRef.current.contains(event.target)){
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown',handleClickOutside)
+    return () =>{
+      document.removeEventListener('mousedown',handleClickOutside)
+    }
+  },[dropdownRef])
+
   return(
     <StyledDropdownOutline
-      onClick={()=>setToggleDown((toggleDown) => !toggleDown)}
+      onClick={()=>setIsOpen((isOpen) => !isOpen)}
+      ref={dropdownRef}
     >
       <StyledDropdown>
-        {text} 
-        {toggleDown ? <StyledChevronUp/> : <StyledChevronDown/>}
+        {question.text}
+        {isOpen ? <StyledChevronUp/> : <StyledChevronDown/>}
       </StyledDropdown>
-      {toggleDown && 
+      {isOpen && 
         <DropdownContent
-          content={content}
+          question={question}
+          handleAnswer={handleAnswer}
         />
       }
     </StyledDropdownOutline>

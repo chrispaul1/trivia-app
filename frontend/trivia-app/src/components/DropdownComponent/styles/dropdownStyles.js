@@ -5,30 +5,33 @@ import { FaChevronUp } from "react-icons/fa";
 export const StyledDropdownOutline = styled.div`
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  align-items: cener;
+  width: 50%;
+  background: blue;
+  gap: 5px;
+  align-items: center;
+  padding: 2px 0 2px 0;
 `
 
 export const StyledDropdown = styled.div`
   display: flex;
-  width: fit-content;
+  min-width: fit-content;
+  width: 100%;
   height: fit-content;
   align-items: center;
-  padding: 1rem;
-  background: white;
+  padding: .5rem 0rem .5rem 0rem;
+  background-color: white;
   cursor: pointer;
   border-radius: 0.25rem;
   box-shadow: 0px 8px 24px rgb(149,157,165,.2);
 `
 export const StyledDropdownContent = styled.ul`
 display: flex;
-flex-directions: column;
-//position: absolute;
-min-width: inherit;
+flex-direction: column;
+width: 100%;
 align-items: center;
-border: 1px solid black;
-padding: 1rem;
-background-color: red;
+padding: 1rem 0rem 1rem 0rem;
+background-color: white;
+border-radius: 0.25rem;
 margin-top: 0.25rem;
 height: fit-content;
 max-height: 40vh;
@@ -40,13 +43,14 @@ scrollbar-width: none;
 
 export const StyledDropdownItem = styled.li`
   display: flex;
-  justif-content: center;
+  width: 90%;
+  justify-content: center;
   align-items: center;
   margin: 0.1rem;
-  width: 100%;
   cursor: pointer;
   &:hover{
-    background-color: rgb(240,249,255); 
+    border-radius: 0.25rem;
+    background-color: #d3d3d3;
   }
 `
 

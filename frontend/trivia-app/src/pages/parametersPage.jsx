@@ -5,24 +5,34 @@ import {
 import { DropDown } from "../components/DropdownComponent/dropdown"
 
 export function ParametersPage(){
-  const [questions,setQuestions] = useState([])
   const [apiUrl,setApiUrl] = useState("")
     
-  const paraQuestions = [
-    {text:"Select your Categories"},
-    {text:"Select your diffculty"},
-    {text:"Choose the number of Questions"},
-    {text:"Set your time limit per question"}]
-    
-  const items = ["first","second","third"]
+  const categories = ["first","second","third"]
+  const difficulty = ["Easy","Medium","Hard"]
+  const [answers,setAnswers] = useState({})
+  const questions = [
+    {id:1,text:"Select your Categories",options:categories},
+    {id:2,text:"Select your difficulty",options:difficulty}
+  ]
+  
+  function handleAnswer(questionId,selectedOption){
+    setAnswers(prevAnswers =>({
+      ...prevAnswers,
+      [questionId]:selectedOption
+    }));
+  };
 
   return(
     <StyledParametersBackground>
       <StyledParametersOutline>
-        <DropDown
-          text={"Dropdown Button"}
-          content={items}
-        />
+        {questions.map((question)=>(
+          <DropDown
+            key={question.id}
+            question={question}
+            handleAnswer={handleAnswer}
+            setAnswers={setAnswers}
+          />
+        ))}
       </StyledParametersOutline>
     </StyledParametersBackground>
   )

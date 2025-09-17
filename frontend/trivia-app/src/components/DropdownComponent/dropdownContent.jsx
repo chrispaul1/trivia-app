@@ -1,16 +1,22 @@
 import React,{useState,useEffect} from "react";
 import { StyledDropdownContent, StyledDropdownItem } from "./styles";
-import { DropdownItem } from "./dropdownItem";
 
-export function DropdownContent({content}) {
-  const dummy = ['1','2','3']
+export function DropdownContent({
+  question,
+  handleAnswer}) {
+
+  function handleOptionClick(option){
+    handleAnswer(question.id,option)
+  }
   return(
     <StyledDropdownContent>
-      {content.map((item)=>(
-        <DropdownItem
-          key={item}
-          item={item}
-        />
+      {question.options.map((option)=>(
+        <StyledDropdownItem
+          key={option}
+          onClick={()=>handleOptionClick(option)}
+        >
+            {option}
+        </StyledDropdownItem>
       ))}
     </StyledDropdownContent>
   )

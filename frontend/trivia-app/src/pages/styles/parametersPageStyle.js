@@ -4,7 +4,7 @@ export const StyledParametersBackground = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-background: black;
+background: blue;
 height: 90vh;
 width: 90vw;
 `
@@ -12,7 +12,7 @@ width: 90vw;
 export const StyledParametersOutline = styled.div`
 display: flex;
 flex-direction: column;
-background: white;
+background: red;
 align-items: center;
 height: 80vh;
 width: 50vw;
