@@ -5,11 +5,13 @@ import './App.css'
 import { ParametersPage } from './pages'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [questions, setQuestions] = useState({})
 
   return (
     <>
-      <ParametersPage/>
+      <ParametersPage
+        setQuestions={setQuestions}
+      />
       {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

@@ -1,3 +1,4 @@
 export * from './dropdown'
-export * from './dropdownContent'
+export * from './number'
+export * from './time'
 export * from './styles'
