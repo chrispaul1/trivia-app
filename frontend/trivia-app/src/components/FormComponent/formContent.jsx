@@ -16,7 +16,7 @@ export function FormContent({questions,handleAnswer,answers}) {
                 selectedAnswer={answers[question.id]}
               />
             );
-          case 'number':
+          case 'numerical':
             return (
               <NumberQuestion
                 key={question.id}

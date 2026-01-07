@@ -9,7 +9,7 @@ export const StyledDropdownContainer = styled.div`
   position: relative;
   align-items: center;
 `
-export const StyledQuestionDiv = styled.div`
+export const StyledQuestionLabel = styled.label`
   display: flex;
   min-width: fit-content;
   width: 95%;

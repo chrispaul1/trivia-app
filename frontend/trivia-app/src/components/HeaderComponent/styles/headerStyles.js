@@ -6,13 +6,15 @@ export const StyledHeaderOutline = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  background: lightblue;
+  background: orange;
 `
 
 export const StyledHeaderLeftDiv = styled.div`
   display: flex;
   height: 100%;
-  width: fit-content;
+  background: blue;
+  width: stretch;
+  width: 25%;
   align-items: center;
   justify-content: center;
   border: solid 1px black;
@@ -22,8 +24,7 @@ export const StyledHeaderMiddleDiv = styled.div`
   display: flex;
   height: 100%;
   min-width: fit-content;
-  width: stretch;
-  max-width: 55%;
+  width: 50%;
   align-items: center;
   justify-content: center;
   border: solid 1px black;
@@ -32,10 +33,30 @@ export const StyledHeaderMiddleDiv = styled.div`
 export const StyledHeaderRightDiv = styled.div`
   display: flex;
   height: 100%;
-  width: fit-content;
+  width: stretch;
+  width: 25%;
+  background: red;
   align-items: center;
   justify-content: center;
   border: solid 1px black;
+  color: black;
+`
+
+export const StyledHeaderButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: fit-content;
+  font-size: 1rem;
+  border-radius: 5px;
+  background: white;
+  color: black;
+
+  &:hover{
+    background: lightblue;
+    cursor: pointer;
+  }
 `
 
 export const StyledHeaderTitle = styled.div`

@@ -5,7 +5,7 @@ import {
   StyledHourInput,
   StyledMinuteInput,
   StyledSecondInput,
-  StyledQuestionDiv,
+  StyledQuestionLabel,
   StyledTimeContainer,
   StyledInputContainer
 } from '.'
@@ -26,9 +26,9 @@ export function TimeQuestion({question,handleAnswer,selectedAnswer}){
 
   return(
     <StyledTimeContainer>
-      <StyledQuestionDiv>
+      <StyledQuestionLabel>
         {question.text}
-      </StyledQuestionDiv>
+      </StyledQuestionLabel>
       <StyledInputDiv>
         <StyledInputContainer>
           <StyledTimeLabel>

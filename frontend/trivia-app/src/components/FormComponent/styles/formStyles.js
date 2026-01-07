@@ -6,7 +6,7 @@ export const StyledFormOutline = styled.div`
   align-items: center;
   justify-content: space-evenly;
   height: 90%;
-  width: 80%;
+  width: 90%;
   background: purple;
   gap: 5px;
   padding: 1rem;

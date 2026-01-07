@@ -4,7 +4,6 @@ import { StyledFormOutline} from ".";
 
 export function Form({questions,handleAnswer,answers}) {
   const formRef = useRef(null)
-
   useEffect(()=>{
     function handleClickOutside(event){
       if(formRef.current && !formRef.current.contains(event.target)){

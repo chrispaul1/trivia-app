@@ -2,8 +2,8 @@ import React,{useEffect,useRef, useState} from "react"
 import { 
   StyledChevronUp,
   StyledChevronDown, 
-  StyledQuestionDiv, 
   StyledDropdownItem,
+  StyledQuestionLabel, 
   StyledDropdownLabel,
   StyledDropdownContent, 
   StyledDropdownContainer,
@@ -12,7 +12,6 @@ import { FaCheck } from "react-icons/fa6";
 
 
 export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
-
   const [isOpen,setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
   const {id,text,options} = question
@@ -30,19 +29,20 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
 
   function handleOptionClick(id,option){
     handleAnswer(id,option)
+    setIsOpen(false)
   }
 
   return (
     <StyledDropdownContainer
       ref={dropdownRef}
     >
-      {question.text}
-      <StyledQuestionDiv
+      {question.label}
+      <StyledQuestionLabel
         onClick={() => setIsOpen((isOpen) => !isOpen)}
       >
-        {question.text}
+        {question.label}
         {isOpen ? <StyledChevronUp /> : <StyledChevronDown />}
-      </StyledQuestionDiv>
+      </StyledQuestionLabel>
       {isOpen && (
         <StyledDropdownContent>
           {question.options.map(option=>( 

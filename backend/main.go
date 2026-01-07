@@ -45,25 +45,26 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 	amount := r.URL.Query().Get("amount")
 	qType := r.URL.Query().Get("type")
 	values := url.Values{}
-	apiUrl := "https://opentdb.com/api.php?amount=10"
+	apiUrl := "https://opentdb.com/api.php?"
+
 	if amount != "" {
 		apiUrl += "amount=" + "10"
 		values.Set("amount", amount)
 	}
-	if category != "" {
+	if category != "" && category != "Any Category" {
 		apiUrl += "&category=" + category
 		values.Set("category", category)
 	}
-	if difficulty != "" {
+	if difficulty != "" && difficulty != "Any Difficulty" {
 		apiUrl += "&difficulty=" + difficulty
 		values.Set("difficulty", difficulty)
 	}
-	if qType != "" {
+	if qType != "" && qType != "Any Type" {
 		apiUrl += "&type=" + qType
 		values.Set("type", qType)
 	}
 	//apiUrl := "https://opentdb.com/api.php?" + values.Encode()
-
+	log.Println("Final API URL:", apiUrl)
 	res, err := http.Get(apiUrl)
 
 	if err != nil {
@@ -78,6 +79,7 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(res.Body)
 	body, _ := io.ReadAll(res.Body)
 	log.Println("Raw Api Response:", string(body))
 	res.Body = io.NopCloser(bytes.NewBuffer(body))
@@ -102,5 +104,4 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(apiData)
-
 }
