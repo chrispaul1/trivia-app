@@ -3,10 +3,13 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/rs/cors"
 )
 
 type ApiResponse struct {
@@ -16,7 +19,7 @@ type ApiResponse struct {
 
 type TriviaQuestion struct {
 	Type            string   `json:"type"`
-	Diffculty       string   `json:"diffculty"`
+	Difficulty      string   `json:"difficulty"`
 	Category        string   `json:"category"`
 	Question        string   `json:"question"`
 	CorrectAnswer   string   `json:"correct_answer"`
@@ -26,11 +29,17 @@ type TriviaQuestion struct {
 func main() {
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /get_questions", getTriviaQuestion)
+	mux.HandleFunc("/get_questions", getTriviaQuestion)
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
 	server := &http.Server{
 		Addr:    ":5000",
-		Handler: mux,
+		Handler: c.Handler(mux),
 	}
 
 	err := server.ListenAndServe()
@@ -46,27 +55,29 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 	qType := r.URL.Query().Get("type")
 	values := url.Values{}
 	apiUrl := "https://opentdb.com/api.php?"
-
 	if amount != "" {
-		apiUrl += "amount=" + "10"
+		apiUrl += "amount=" + amount
 		values.Set("amount", amount)
 	}
-	if category != "" && category != "Any Category" {
+
+	if category != "" && category != "randomized categories" && category != "undefined" {
 		apiUrl += "&category=" + category
 		values.Set("category", category)
 	}
-	if difficulty != "" && difficulty != "Any Difficulty" {
+
+	if difficulty != "" && difficulty != "randomized difficulty" && difficulty != "undefined" {
 		apiUrl += "&difficulty=" + difficulty
 		values.Set("difficulty", difficulty)
 	}
-	if qType != "" && qType != "Any Type" {
+
+	if qType != "" && qType != "any type" && qType != "undefined" {
 		apiUrl += "&type=" + qType
 		values.Set("type", qType)
 	}
+	fmt.Print("Final API URL: ", apiUrl)
 	//apiUrl := "https://opentdb.com/api.php?" + values.Encode()
-	log.Println("Final API URL:", apiUrl)
+	//Fetch trivia questions from OpenTDB API
 	res, err := http.Get(apiUrl)
-
 	if err != nil {
 		http.Error(w, "Failed to fetch trivia questions", http.StatusInternalServerError)
 		return
@@ -79,11 +90,10 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(res.Body)
 	body, _ := io.ReadAll(res.Body)
-	log.Println("Raw Api Response:", string(body))
 	res.Body = io.NopCloser(bytes.NewBuffer(body))
 
+	//Decode the response
 	var apiData ApiResponse
 	decoder := json.NewDecoder(res.Body)
 	err = decoder.Decode(&apiData)
