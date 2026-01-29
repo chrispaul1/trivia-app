@@ -1,2 +1,2 @@
-export * from './parametersPageStyle';
+export * from './settingsPageStyle';
 export * from './questionsPageStyle';   

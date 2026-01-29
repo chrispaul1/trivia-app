@@ -1,4 +1,4 @@
 export * from './login'
-export * from './parametersPage'
-export * from './questionsPage'
+export * from './settingsPage'
+export * from './quizPage'
 export * from './styles'

@@ -14,6 +14,7 @@ export const StyledPaginate = styled(ReactPaginate)`
   list-style: none;
   justify-content: center;
   padding: 0;
+  margin-top: auto;
 
   li {
     margin: 0 2px;
@@ -67,7 +68,7 @@ export const StyledQuestionScoreContainer = styled.div`
 export const StyledQuestionsOutline = styled.div` 
     display: flex; 
     flex-direction: column;
-    background: blue;
+    background: lightblue;
     align-items: center; 
     height: 90%; 
     width: 100%; 

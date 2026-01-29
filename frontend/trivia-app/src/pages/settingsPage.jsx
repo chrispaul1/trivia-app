@@ -5,7 +5,9 @@ import {
 import { Form,Header } from "../components"
 import { questions, initialAnswerState } from "../assets/questions"
 import { categoryNames } from "../assets/categories"
-export function ParametersPage({setTriviaQuestions}){
+import {useNavigate} from "react-router-dom"
+
+export function SettingsPage({setTriviaQuestions}){
 
   const headerState = [
     {
@@ -28,6 +30,8 @@ export function ParametersPage({setTriviaQuestions}){
   const [disableButton,setDisableButton] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const [error,setError] = useState(null)
+
+  const navigate = useNavigate()
   //get the number of required questions and their IDs
   const reqCount = questions.filter(q => q.required).length
   const reqID = questions.filter(q => q.required == true).map(item => item.id)
@@ -89,10 +93,9 @@ export function ParametersPage({setTriviaQuestions}){
   async function FetchQuestions(){
     setIsLoading(true)
     let categoryID
-    if(answers["category"] != undefined && answers["category"] != ""){
-      console.log("Category selected:", answers["category"]) 
+    if(answers["category"] != undefined && answers["category"] != "" && answers["category"].toLowerCase() != "randomized categories"){
+      //console.log("Category selected:", answers["category"]) 
       categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === answers["category"].toLowerCase()).id
-      
     }
     const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers["difficulty"])}&amount=${answers["questionCount"]}&type=${encodeURIComponent(answers["questionType"])}`;
     //console.log("Answers state before fetch:", answers)
@@ -104,6 +107,7 @@ export function ParametersPage({setTriviaQuestions}){
       }
       const data = await res.json()
       setTriviaQuestions(data.results)
+      navigate("/quiz")
     } catch (error){
       //console.error("Fetch error:", error)
     } finally{

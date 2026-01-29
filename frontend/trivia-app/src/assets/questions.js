@@ -14,7 +14,7 @@ const updatedCategories = [anyCategory,...categories]
 //diffculty options
 const difficulty = ["Randomized Difficulty","Easy","Medium","Hard"]
 //question type
-const questionType = [{text:"Any Type",value:"Any Type"},{text:"Multiple Choice",value:"multiple"},{text:"True / False",value:"boolean"}]
+const questionType = [{text:"Any Type",value:"any type"},{text:"Multiple Choice",value:"multiple"},{text:"True / False",value:"boolean"}]
 //questions array objets
 export const questions = [
     { id: "category", type: 'dropdown', label: "Select your Categories", options: updatedCategories, required: false },

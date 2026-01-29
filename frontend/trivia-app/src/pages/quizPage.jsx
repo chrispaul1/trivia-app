@@ -5,21 +5,27 @@ import {
   StyledQuestionsBackground,
 } from "."
 import { QuestionDisplay} from "../components"
+import { useWindowSize } from "../hooks/SizeHook"
+import { use } from "react";
  
-export function QuestionsPage({ triviaQuestions }) {
+export function QuizPage({ triviaQuestions }) {
 
   const [scoreCounter,setScoreCounter] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 1;
-  console.log("triviaQuestions in QuestionsPage:", triviaQuestions)
   const endOffset = itemOffset + itemsPerPage
   const currentItems = triviaQuestions.slice(itemOffset, endOffset)
   const pageCount = Math.ceil(triviaQuestions.length/itemsPerPage)
+  const size = useWindowSize();
 
   const handlePageClick = (event) =>{
     const newOffset = (event.selected * itemsPerPage) % triviaQuestions.length
     setItemOffset(newOffset)
   }
+
+  useEffect(()=>{
+    console.log("window size changed:", size.width, size.height )
+  },[size.width])
 
   return (
     <StyledQuestionsBackground>
@@ -33,16 +39,16 @@ export function QuestionsPage({ triviaQuestions }) {
           currentItems={currentItems}
           setScoreCounter={setScoreCounter}
         />
-      </StyledQuestionsOutline>
       <StyledPaginate
         breakLabel="..."
-        nextLabel="next >"
+        nextLabel={size.width > 500 ? "next >" : ">"}
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
         pageCount={pageCount}
-        previousLabel="< previous"
+          previousLabel={size.width > 500 ? "< Previous" : "<"}
         renderOnZeroPageCount={null}
       />         
+      </StyledQuestionsOutline>
 
     </StyledQuestionsBackground>
   )

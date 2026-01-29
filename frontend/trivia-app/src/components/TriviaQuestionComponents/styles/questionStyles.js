@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledMultipleContainer = styled.div`
+export const StyledQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,9 +10,12 @@ export const StyledMultipleContainer = styled.div`
 
 export const StyledQuestionTextDiv = styled.div`
   display: flex:
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
-  margin-bottom: 20px;  
+  margin-top: 5px;
+  margin-bottom: 20px;
+  padding: 5px;  
+  border: 2px solid black;
 `
 
 export const StyledAnswerContainer = styled.div`
@@ -28,8 +31,8 @@ export const StyledAnswerButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;       
+  background-color: ${(props) => (props.isSelected ? "lightblue" : "#f0f0f0")};
+  border: 2px solid #000;       
   border-radius: 8px;
   padding: 10px 20px;
   margin: 10px;

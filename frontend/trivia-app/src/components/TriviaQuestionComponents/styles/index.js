@@ -1,2 +1,1 @@
-export * from './multipleChoiceStyles'
-export * from './trueFalseStyle'
+export * from './questionStyles'
