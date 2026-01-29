@@ -14,11 +14,17 @@ export function Header({headerObjs=[{}],disableButton}) {
   const middle = headerObjs.filter(obj => obj.placement == "middle")
   const rightSide = headerObjs.filter(obj => obj.placement == "right")
   const titleObj = middle.find(obj => obj.type == "title")
-  console.log(disableButton,"---disable---")
   return(
     <StyledHeaderOutline>
       <StyledHeaderLeftDiv>
-        hello
+        {leftSide.length > 0 && leftSide.map(obj => (
+          <StyledHeaderButton key={obj.id}
+            onClick={obj.function}
+          >
+            {obj.text && obj.text}
+            {obj.icon && obj.icon}
+          </StyledHeaderButton>
+        ))}
       </StyledHeaderLeftDiv>
       <StyledHeaderMiddleDiv>
         <StyledHeaderTitle>
@@ -26,12 +32,13 @@ export function Header({headerObjs=[{}],disableButton}) {
         </StyledHeaderTitle>
       </StyledHeaderMiddleDiv>
       <StyledHeaderRightDiv>
-        {rightSide.map(obj => (
+        {rightSide.length > 0 && rightSide.map(obj => (
           <StyledHeaderButton key={obj.id}
             onClick={obj.function}
             disabled={disableButton}
           >
-            {obj.text}
+            {obj.text && obj.text}
+            {obj.icon && obj.icon}
           </StyledHeaderButton>
         ))}
       </StyledHeaderRightDiv>

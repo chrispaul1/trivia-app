@@ -4,7 +4,8 @@ import {
     StyledParametersOutline } from '.'
 import { Form,Header } from "../components"
 import { questions, initialAnswerState } from "../assets/questions"
-export function ParametersPage({setQuestions}){
+import { categoryNames } from "../assets/categories"
+export function ParametersPage({setTriviaQuestions}){
 
   const headerState = [
     {
@@ -25,56 +26,89 @@ export function ParametersPage({setQuestions}){
   //state array for the answers
   const [answers,setAnswers] = useState(initialAnswerState)
   const [disableButton,setDisableButton] = useState(false)
+  const [isLoading,setIsLoading] = useState(false)
+  const [error,setError] = useState(null)
+  //get the number of required questions and their IDs
   const reqCount = questions.filter(q => q.required).length
   const reqID = questions.filter(q => q.required == true).map(item => item.id)
 
+  //handle disabling the start button until all required questions are answered
   useEffect(()=>{
-    let ansCount = reqID.filter(id => answers[id] !== '' && answers[id] != undefined && answers[id] != 0).length
+    console.log("answers",answers)
+    //console.log(reqID,"**",answers.find(ans => ans.id === reqID[0]).value)
+    let ansCount = 0
+
+    reqID.forEach((id)=>{
+      var value = answers[id]
+      //console.log("id:",id,"value:",value)
+      if (value !== "" && value !== undefined && value != 0 && value != [0,0] && value !== null){
+        ansCount += 1
+      }
+      else{
+        ansCount -= 1
+      }
+    })
+    if (ansCount < 0) { 
+      ansCount = 0 
+    }
     if(ansCount == reqCount){
       setDisableButton(false)
     }else{
       setDisableButton(true)
     }
-  },[])
+  },[answers])
 
   //function to handle the user answers, based on the question id, it changes the answer
-  function HandleAnswer(questionId, newValue){
+  function HandleAnswer(questionLabel, newValue){
     setAnswers(prevAnswers =>{
-      //Check if the answer already exists for the question
-      const exists = prevAnswers.find(answer => answer.id === questionId);
-      if (exists) {
-        //if the new value is same as the exisitng value, remove it from the answers
-        if (exists.value == newValue){
-          let initialAnswer = initialAnswerState.find(ans => ans.id === questionId).value
-          return prevAnswers.map((answer) => answer.id === questionId ? { ...answer, value: initialAnswer } : answer);
+      if (prevAnswers[questionLabel] == newValue){
+        console.log(prevAnswers[questionLabel],"==",newValue)
+        return {...prevAnswers, [questionLabel]: initialAnswerState[questionLabel]}
+      } 
+      return {...prevAnswers, [questionLabel]: newValue}
+      /*
+        //Check if the answer already exists for the question
+        const exists = prevAnswers.find(answer => answer.id === questionId);
+        if (exists) {
+          //if the new value is same as the exisitng value, remove it from the answers
+          if (exists.value == newValue){
+            let initialAnswer = initialAnswerState.find(ans => ans.id === questionId).value
+            return prevAnswers.map((answer) => answer.id === questionId ? { ...answer, value: initialAnswer } : answer);
+          }
+          //if its not, update the answers state with the new value
+          return prevAnswers.map(answer =>
+            answer.id === questionId ? {...answer, value: newValue} : answer
+          )
         }
-        //if its not, update the answers state with the new value
-        return prevAnswers.map(answer =>
-          answer.id === questionId ? {...answer, value: newValue} : answer
-        )
-      }
-      return [...prevAnswers, {id: questionId, value: newValue}];
+        return [...prevAnswers, {id: questionId, value: newValue}];
+      */
     })
   }
 
-  useEffect(()=>{
-    console.log(answers)
-  },[answers])
-
   //This handles creating the api url sent to the backend to retireve the data
   async function FetchQuestions(){
-    console.log("Fetching Questions with answers :")
+    setIsLoading(true)
     let categoryID
-    if(answers.category){
-      const found = categoryNames.trivia_categories
-                          .filter(obj => obj.name == answers.category).map(item => item.id)
-      categoryID = found.length ? found[0] : ""
+    if(answers["category"] != undefined && answers["category"] != ""){
+      console.log("Category selected:", answers["category"]) 
+      categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === answers["category"].toLowerCase()).id
+      
     }
-
-     const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers.difficulty)}&amount=${answers.questionCount}&type=${encodeURIComponent(answers.questionType)}`;
-     fetch(apiUrl)
-          .then((res) => res.json())
-          .then((data) => setQuestions(data))
+    const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers["difficulty"])}&amount=${answers["questionCount"]}&type=${encodeURIComponent(answers["questionType"])}`;
+    //console.log("Answers state before fetch:", answers)
+    console.log("Fetching from API URL: ", apiUrl)
+    try{
+      const res = await fetch(apiUrl)
+      if(!res.ok){
+        throw new Error("Network response was not ok")
+      }
+      const data = await res.json()
+      setTriviaQuestions(data.results)
+    } catch (error){
+      //console.error("Fetch error:", error)
+    } finally{
+      setIsLoading(false)
+    }
   }
 
   return(

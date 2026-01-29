@@ -55,6 +55,7 @@ export const StyledDropdownItem = styled.li`
   align-items: center;
   margin: 0.1rem;
   cursor: pointer;
+  column-gap: 0.5rem;
   &:hover{
     border-radius: 0.25rem;
     background-color: #d3d3d3;

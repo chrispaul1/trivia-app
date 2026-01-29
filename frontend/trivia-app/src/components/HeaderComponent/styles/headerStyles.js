@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StyledHeaderOutline = styled.div`
   display: flex;
-  height: 10vh;
+  height: 5vh;
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -50,12 +50,12 @@ export const StyledHeaderButton = styled.button`
   width: fit-content;
   font-size: 1rem;
   border-radius: 5px;
-  background: white;
+  background: ${props => props.disabled ? "grey" : "white"};
   color: black;
 
   &:hover{
     background: lightblue;
-    cursor: pointer;
+    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   }
 `
 

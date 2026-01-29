@@ -1,17 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { ParametersPage } from './pages'
+import { ParametersPage, QuestionsPage } from './pages'
 
 function App() {
-  const [questions, setQuestions] = useState({})
+  const [triviaQuestions,setTriviaQuestions] = useState([])
+  const [displayQuestions,setDisplayQuestions] = useState(false)  
+
+  useEffect(()=>{
+    if (triviaQuestions.length != []){
+      setDisplayQuestions(true)
+      console.log("display questions set to true")
+    }
+    console.log("trivia questions in app.jsx",triviaQuestions)
+  },[triviaQuestions])
 
   return (
     <>
-      <ParametersPage
-        setQuestions={setQuestions}
-      />
+      {displayQuestions ?
+        <QuestionsPage
+          triviaQuestions={triviaQuestions}
+        />
+        :
+        <ParametersPage
+          setTriviaQuestions={setTriviaQuestions}
+        />
+      }
+      
       {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

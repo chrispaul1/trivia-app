@@ -9,14 +9,15 @@ import {
 
 export function NumberQuestion({question,handleAnswer,selectedAnswer}){
 
-  const [questionLimit, setQuestionLimit] = useState(true)
+  const [invalidAns, setInvalidAns] = useState(true)
 
   function validateNumberInput(value){
-    if(value > question.limit || value < 0) {
-      setQuestionLimit(false)
+    if(value > question.limit || value <= 0) {
+      setInvalidAns(false)
+      handleAnswer(question.id,0)
     }
     else{
-      setQuestionLimit(true)
+      setInvalidAns(true)
     } 
   }
   return(
@@ -24,7 +25,7 @@ export function NumberQuestion({question,handleAnswer,selectedAnswer}){
       <StyledQuestionLabel>
         {question.text} 
         {question.required && "*"}
-        {!questionLimit && 
+        {!invalidAns && 
           <IoMdAlert 
             style={{color:"red",marginLeft:"5px"}}
             />

@@ -3,10 +3,10 @@ import styled from 'styled-components'
 export const StyledParametersBackground = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  background: blue;
-  height: 90vh;
+  background: white;
+  height: 100vh;
   width: 90vw;
 `
 

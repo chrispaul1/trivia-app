@@ -47,15 +47,15 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
         <StyledDropdownContent>
           {question.options.map(option=>( 
             <StyledDropdownLabel
-              key={option}
+              key={option.text ? option.text : option}
             >
               <StyledDropdownItem
-                onClick={() => handleOptionClick(question.id,option)}
+                onClick={() => handleOptionClick(question.id,option.text ? option.value.toLowerCase() : option.toLowerCase())}
               >
-                {selectedAnswer == option && 
+                {option.text || option}
+                {(option.value == selectedAnswer || option == selectedAnswer) && 
                   <FaCheck/>
-                }
-                {option}
+                }                
               </StyledDropdownItem>
             </StyledDropdownLabel>
           ))}
