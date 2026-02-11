@@ -4,8 +4,10 @@ export const StyledQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: lightgreen;
   justify-content: center;                  
   width: 100%;
+  height: 100%;
 `
 
 export const StyledQuestionTextDiv = styled.div`
@@ -31,7 +33,7 @@ export const StyledAnswerButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => (props.isSelected ? "lightblue" : "#f0f0f0")};
+  background: ${(props) => (props.$isselected ? "lightblue" : "#f0f0f0")};
   border: 2px solid #000;       
   border-radius: 8px;
   padding: 10px 20px;

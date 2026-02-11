@@ -6,6 +6,7 @@ export const initialAnswerState = {
     difficulty: "",
     questionCount: 0,
     questionType: "",
+    timeLimit: [0,0]
 }
 const anyCategory = "Randomized Categories"
 //setting the categories

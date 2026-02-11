@@ -16,7 +16,7 @@ export function TrueFalse({questionObj}) {
       <StyledAnswerContainer>
         {["True","False"].map((answerOption,index)=>{
           return(
-            <StyledAnswerButton key={index}>
+            <StyledAnswerButton key={questionObj.question}>
               {answerOption}
             </StyledAnswerButton>
           )

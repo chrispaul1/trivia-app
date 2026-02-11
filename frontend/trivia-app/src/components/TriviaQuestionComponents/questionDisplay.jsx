@@ -1,37 +1,23 @@
 import React, { useState, useEffect } from "react"
 import { MultipleChoice, TrueFalse } from "."
-export function QuestionDisplay({ currentItems }) {
-
-  function decodeHtmlEntities(encodedString) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(encodedString, 'text/html');
-    return doc.documentElement.textContent;
-  }
-
-  currentItems = currentItems.map(item => ({
-    ...item,
-    question: decodeHtmlEntities(item.question),
-    category: decodeHtmlEntities(item.category),
-    correct_answer: decodeHtmlEntities(item.correct_answer),
-    incorrect_answers: item.incorrect_answers.map(ans => decodeHtmlEntities(ans))
-  }))
+export function QuestionDisplay({ currentQuestions }) {
 
   return ( 
     <>
-      {currentItems && 
-          currentItems.map((questionObj, index) => {
+      {currentQuestions && 
+        currentQuestions.map((questionObj, index) => {
             switch(questionObj.type) {
               case "multiple":
                 return(
                   <MultipleChoice 
-                    key={index} 
-                    questionObj={questionObj} 
+                    key={questionObj.id} 
+                    questionObj={questionObj}
                   />
                 ) 
               case "boolean":
                 return(
                   <TrueFalse 
-                    key={index} 
+                    key={questionObj.id} 
                     questionObj={questionObj} 
                   />
                 ) 

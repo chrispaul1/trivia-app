@@ -1,2 +1,2 @@
 export * from './settingsPageStyle';
-export * from './questionsPageStyle';   
+export * from './quizPageStyle';   

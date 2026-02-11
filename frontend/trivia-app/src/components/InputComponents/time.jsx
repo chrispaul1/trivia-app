@@ -9,9 +9,11 @@ import {
   StyledTimeContainer,
   StyledInputContainer
 } from '.'
+import { useQuizDispatch } from "../../context/quizContext" 
 
 export function TimeQuestion({question,handleAnswer,selectedAnswer}){
 
+  const quizDispatch = useQuizDispatch()
   //Sets the array answer intially
   useEffect(()=>{
     handleAnswer(question.id,[0,0])
@@ -22,6 +24,9 @@ export function TimeQuestion({question,handleAnswer,selectedAnswer}){
       var answerArr = JSON.parse(JSON.stringify(selectedAnswer));
       answerArr[index] = answer
       handleAnswer(question.id,answerArr)
+      let id = question.id
+      let value = answerArr
+      quizDispatch(({type: "SET_PARAMETERS", payload: {id, value}}))
   }
 
   return(
@@ -38,7 +43,7 @@ export function TimeQuestion({question,handleAnswer,selectedAnswer}){
             type='number'
             id={"minute"}
             min={0}
-            max={59}
+            max={60}
             onChange={(e) => HandleTimeInput(e.target.value, 0)}
           />
         </StyledInputContainer>

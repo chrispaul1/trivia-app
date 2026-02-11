@@ -9,12 +9,13 @@ import {
   StyledDropdownContainer,
  } from "."
 import { FaCheck } from "react-icons/fa6";
-
+import {useQuizDispatch } from "../../context/quizContext"
 
 export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
   const [isOpen,setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
-  const {id,text,options} = question
+  const quizDispatch = useQuizDispatch()  
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,8 +28,9 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
     }
   }, [dropdownRef])
 
-  function handleOptionClick(id,option){
-    handleAnswer(id,option)
+  function handleOptionClick(id,value){
+    quizDispatch({ type: "SET_PARAMETERS", payload: { id, value }})
+    handleAnswer(id, value)
     setIsOpen(false)
   }
 
@@ -50,7 +52,7 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
               key={option.text ? option.text : option}
             >
               <StyledDropdownItem
-                onClick={() => handleOptionClick(question.id,option.text ? option.value.toLowerCase() : option.toLowerCase())}
+                onClick={() => handleOptionClick(question.id, option.text ? option.value.toLowerCase() : option.toLowerCase())}
               >
                 {option.text || option}
                 {(option.value == selectedAnswer.toLowerCase() || String(option).toLowerCase() == selectedAnswer.toLowerCase()) && 

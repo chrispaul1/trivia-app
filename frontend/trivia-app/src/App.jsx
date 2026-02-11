@@ -3,7 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
-import { SettingsPage, QuizPage } from './pages'
+import { SettingsPage,QuizPage } from './pages'
+//import {QuizPage}  from "./pages"
 
 function App() {
   const [triviaQuestions,setTriviaQuestions] = useState([])
@@ -13,7 +14,6 @@ function App() {
     if (triviaQuestions.length != []){
       setDisplayQuestions(true)
     }
-    console.log("trivia questions in app.jsx",triviaQuestions)
   },[triviaQuestions])
 
   return (
@@ -29,10 +29,8 @@ function App() {
         />
         <Route
           path="/quiz"
-          elemnt={
-            <QuizPage
-              triviaQuestions={triviaQuestions}
-            />
+          element={
+            <QuizPage/>
           }
         />
       </Routes>
