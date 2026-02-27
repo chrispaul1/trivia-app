@@ -13,6 +13,9 @@ export function SettingsPage({setTriviaQuestions}){
   const [token, setToken] = useState(null)
 
   useEffect(()=>{
+
+    //Switching to calling it from the backend, backend will also handle if the token is expired or used up
+
     //fetch a new token from the opentdb api to ensure we get unique questions for the quiz, and store it in state
       const fetchToken = async() =>{
         const savedToken = localStorage.getItem("triviaToken")
@@ -37,13 +40,13 @@ export function SettingsPage({setTriviaQuestions}){
       id:1,
       placement:"middle",
       type:"title",
-      text:"Placeholder Text"
+      text:"Settings"
     },
     {
       id:1,
       placement:"right",
       type:"button",
-      text:"Start",
+      text:"Start Game",
       function:FetchQuestions,
     }
   ]

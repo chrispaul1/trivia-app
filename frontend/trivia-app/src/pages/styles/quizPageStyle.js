@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ReactPaginate from "react-paginate";
+
 export const StyledQuestionsBackground = styled.div` 
     display: flex; 
     flex-direction: column; 
