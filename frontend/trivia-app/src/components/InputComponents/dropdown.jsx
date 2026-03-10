@@ -9,12 +9,10 @@ import {
   StyledDropdownContainer,
  } from "."
 import { FaCheck } from "react-icons/fa6";
-import {useQuizDispatch } from "../../context/quizContext"
 
 export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
   const [isOpen,setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
-  const quizDispatch = useQuizDispatch()  
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -29,7 +27,6 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
   }, [dropdownRef])
 
   function handleOptionClick(id,value){
-    quizDispatch({ type: "SET_PARAMETERS", payload: { id, value }})
     handleAnswer(id, value)
     setIsOpen(false)
   }

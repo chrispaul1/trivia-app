@@ -1,10 +1,15 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"sync"
+	"trivia-backend/internal/db"
 )
 
 var sessionToken string
@@ -22,6 +27,8 @@ type resetTokenResponse struct {
 }
 
 func FetchToken() (string, error) {
+	tokenLock.Lock()
+	defer tokenLock.Unlock()
 	tokenUrl := "https://opentdb.com/api_token.php?command=request"
 	resp, err := http.Get(tokenUrl)
 
@@ -39,7 +46,7 @@ func FetchToken() (string, error) {
 	return tokenResp.Token, nil
 }
 
-func ResetToken(token string) error {
+func ResetToken(userID int, token string) error {
 	tokenLock.Lock()
 	defer tokenLock.Unlock()
 
@@ -57,25 +64,62 @@ func ResetToken(token string) error {
 		return errors.New("failed to reset token")
 	}
 	sessionToken = resetResp.Token
-	return nil
-}
-
-func EnsureToken() error {
-	tokenLock.Lock()
-	defer tokenLock.Unlock()
-
-	if sessionToken == "" {
-		newToken, err := FetchToken()
-		if err != nil {
-			return err
-		}
-		sessionToken = newToken
+	updateTokenQuery := `UPDATE session_tokens SET token = (?) WHERE user_id = (?)`
+	_, err = db.DB.Exec(updateTokenQuery, resetResp.Token, userID)
+	if err != nil {
+		return errors.New("failed to update the session token")
 	}
+
 	return nil
 }
 
-func GetToken() string {
+// Ensure token checks to see if a token currently exists for the user or guest
+func EnsureToken(userID int) (string, error) {
+	var token string
+
+	query := `SELECT token FROM session_tokens WHERE user_id = (?)`
+	err := db.DB.QueryRow(query, userID).Scan(&token)
+	log.Printf("query token : %s", token)
+	fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			newToken, fetchErr := FetchToken()
+			if fetchErr != nil {
+				return "", fetchErr
+			}
+			insertQuery := `INSERT INTO session_tokens(user_id,token) VALUES (?,?)`
+			_, insertErr := db.DB.Exec(insertQuery, userID, newToken)
+			if insertErr != nil {
+				return "", insertErr
+			}
+			log.Printf("New Token added")
+			return newToken, nil
+		}
+		return "", err
+	}
+
+	return token, nil
+
+	// if sessionToken == "" {
+	// 	newToken, err := FetchToken()
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	sessionToken = newToken
+	// }
+	// return nil
+}
+
+// Retrieve the Token from the back
+func GetToken(userID int) (string, error) {
 	tokenLock.Lock()
 	defer tokenLock.Unlock()
-	return sessionToken
+
+	var userToken string
+	getTokenQuery := `SELECT token FROM session_tokens WHERE user_id = (?)`
+	err := db.DB.QueryRow(getTokenQuery, userID).Scan(&userToken)
+	if err != nil {
+		return "", err
+	}
+	return userToken, nil
 }

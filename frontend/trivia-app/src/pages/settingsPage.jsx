@@ -6,34 +6,18 @@ import { Form,Header } from "../components"
 import { questions, initialAnswerState } from "../assets/questions"
 import { categoryNames } from "../assets/categories"
 import { useNavigate } from "react-router-dom"
-import { useQuizState } from "../context/quizContext"
+import { useQuizState, useQuizDispatch } from "../context/quizContext"
 
-export function SettingsPage({setTriviaQuestions}){
+export function SettingsPage(){
 
-  const [token, setToken] = useState(null)
-
-  useEffect(()=>{
-
-    //Switching to calling it from the backend, backend will also handle if the token is expired or used up
-
-    //fetch a new token from the opentdb api to ensure we get unique questions for the quiz, and store it in state
-      const fetchToken = async() =>{
-        const savedToken = localStorage.getItem("triviaToken")
-        if(!savedToken){
-          try{
-            const res = await fetch("https://opentdb.com/api_token.php?command=request")
-            const data = await res.json()
-            setToken(data.token)
-            localStorage.setItem("triviaToken", data.token);
-          } catch (error){
-            console.error("Error fetching token:", error)
-          }
-        } else {
-          setToken(savedToken)
-        }
-      }
-      fetchToken()
-  },[]);
+  //state array for the answers
+  const [answers, setAnswers] = useState(initialAnswerState)
+  const [disableButton, setDisableButton] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const quizState = useQuizState()
+  const quizDispatch = useQuizDispatch()
+  const navigate = useNavigate()
 
   const headerState = [
     {
@@ -51,18 +35,10 @@ export function SettingsPage({setTriviaQuestions}){
     }
   ]
 
-  const quizState = useQuizState()
   useEffect(()=>{
     console.log("State answers from context:", quizState)
   }, [quizState]) 
 
-  //state array for the answers
-  const [answers,setAnswers] = useState(initialAnswerState)
-  const [disableButton,setDisableButton] = useState(false)
-  const [isLoading,setIsLoading] = useState(false)
-  const [error,setError] = useState(null)
-
-  const navigate = useNavigate()
   //get the number of required questions and their IDs
   const reqCount = questions.filter(q => q.required).length
   const reqID = questions.filter(q => q.required == true).map(item => item.id)
@@ -92,13 +68,19 @@ export function SettingsPage({setTriviaQuestions}){
   },[answers])
 
   //function to handle the user answers, based on the question id, it changes the answer
-  function HandleAnswer(questionLabel, newValue){
+  function HandleSettingsAnswer(id, value){
+    console.log("id :",id,"value:",value)
+    quizDispatch({
+      type:"SET_PARAMETERS",
+      payload: {"id":id,"value":value}
+    })
+
     setAnswers(prevAnswers =>{
-      if (prevAnswers[questionLabel] == newValue){
-        console.log(prevAnswers[questionLabel],"==",newValue)
-        return {...prevAnswers, [questionLabel]: initialAnswerState[questionLabel]}
+      if (prevAnswers[id] == value){
+        console.log(prevAnswers[id],"==",value)
+        return {...prevAnswers, [id]: initialAnswerState[id]}
       } 
-      return {...prevAnswers, [questionLabel]: newValue}
+      return {...prevAnswers, [id]: value}
       /*
         //Check if the answer already exists for the question
         const exists = prevAnswers.find(answer => answer.id === questionId);
@@ -126,20 +108,20 @@ export function SettingsPage({setTriviaQuestions}){
       //console.log("Category selected:", answers["category"]) 
       categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === answers["category"].toLowerCase()).id
     }
-    const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers["difficulty"])}&amount=${answers["questionCount"]}&type=${encodeURIComponent(answers["questionType"])}&token=${token}`;
+    const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers["difficulty"])}&amount=${answers["questionCount"]}&type=${encodeURIComponent(answers["questionType"])}&userid=${quizState.userID}`;
     //console.log("Answers state before fetch:", answers)
     console.log("Fetching from API URL: ", apiUrl)
     try{
       const res = await fetch(apiUrl)
       
       if(!res.ok){
-        throw new Error("Network response was not ok")
+        throw new Error("Error, Failed to fetch trivia questions")
       }
 
       const data = await res.json()
-      if (data.NewToken){
-        localStorage.setItem("triviaToken", data.NewToken)
-      } 
+      // if (data.NewToken){
+      //   localStorage.setItem("triviaToken", data.NewToken)
+      // } 
 
       setTriviaQuestions(data.results)
       navigate("/quiz", {state:{triviaQuestions: data.results }})
@@ -159,7 +141,7 @@ export function SettingsPage({setTriviaQuestions}){
       <StyledParametersOutline>
         <Form
           questions={questions}
-          handleAnswer={HandleAnswer}
+          handleAnswer={HandleSettingsAnswer}
           answers={answers}
         />
       </StyledParametersOutline>
@@ -197,3 +179,27 @@ function App() {
 
 export default App;
 */
+
+
+// useEffect(() => {
+
+//   //Switching to calling it from the backend, backend will also handle if the token is expired or used up
+
+//   //fetch a new token from the opentdb api to ensure we get unique questions for the quiz, and store it in state
+//   const fetchToken = async () => {
+//     const savedToken = localStorage.getItem("triviaToken")
+//     if (!savedToken) {
+//       try {
+//         const res = await fetch("https://opentdb.com/api_token.php?command=request")
+//         const data = await res.json()
+//         setToken(data.token)
+//         localStorage.setItem("triviaToken", data.token);
+//       } catch (error) {
+//         console.error("Error fetching token:", error)
+//       }
+//     } else {
+//       setToken(savedToken)
+//     }
+//   }
+//   fetchToken()
+// }, []);

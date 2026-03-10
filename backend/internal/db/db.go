@@ -11,10 +11,11 @@ var DB *sql.DB
 
 func Connect(dbFile string) *sql.DB {
 	var err error
-	DB, err := sql.Open("sqlite3", dbFile)
+	DB, err = sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
+	log.Println("Database connected successfully.")
 	return DB
 }
 

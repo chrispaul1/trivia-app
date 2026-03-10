@@ -1,12 +1,11 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"trivia-backend/internal/db"
 	"trivia-backend/internal/handlers"
 
@@ -34,13 +33,15 @@ func main() {
 
 	//Connect to the database and run migrations
 	db.Connect("./trivia.db")
-	defer db.Close()
-	db.Initialize(db.DB)
+	//defer db.Close()
+	db.Initialize()
 
 	//Set up HTTP server and routes
 	mux := http.NewServeMux()
 	mux.HandleFunc("/get_questions", getTriviaQuestion)
-	//mux.HandleFunc("submit_score", handleScoreSubmission)
+	mux.HandleFunc("/login", handlers.HandleLogin)
+	mux.HandleFunc("/submit_score", handlers.HandleScoring)
+	mux.HandleFunc("/get_leaderboard", handlers.GetLeaderboard)
 
 	//Configure CORS
 	c := cors.New(cors.Options{
@@ -62,11 +63,23 @@ func main() {
 }
 
 func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
+
+	log.Print(r.URL)
+	log.Printf("%s", r.URL.Query().Get("userid"))
+
 	category := r.URL.Query().Get("category")
 	difficulty := r.URL.Query().Get("difficulty")
 	amount := r.URL.Query().Get("amount")
 	qType := r.URL.Query().Get("type")
+	id := r.URL.Query().Get("userid")
+	log.Printf("^^^^^%s", id)
+	userID, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error during conversion: %v\n", err)
+		return
+	}
 	apiUrl := "https://opentdb.com/api.php?"
+
 	if amount != "" {
 		apiUrl += "amount=" + amount
 	}
@@ -83,15 +96,18 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 		apiUrl += "&type=" + qType
 	}
 
+	log.Printf("Checking if we have a valid token")
 	//Ensure we have a valid token before making the API call
-	if err := handlers.EnsureToken(); err != nil {
+	sessionToken, err := handlers.EnsureToken(userID)
+	if err != nil {
+		log.Printf("we have an error")
 		http.Error(w, "Failed to validate token: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	sessionToken := handlers.GetToken()
+	log.Printf("user token : %s", sessionToken)
+	//sessionToken := handlers.GetToken()
 	apiUrl += "&token=" + sessionToken
-
+	log.Printf("apiUrl : %s", apiUrl)
 	//apiUrl := "https://opentdb.com/api.php?" + values.Encode()
 	//Fetch trivia questions from OpenTDB API
 	res, err := http.Get(apiUrl)
@@ -101,14 +117,10 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer res.Body.Close()
-
 	if res.StatusCode != http.StatusOK {
 		http.Error(w, "Error fetching questions from OpenTDB", http.StatusBadGateway)
 		return
 	}
-
-	body, _ := io.ReadAll(res.Body)
-	res.Body = io.NopCloser(bytes.NewBuffer(body))
 
 	//Decode the response
 	var apiData ApiResponse
@@ -121,13 +133,18 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 
 	//If the token is invalid or empty, reset it and try again
 	if apiData.ResponseCode == 3 || apiData.ResponseCode == 4 {
-		if err := handlers.ResetToken(sessionToken); err != nil {
+		if err := handlers.ResetToken(userID, sessionToken); err != nil {
 			http.Error(w, "Failed to reset Token: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		//Try the API call again with the new token
-		sessionToken = handlers.GetToken()
+		sessionToken, err = handlers.GetToken(userID)
+		if err != nil {
+			http.Error(w, "Failed to get token : "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		apiUrl = fmt.Sprintf("https://opentdb.com/api.php?amount=%s&category=%s&difficulty=%s&type=%s&token=%s",
 			amount, category, difficulty, qType, sessionToken)
 
@@ -146,20 +163,20 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-
-		//Check if the API call was not successful
-		if apiData.ResponseCode != 0 {
-			log.Printf("OpenTDB API returned response code %d", apiData.ResponseCode)
-			http.Error(w, "OpenTDB returned an error", http.StatusBadGateway)
-			return
-		}
-
-		if len(apiData.Results) == 0 {
-			http.Error(w, "No questions avaliable", http.StatusNotFound)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(apiData)
 	}
+
+	//Check if the API call was not successful
+	if apiData.ResponseCode != 0 {
+		log.Printf("OpenTDB API returned response code %d", apiData.ResponseCode)
+		http.Error(w, "OpenTDB returned an error", http.StatusBadGateway)
+		return
+	}
+
+	if len(apiData.Results) == 0 {
+		http.Error(w, "No questions avaliable", http.StatusNotFound)
+		return
+	}
+	log.Printf("Successfully retrived the questions")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(apiData)
 }

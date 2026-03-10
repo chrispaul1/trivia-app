@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { intialState, quizReducer } from './quizReducer';
+import { initialState, quizReducer } from './quizReducer';
 
 const QuizContext = createContext();
 const QuizDispatchContext = createContext(undefined);
 
 export const QuizProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(quizReducer, intialState)
+    const [state, dispatch] = useReducer(quizReducer, initialState)
 
     return (
         <QuizContext.Provider value={state}>

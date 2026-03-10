@@ -7,16 +7,19 @@ import {
 } from "./styles"
 
 
-export function TrueFalse({questionObj}) {
+export function TrueFalse({ questionObj,setItemOffset,questionNumber}) {
   return (
     <StyledQuestionContainer>
+      <h2>
+        {questionNumber}.{" "}{questionObj.category}
+      </h2>
       <StyledQuestionTextDiv>
         {questionObj.question}
       </StyledQuestionTextDiv>
       <StyledAnswerContainer>
         {["True","False"].map((answerOption,index)=>{
           return(
-            <StyledAnswerButton key={questionObj.question}>
+            <StyledAnswerButton key={answerOption}>
               {answerOption}
             </StyledAnswerButton>
           )

@@ -10,16 +10,41 @@ export const StyledQuestionsBackground = styled.div`
     height: 100vh; 
     width: 95vw; 
 `
+export const StyledQuestionsOutline = styled.div` 
+    display: flex; 
+    flex-direction: column;
+    background: lightgreen;
+    align-items: center; 
+    height: 90%; 
+    width: 100%; 
+    color: black; 
+`
 export const StyledPaginate = styled(ReactPaginate)`
   display: flex;
   list-style: none;
   justify-content: center;
   padding: 0;
   margin-top: auto;
+  width: 90%;
+  //border: solid 2px black;
 
   li {
     margin: 0 2px;
     cursor: pointer;
+
+    &.selected a {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+    
+    &.previous {
+      display: none;
+    }
+
+    &.next {
+      display: none;
+    }
   }
 
   a {
@@ -33,7 +58,10 @@ export const StyledPaginate = styled(ReactPaginate)`
     &:hover {
       background-color: #eee;
     }
+
+
   }
+    
 
   li.active a {
     background-color: #007bff;
@@ -66,15 +94,7 @@ export const StyledQuestionScoreContainer = styled.div`
     margin-right: 2vw;
 `
 
-export const StyledQuestionsOutline = styled.div` 
-    display: flex; 
-    flex-direction: column;
-    background: lightblue;
-    align-items: center; 
-    height: 90%; 
-    width: 100%; 
-    color: black; 
-`
+
 
 export const StyledQuestionTimerContainer = styled.div`
 

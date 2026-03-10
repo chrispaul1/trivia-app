@@ -23,9 +23,9 @@ export const StyledLoginDiv = styled.div`
 export const StyledLoginInputContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
-    background: white;
+    background: purple;
     height: 40%;
     width: 80%;
 `
@@ -35,4 +35,16 @@ export const StyledLoginInput = styled.input`
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;       
+`
+
+export const StyledButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width:75px;
+    width: fit-content;
+
+    &: hover{
+        pointer: cursor
+    }
 `

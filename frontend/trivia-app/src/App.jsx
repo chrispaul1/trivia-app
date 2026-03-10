@@ -7,14 +7,6 @@ import { SettingsPage, QuizPage, LoginPage } from './pages'
 //import {QuizPage}  from "./pages"
 
 function App() {
-  const [triviaQuestions,setTriviaQuestions] = useState([])
-  const [displayQuestions,setDisplayQuestions] = useState(false)  
-
-  useEffect(()=>{
-    if (triviaQuestions.length != []){
-      setDisplayQuestions(true)
-    }
-  },[triviaQuestions])
 
   return (
     <Router>
@@ -29,9 +21,7 @@ function App() {
         <Route
           path="/settings"
           element={
-            <SettingsPage
-              setTriviaQuestions={setTriviaQuestions}
-            />
+            <SettingsPage/>
           }
         />
         <Route

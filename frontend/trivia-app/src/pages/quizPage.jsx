@@ -4,7 +4,7 @@ import {
   StyledQuestionsOutline,
   StyledQuestionsBackground,
 } from "."
-import { QuestionDisplay} from "../components"
+import { TriviaQuestionsComponent} from "../components"
 import { useWindowSize } from "../hooks/SizeHook"
 import { useLocation } from "react-router-dom"
 
@@ -19,7 +19,7 @@ export function QuizPage() {
   const location = useLocation()
 
   const triviaQuestions = location.state?.triviaQuestions || []
-
+  console.log(triviaQuestions)
   const [processedQuestions, setProcessedQuestions] = useState([])
 
   useEffect(()=>{
@@ -47,12 +47,12 @@ export function QuizPage() {
   const endOffset = itemOffset + itemsPerPage
   const pageCount = Math.ceil(processedQuestions.length/itemsPerPage)
   const currentQuestions = processedQuestions.slice(itemOffset, endOffset)
-
   const size = useWindowSize();  
-  
+
   //function that handles page changes in the pagination component
   const handlePageClick = useCallback((event) =>{
     const newOffset = (event.selected * itemsPerPage) % processedQuestions.length
+    console.log(newOffset)
     setItemOffset(newOffset)
   },[itemsPerPage, processedQuestions.length])
 
@@ -64,17 +64,22 @@ export function QuizPage() {
       //disableButton={disableButton}
       /> */}
       <StyledQuestionsOutline>
-        <QuestionDisplay
+        <TriviaQuestionsComponent
           currentQuestions={currentQuestions}
-          setScoreCounter={setScoreCounter}
+          //setScoreCounter={setScoreCounter}
+          questionNumber={itemOffset+1}
+          setItemOffset={setItemOffset}
         />
         <StyledPaginate
-          breakLabel="..."
-          nextLabel={size.width > 600 ? "next >" : ">"}
+          //breakLabel="..."
+          //previousLabel={size.width > 650 ? "< Previous" : "<"}
+          previousLabel={null}
           onPageChange={handlePageClick}
-          pageRangeDisplayed={1}
           pageCount={pageCount}
-          previousLabel={size.width > 600 ? "< Previous" : "<"}
+          pageRangeDisplayed={0}
+          marginPagesDisplayed={0}
+          //nextLabel={size.width > 650 ? "next >" : ">"}
+          nextLabel={null}
           renderOnZeroPageCount={null}
         />         
       </StyledQuestionsOutline>

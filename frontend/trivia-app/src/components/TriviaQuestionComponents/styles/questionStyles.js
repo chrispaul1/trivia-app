@@ -4,7 +4,7 @@ export const StyledQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: lightgreen;
+  //background: lightgreen;
   justify-content: center;                  
   width: 100%;
   height: 100%;
@@ -16,6 +16,7 @@ export const StyledQuestionTextDiv = styled.div`
   font-weight: bold;
   margin-top: 5px;
   margin-bottom: 20px;
+  max-width: 90%;
   padding: 5px;  
   border: 2px solid black;
 `

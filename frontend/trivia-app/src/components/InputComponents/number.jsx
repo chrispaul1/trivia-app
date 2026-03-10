@@ -10,22 +10,17 @@ import { useQuizDispatch } from "../../context/quizContext"
 
 export function NumberQuestion({question,handleAnswer,selectedAnswer}){
 
-  const [invalidAns, setInvalidAns] = useState(true)
+  const [validAns, setValidAns] = useState(false)
   const quizDispatch = useQuizDispatch()
-
-  function dispatchNumberAnswer(value){
-    quizDispatch({type:"SET_PARAMETERS", payload:{id,value}})
-    handleAnswer(question.id,value)
-  }
 
   function validateNumberInput(value){
     if(value > question.limit || value <= 0) {
-      setInvalidAns(false)
+      setValidAns(false)
       handleAnswer(question.id,0)
-      quizDispatch({type:"SET_PARAMETERS", payload:{id:question.id,option:0}})
     }
     else{
-      setInvalidAns(true)
+      setValidAns(true)
+      handleAnswer(question.id, value)
     } 
   }
   return(
@@ -33,7 +28,7 @@ export function NumberQuestion({question,handleAnswer,selectedAnswer}){
       <StyledQuestionLabel>
         {question.text} 
         {question.required && "*"}
-        {!invalidAns && 
+        {!validAns && 
           <IoMdAlert 
             style={{color:"red",marginLeft:"5px"}}
             />
@@ -49,7 +44,7 @@ export function NumberQuestion({question,handleAnswer,selectedAnswer}){
           placeholder={0}
           min={1}
           max={question.limit}
-          onChange={(e) => (handleAnswer(question.id,e.target.value),validateNumberInput(e.target.value),dispatchNumberAnswer(e.target.value))}
+          onChange={(e) => validateNumberInput(e.target.value)}
         />
       </StyledNumberLabel>
     </StyledNumberContainer>

@@ -5,13 +5,29 @@ import {
   StyledAnswerContainer,
   StyledQuestionContainer, 
 } from "./styles"
-export function MultipleChoice({questionObj}) {
+import { useQuizState, useQuizDispatch } from "../../context/quizContext";
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+export function MultipleChoice({ questionObj, setItemOffset,questionNumber }) {
+  console.log(questionObj)
+  const [showFeedback, setShowFeedback] = useState(false);
+  const quizState = useQuizState()
+  const quizDispatch = useQuizDispatch()
+
+  function handleAnswerClick(selectedAnswer){
+    const isCorrect = selectedAnswer === questionObj.correct_answer
+
+    if(isCorrect){
+      quizDispatch({
+        type:"INCREMENT_SCORE"
+      })
+    }
+    setShowFeedback(true)
+  }
+
   return (
     <StyledQuestionContainer>
       <h2>
-        Category : {questionObj.category}
+        {questionNumber}.{" "}{questionObj.category}
       </h2>
       <StyledQuestionTextDiv>
         {questionObj.question}
@@ -20,8 +36,8 @@ export function MultipleChoice({questionObj}) {
         {questionObj.shuffledAnswers.map((answerOption, index) => (
           <StyledAnswerButton 
             key={answerOption}
-            onClick={() => setSelectedAnswer(answerOption)}
-            $isselected={selectedAnswer === answerOption}
+            onClick={() => handleAnswerClick(answerOption)}
+            //$isselected={selectedAnswer === answerOption}
           >
             {answerOption}
           </StyledAnswerButton>

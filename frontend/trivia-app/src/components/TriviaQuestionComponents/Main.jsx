@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { MultipleChoice, TrueFalse } from "."
-export function QuestionDisplay({ currentQuestions }) {
+export function TriviaQuestionsComponent({ 
+  currentQuestions, 
+  questionNumber ,
+  setItemOffset
+}) {
 
   return ( 
     <>
@@ -12,6 +16,8 @@ export function QuestionDisplay({ currentQuestions }) {
                   <MultipleChoice 
                     key={questionObj.id} 
                     questionObj={questionObj}
+                    setItemOffset={setItemOffset}
+                    questionNumber={questionNumber}
                   />
                 ) 
               case "boolean":
@@ -19,6 +25,8 @@ export function QuestionDisplay({ currentQuestions }) {
                   <TrueFalse 
                     key={questionObj.id} 
                     questionObj={questionObj} 
+                    setItemOffset={setItemOffset}
+                    questionNumber={questionNumber}
                   />
                 ) 
               default:
