@@ -3,6 +3,7 @@ import {
   StyledButton,
   StyledLoginDiv,
   StyledLoginInput,
+  StyledUserNameDiv,
   StyledLoginBackground,
   StyledLoginInputContainer,
 } from ".";
@@ -16,13 +17,18 @@ export function LoginPage() {
   const navigate = useNavigate()
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
-  const userAmt = quizState.initialAnswerState.amount
+  const userAmt = quizState.settingsState.amount
+  const defaultSettings = {
+    category: 'General Knowledge',
+    difficulty: 'medium',
+    type: "",
+    amount: 10,
+    mode: 'standard'
+  }
 
   //Function to handle login, will eventually send username to backend and receive a token, for now it just navigates to the settings page
   async function handleLogin(isGuest = false) {
     try{
-      const payload = {username : isGuest ? "Guest" : username}
-      console.log("SENDING THIS  PAYLOAD",JSON.stringify(payload))
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -40,26 +46,14 @@ export function LoginPage() {
     }
   }
 
-  useEffect(()=>{
-    console.log("user id",quizState.userID)
-  },[quizState])
-
 	//call to the backend to ge the questions with the default settings
-	async function handleStartQuiz(){    
-    console.log("******user id", quizState.userID)
-    const apiUrl = `http://localhost:5000/get_questions?amount=${userAmt}&userid=${quizState.userID}`
-    try{
-      const res = await fetch(apiUrl)
-      if (!res.ok){
-        throw new Error("Error, Failed to fetch trivia questions")
-      }
-
-      const data = await res.json()
-      console.log("data",data)
-      navigate("/quiz",{state:{triviaQuestions: data.results}})
-    } catch(error){
-      console.log("Error, Failed to fetch trivia questions ",error)
-    }
+	function handleStartQuiz(){  
+    console.log("set parameters")
+    quizDispatch({
+      type:"SET_PARAMETERS",
+      payload:defaultSettings
+    })  
+    navigate("/quiz")
 	}
 
   
@@ -69,7 +63,7 @@ export function LoginPage() {
         <h2>Trivia Quiz Application</h2>
         {!showMenu ?
           <StyledLoginInputContainer>
-            <div>
+            <StyledUserNameDiv>
               <StyledLoginInput
                 type="text"
                 id="username"
@@ -81,11 +75,15 @@ export function LoginPage() {
               >
                 Enter
               </StyledButton>
-            </div>
+            </StyledUserNameDiv>
             <StyledButton
               onClick={() => handleLogin(true) }
             >
               Play as Guest
+            </StyledButton>
+            <StyledButton
+            >
+              View Leaderboard
             </StyledButton>
           </StyledLoginInputContainer>
           :

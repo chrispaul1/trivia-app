@@ -38,10 +38,10 @@ func main() {
 
 	//Set up HTTP server and routes
 	mux := http.NewServeMux()
-	mux.HandleFunc("/get_questions", getTriviaQuestion)
-	mux.HandleFunc("/login", handlers.HandleLogin)
-	mux.HandleFunc("/submit_score", handlers.HandleScoring)
-	mux.HandleFunc("/get_leaderboard", handlers.GetLeaderboard)
+	mux.HandleFunc("GET /questions", getTriviaQuestion)
+	mux.HandleFunc("POST /login", handlers.HandleLogin)
+	mux.HandleFunc("POST /score", handlers.HandleScoring)
+	mux.HandleFunc("GET /leaderboard", handlers.GetLeaderboard)
 
 	//Configure CORS
 	c := cors.New(cors.Options{
@@ -137,6 +137,7 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to reset Token: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
+		log.Printf("reset the token")
 
 		//Try the API call again with the new token
 		sessionToken, err = handlers.GetToken(userID)
@@ -176,7 +177,7 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "No questions avaliable", http.StatusNotFound)
 		return
 	}
-	log.Printf("Successfully retrived the questions")
+	log.Printf("Successfully retrieved the questions")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(apiData)
 }

@@ -3,15 +3,13 @@ import {
     StyledParametersBackground,
     StyledParametersOutline } from '.'
 import { Form,Header } from "../components"
-import { questions, initialAnswerState } from "../assets/questions"
-import { categoryNames } from "../assets/categories"
+import { questions } from "../assets/questions"
 import { useNavigate } from "react-router-dom"
 import { useQuizState, useQuizDispatch } from "../context/quizContext"
 
 export function SettingsPage(){
 
   //state array for the answers
-  const [answers, setAnswers] = useState(initialAnswerState)
   const [disableButton, setDisableButton] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -31,12 +29,22 @@ export function SettingsPage(){
       placement:"right",
       type:"button",
       text:"Start Game",
-      function:FetchQuestions,
+      function:handleStartQuiz,
     }
   ]
 
+  //quiz settings buffer state
+  const [bufferSettings,setBufferSettings] = useState({
+    category: quizState.settingsState.category || '',
+    difficulty: quizState.settingsState.difficulty || 'medium',
+    type: quizState.settingsState.type || "",
+    amount: quizState.settingsState.amount || 10,
+    mode: quizState.settingsState.mode || 'standard'
+  })
+
   useEffect(()=>{
     console.log("State answers from context:", quizState)
+    console.log(quizState.settingsState.category)
   }, [quizState]) 
 
   //get the number of required questions and their IDs
@@ -48,7 +56,7 @@ export function SettingsPage(){
     let ansCount = 0
     //console.log("answers state changed:", answers)
     reqID.forEach((id)=>{
-      var value = answers[id]
+      var value = quizState.settingsState[id]
       //console.log("id:",id,"value:",value)
       if (value !== "" && value !== undefined && value != 0 && value != [0,0] && value !== null){
         ansCount += 1
@@ -65,72 +73,26 @@ export function SettingsPage(){
     }else{
       setDisableButton(true)
     }
-  },[answers])
+  },[quizState.settingsState])
 
   //function to handle the user answers, based on the question id, it changes the answer
-  function HandleSettingsAnswer(id, value){
-    console.log("id :",id,"value:",value)
+  function handleSettingsAnswer(id, value){
+    setBufferSettings(prev =>({
+      ...prev,
+      [id]:value
+    }))
+  }
+
+  //handles starting the quiz, by dispatching the quiz settings to the reducer
+  //and call the fetchQuestions func to retrieve the trivia question and navigate to the quiz
+  function handleStartQuiz(){
     quizDispatch({
-      type:"SET_PARAMETERS",
-      payload: {"id":id,"value":value}
+      type:"SET_QUIZ_SETTINGS",
+      payload:bufferSettings
     })
-
-    setAnswers(prevAnswers =>{
-      if (prevAnswers[id] == value){
-        console.log(prevAnswers[id],"==",value)
-        return {...prevAnswers, [id]: initialAnswerState[id]}
-      } 
-      return {...prevAnswers, [id]: value}
-      /*
-        //Check if the answer already exists for the question
-        const exists = prevAnswers.find(answer => answer.id === questionId);
-        if (exists) {
-          //if the new value is same as the exisitng value, remove it from the answers
-          if (exists.value == newValue){
-            let initialAnswer = initialAnswerState.find(ans => ans.id === questionId).value
-            return prevAnswers.map((answer) => answer.id === questionId ? { ...answer, value: initialAnswer } : answer);
-          }
-          //if its not, update the answers state with the new value
-          return prevAnswers.map(answer =>
-            answer.id === questionId ? {...answer, value: newValue} : answer
-          )
-        }
-        return [...prevAnswers, {id: questionId, value: newValue}];
-      */
-    })
+    navigate("/quiz")
   }
 
-  //This handles creating the api url sent to the backend to retireve the data
-  async function FetchQuestions(){
-    setIsLoading(true)
-    let categoryID
-    if(answers["category"] != undefined && answers["category"] != "" && answers["category"].toLowerCase() != "randomized categories"){
-      //console.log("Category selected:", answers["category"]) 
-      categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === answers["category"].toLowerCase()).id
-    }
-    const apiUrl = `http://localhost:5000/get_questions?category=${categoryID}&difficulty=${encodeURIComponent(answers["difficulty"])}&amount=${answers["questionCount"]}&type=${encodeURIComponent(answers["questionType"])}&userid=${quizState.userID}`;
-    //console.log("Answers state before fetch:", answers)
-    console.log("Fetching from API URL: ", apiUrl)
-    try{
-      const res = await fetch(apiUrl)
-      
-      if(!res.ok){
-        throw new Error("Error, Failed to fetch trivia questions")
-      }
-
-      const data = await res.json()
-      // if (data.NewToken){
-      //   localStorage.setItem("triviaToken", data.NewToken)
-      // } 
-
-      setTriviaQuestions(data.results)
-      navigate("/quiz", {state:{triviaQuestions: data.results }})
-    } catch (error){
-      //console.error("Fetch error:", error)
-    } finally{
-      setIsLoading(false)
-    }
-  }
 
   return(
     <StyledParametersBackground>
@@ -141,65 +103,39 @@ export function SettingsPage(){
       <StyledParametersOutline>
         <Form
           questions={questions}
-          handleAnswer={HandleSettingsAnswer}
-          answers={answers}
+          handleAnswer={handleSettingsAnswer}
+          answers={quizState.settingsState}
         />
       </StyledParametersOutline>
     </StyledParametersBackground>
   )
 }
 
-/*
-import React, { useState, useEffect } from 'react';
+// //This handles creating the api url sent to the backend to retireve the data
+// async function fetchQuestions() {
+//   setIsLoading(true)
+//   let categoryID
 
-function App() {
-    const [questions, setQuestions] = useState([]);
-    
-    useEffect(() => {
-        fetch('http://localhost:5000/get_questions')
-            .then(response => response.json())
-            .then(data => setQuestions(data.results)); // Store trivia questions in state
-    }, []);
-
-    return (
-        <div>
-            <h1>Trivia Quiz</h1>
-            {questions.length > 0 && (
-                <div>
-                    <h2>{questions[0].question}</h2>
-                    //{ Render multiple choice answers }
-                    {questions[0]?.incorrect_answers.concat(questions[0]?.correct_answer).map((answer, index) => (
-                        <button key={index}>{answer}</button>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-}
-
-export default App;
-*/
-
-
-// useEffect(() => {
-
-//   //Switching to calling it from the backend, backend will also handle if the token is expired or used up
-
-//   //fetch a new token from the opentdb api to ensure we get unique questions for the quiz, and store it in state
-//   const fetchToken = async () => {
-//     const savedToken = localStorage.getItem("triviaToken")
-//     if (!savedToken) {
-//       try {
-//         const res = await fetch("https://opentdb.com/api_token.php?command=request")
-//         const data = await res.json()
-//         setToken(data.token)
-//         localStorage.setItem("triviaToken", data.token);
-//       } catch (error) {
-//         console.error("Error fetching token:", error)
-//       }
-//     } else {
-//       setToken(savedToken)
-//     }
+//   if (quizState.settingsState.category != undefined && quizState.settingsState.category != "" && quizState.settingsState.category.toLowerCase() != "randomized categories") {
+//     categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === quizState.settingsState.category.toLowerCase()).id
 //   }
-//   fetchToken()
-// }, []);
+
+//   const apiUrl = `http://localhost:5000/questions?category=${categoryID}&difficulty=${encodeURIComponent(quizState.settingsState.difficulty)}&amount=${quizState.settingsState.amount}&type=${encodeURIComponent(quizState.settingsState.type)}&userid=${quizState.userID}`;
+
+//   console.log("Fetching from API URL: ", apiUrl)
+//   try {
+//     const res = await fetch(apiUrl)
+
+//     if (!res.ok) {
+//       throw new Error("Error, Failed to fetch trivia questions")
+//     }
+
+//     const data = await res.json()
+
+//     navigate("/quiz", { state: { triviaQuestions: data.results } })
+//   } catch (error) {
+//     console.error("Error, could not fetch the questions:", error)
+//   } finally {
+//     setIsLoading(false)
+//   }
+// }

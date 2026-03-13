@@ -56,7 +56,7 @@ func ResetToken(userID int, token string) error {
 		return err
 	}
 	defer resp.Body.Close()
-
+	log.Printf("^^^token reset suscessfully")
 	var resetResp resetTokenResponse
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&resetResp)

@@ -27,7 +27,12 @@ export const StyledLoginInputContainer = styled.div`
     align-items: center;
     background: purple;
     height: 40%;
-    width: 80%;
+    width: 100%;
+`
+
+export const StyledUserNameDiv = styled.div`
+    display: flex;
+    
 `
 
 export const StyledLoginInput = styled.input`

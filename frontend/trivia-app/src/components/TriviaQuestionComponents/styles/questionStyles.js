@@ -34,7 +34,7 @@ export const StyledAnswerButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${(props) => (props.$isselected ? "lightblue" : "#f0f0f0")};
+  background: lightblue;
   border: 2px solid #000;       
   border-radius: 8px;
   padding: 10px 20px;
@@ -44,10 +44,32 @@ export const StyledAnswerButton = styled.button`
   width: 60%;
   color : black;
 
-  &:hover {
-    background-color: #e0e0e0;
-  }
   &:active {
     background-color: #d0d0d0;
   } 
+
+  ${(props)=>props.$status === 'correct' && `
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border-color: #4CAF50;
+  `}
+
+  ${(props) => props.$status === 'incorrect' && `
+    background-color: #F44336; /* Green */
+    color: white;
+    border-color: #F44336;
+  `}
+
+  ${(props) => props.$status === 'unselected' && `
+    opacity: 0.5;
+    background-color: #e0e0e0;
+  `}
+
+  &:hover {
+    ${(props) => props.$status === 'default' && `
+      background-color: #e0e0e0;
+    `}
+  }
+
+
 `   

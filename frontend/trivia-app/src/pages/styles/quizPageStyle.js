@@ -31,7 +31,7 @@ export const StyledPaginate = styled(ReactPaginate)`
   li {
     margin: 0 2px;
     cursor: pointer;
-
+    display: none;
     &.selected a {
       background-color: #007bff;
       color: white;
@@ -45,6 +45,7 @@ export const StyledPaginate = styled(ReactPaginate)`
     &.next {
       display: none;
     }
+
   }
 
   a {

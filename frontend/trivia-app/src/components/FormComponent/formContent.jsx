@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import { DropdownQuestion,NumberQuestion,TimeQuestion } from "../InputComponents";
 
 export function FormContent({questions,handleAnswer,answers}) {
-
+  console.log(answers)
   return (
     <>
       {questions.map(question => {
