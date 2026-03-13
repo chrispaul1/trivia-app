@@ -18,13 +18,7 @@ export function LoginPage() {
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
   const userAmt = quizState.settingsState.amount
-  const defaultSettings = {
-    category: 'General Knowledge',
-    difficulty: 'medium',
-    type: "",
-    amount: 10,
-    mode: 'standard'
-  }
+
 
   //Function to handle login, will eventually send username to backend and receive a token, for now it just navigates to the settings page
   async function handleLogin(isGuest = false) {
@@ -48,11 +42,6 @@ export function LoginPage() {
 
 	//call to the backend to ge the questions with the default settings
 	function handleStartQuiz(){  
-    console.log("set parameters")
-    quizDispatch({
-      type:"SET_PARAMETERS",
-      payload:defaultSettings
-    })  
     navigate("/quiz")
 	}
 
