@@ -8,7 +8,7 @@ import { TriviaQuestionsComponent} from "../components"
 import { useWindowSize } from "../hooks/SizeHook"
 import { useLocation, useNavigate } from "react-router-dom"
 import { categoryNames } from "../assets/categories"
-import { useQuizState } from "../context/quizContext"
+import { useQuizState, useQuizDispatch } from "../context/quizContext"
 
 //function that decodes html entities in the question and answer strings, since the API returns them encoded
 function decodeHtmlEntities(encodedString) {
@@ -18,15 +18,38 @@ function decodeHtmlEntities(encodedString) {
 }
 
 export function QuizPage() {
-  //const triviaQuestions = location.state?.triviaQuestions || []
 
   const [triviaQuestions, setTriviaQuestions] = useState([])
   const [processedQuestions, setProcessedQuestions] = useState([])
   const quizState = useQuizState()
+  const quizDispatch = useQuizDispatch()
   const hasFetched = useRef(false)
   const navigate = useNavigate()
 
   console.log("quizState", quizState)
+
+  //calls the fetchQuestion funcs and prevents the func being called twice
+  useEffect(() => {
+    if(!quizState.isGameStarted){
+      return;
+    }
+
+    if (hasFetched.current) {
+      return
+    }
+    hasFetched.current = true
+
+    fetchQuestions()
+  }, [quizState.isGameStarted])
+
+  //if the game hasn't started officially, send the user back to the menu
+  useEffect(() => {
+    if (!quizState.isGameStarted) {
+      console.log("game hasnt started, im going back to menu")
+      navigate('/', { replace: true });
+    } 
+  }, [quizState.isGameStarted, navigate])
+
   useEffect(() => {
     //decode html entities in the question and answer strings
     const decodedQuestions = triviaQuestions.map(item => ({
@@ -36,7 +59,6 @@ export function QuizPage() {
       correct_answer: decodeHtmlEntities(item.correct_answer),
       incorrect_answers: item.incorrect_answers.map(ans => decodeHtmlEntities(ans))
     }))
-    console.log("Shuffling all questions...");
     const shuffledQuestions = decodedQuestions.map((q) => ({
       ...q,
       shuffledAnswers: q.incorrect_answers.concat(q.correct_answer)
@@ -52,16 +74,6 @@ export function QuizPage() {
   //const pageCount = Math.ceil(processedQuestions.length / itemsPerPage)
   //const size = useWindowSize();  
 
-  //calls the fetchQuestion funcs and prevents the func being called twice
-  useEffect(() => {
-    if (hasFetched.current) {
-      return
-    }
-    hasFetched.current = true
-
-    fetchQuestions()
-  }, [])
-
   //fetches the questions by calling an api endpoint with the settings data
   async function fetchQuestions() {
     let categoryID
@@ -75,20 +87,19 @@ export function QuizPage() {
     console.log("Fetching from API URL: ", apiUrl)
     try {
       const res = await fetch(apiUrl)
-      console.log("res", res)
       if (!res.ok) {
-        throw new Error("Error, Failed to fetch trivia questions")
+        throw new Error("Failed to fetch  questions")
       }
-
       const data = await res.json()
+      quizDispatch({type:"SET_QUESTIONS",payload:data.results})
       setTriviaQuestions(data.results)
-      //navigate("/quiz", {state:{triviaQuestions: data.results }})
     } catch (error) {
       console.error(error)
-      navigate("/")
+      alert("Oops! The trivia database is currently unavailable. Please try again.");
+      quizDispatch({ type: "END_GAME" });
+      navigate("/",{replace:true})
     }
   }
-
 
   return (
     <StyledQuestionsBackground>
@@ -99,7 +110,8 @@ export function QuizPage() {
       /> */}
       <StyledQuestionsOutline>
         <TriviaQuestionsComponent
-          triviaQuestions={processedQuestions}
+          triviaQuestions={quizState.triviaQuestions}
+          fetchQuestions={fetchQuestions}
           mode={""}
         />
         {/* <StyledPaginate

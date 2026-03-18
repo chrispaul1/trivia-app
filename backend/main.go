@@ -64,15 +64,12 @@ func main() {
 
 func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 
-	log.Print(r.URL)
-	log.Printf("%s", r.URL.Query().Get("userid"))
-
+	log.Printf("%v", r.Body)
 	category := r.URL.Query().Get("category")
 	difficulty := r.URL.Query().Get("difficulty")
 	amount := r.URL.Query().Get("amount")
 	qType := r.URL.Query().Get("type")
 	id := r.URL.Query().Get("userid")
-	log.Printf("^^^^^%s", id)
 	userID, err := strconv.Atoi(id)
 	if err != nil {
 		fmt.Printf("Error during conversion: %v\n", err)
@@ -96,7 +93,6 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 		apiUrl += "&type=" + qType
 	}
 
-	log.Printf("Checking if we have a valid token")
 	//Ensure we have a valid token before making the API call
 	sessionToken, err := handlers.EnsureToken(userID)
 	if err != nil {
@@ -137,7 +133,6 @@ func getTriviaQuestion(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to reset Token: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
-		log.Printf("reset the token")
 
 		//Try the API call again with the new token
 		sessionToken, err = handlers.GetToken(userID)

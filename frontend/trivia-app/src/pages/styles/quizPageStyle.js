@@ -15,7 +15,7 @@ export const StyledQuestionsOutline = styled.div`
     flex-direction: column;
     background: lightgreen;
     align-items: center; 
-    height: 90%; 
+    height: 100%; 
     width: 100%; 
     color: black; 
 `

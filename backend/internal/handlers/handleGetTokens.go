@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"sync"
@@ -56,7 +55,6 @@ func ResetToken(userID int, token string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	log.Printf("^^^token reset suscessfully")
 	var resetResp resetTokenResponse
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&resetResp)
@@ -79,7 +77,6 @@ func EnsureToken(userID int) (string, error) {
 
 	query := `SELECT token FROM session_tokens WHERE user_id = (?)`
 	err := db.DB.QueryRow(query, userID).Scan(&token)
-	log.Printf("query token : %s", token)
 	fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -92,22 +89,12 @@ func EnsureToken(userID int) (string, error) {
 			if insertErr != nil {
 				return "", insertErr
 			}
-			log.Printf("New Token added")
 			return newToken, nil
 		}
 		return "", err
 	}
 
 	return token, nil
-
-	// if sessionToken == "" {
-	// 	newToken, err := FetchToken()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	sessionToken = newToken
-	// }
-	// return nil
 }
 
 // Retrieve the Token from the back

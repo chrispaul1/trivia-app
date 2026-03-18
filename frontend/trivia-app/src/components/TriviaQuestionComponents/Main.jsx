@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
-import { MultipleChoice, TrueFalse } from "."
+import { MultipleChoice, TrueFalse, QuizSummary } from "."
 import { useQuizState, useQuizDispatch } from "../../context/quizContext";
 
-export function TriviaQuestionsComponent({ triviaQuestions,mode="standard"}) {
+export function TriviaQuestionsComponent({ triviaQuestions,fetchQuestions,mode="standard"}) {
 
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 1;
@@ -10,13 +10,14 @@ export function TriviaQuestionsComponent({ triviaQuestions,mode="standard"}) {
   const pageCount = Math.ceil(triviaQuestions.length / itemsPerPage)
   //stores the curretn question sliced from the trivia questions
   const currentQuestion = triviaQuestions.slice(itemOffset, endOffset)
-  const [quizFinished, setQuizFinished] = useState(false)
+  const [showSummary,setShowSummary] = useState(false)
   //tracks the current number of questions answered correctly
   const [currentStreak,setCurrentStreak] = useState(0)
   //stores the longest number of answered correctly
   const [maxStreak,setMaxStreak] = useState(0)
   const quizDispatch = useQuizDispatch()
   const quizState = useQuizState()
+  const isQuizFinished = triviaQuestions.length > 0 && itemOffset >= triviaQuestions.length
 
   //handles what score to add to the users score and increments it
   function handleAnswerScoring(selectedAnswer,correctAnswer,qDifficulty){
@@ -41,50 +42,28 @@ export function TriviaQuestionsComponent({ triviaQuestions,mode="standard"}) {
   
       quizDispatch({type: "INCREMENT_CORRECT_ANSWERS"})
     }
+    else{
+      let qObj = {
+        question:currentQuestion[0].question,
+        your_answer:selectedAnswer,
+        correct_answer:currentQuestion[0].correct_answer
+      }
+      quizDispatch({type:"ADD_TO_REVIEW_QUESTIONS",payload:qObj})
+    }
+
     //sets the itemoffset to go to display the next question
     setTimeout(()=>{
-      if (itemOffset + 1 >= triviaQuestions.length){
-        setQuizFinished(true)
-      } else {
-        console.log("go to next question")
-        setItemOffset(prevOffset => prevOffset +1)
-      }
+      setItemOffset(prevOffset => prevOffset +1)
     },2000);
   }
 
-  //handles submiting the score to the backend based on the quizFinished state
-  useEffect(() => {
-    if (quizFinished) {
-      async function SubmitScore() {
-        try {
-          console.log("submit the score")
-          const response = await fetch("http://localhost:5000/score", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: {
-              userID: quizState.userID,
-              score: quizState.score,
-              answeredCorrectly: quizState.answeredCorrectly,
-              totalQuestions: triviaQuestions.length(),
-              category: quizState.settingsState.category,
-              difficulty: quizState.settingsState.difficulty
-            }
-          })
-          const res = await response.json()
-          console.log(" score response:", res)
-
-        } catch (error) {
-
-        }
-
-      }
-      SubmitScore()
-    }
-  }, [quizFinished])
+  useEffect(()=>{
+    console.log("wrong questions",quizState.reviewQuestions)
+  },[quizState.reviewQuestions])
 
   return (
     <>
-      {!quizFinished ?
+      {!isQuizFinished ?
         currentQuestion.map((questionObj, index) => {
           switch (questionObj.type) {
             case "multiple":
@@ -110,15 +89,11 @@ export function TriviaQuestionsComponent({ triviaQuestions,mode="standard"}) {
             default:
           }
         }) :
-        <div>
-          <div>
-            QUIZ SUMMARY
-          </div>
-          <div>
-            Your Score :
-
-          </div>
-        </div>
+        <QuizSummary
+          questionsLength={triviaQuestions.length}
+          fetchQuestions={fetchQuestions}
+          setItemOffset={setItemOffset}
+        />
       }
     </>
   )

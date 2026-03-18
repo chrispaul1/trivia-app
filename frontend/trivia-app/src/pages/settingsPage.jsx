@@ -16,6 +16,14 @@ export function SettingsPage(){
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
   const navigate = useNavigate()
+  //get the number of required questions and their IDs
+  const reqCount = questions.filter(q => q.required).length
+  const reqID = questions.filter(q => q.required == true).map(item => item.id)
+
+
+  useEffect(()=>{
+    quizDispatch({type:"END_GAME"})
+  },[])
 
   const headerState = [
     {
@@ -46,10 +54,6 @@ export function SettingsPage(){
     console.log("State answers from context:", quizState)
     console.log(quizState.settingsState.category)
   }, [quizState]) 
-
-  //get the number of required questions and their IDs
-  const reqCount = questions.filter(q => q.required).length
-  const reqID = questions.filter(q => q.required == true).map(item => item.id)
 
   //handle disabling the start button until all required questions are answered
   useEffect(()=>{
@@ -87,9 +91,11 @@ export function SettingsPage(){
   //and call the fetchQuestions func to retrieve the trivia question and navigate to the quiz
   function handleStartQuiz(){
     quizDispatch({
-      type:"SET_QUIZ_SETTINGS",
+      type:"SET_QUIZ_SETTINGS",  
       payload:bufferSettings
     })
+    quizDispatch({type:"RESET_GAME"})
+    quizDispatch({type:"START_GAME"})
     navigate("/quiz")
   }
 

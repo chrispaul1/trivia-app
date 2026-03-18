@@ -17,7 +17,7 @@ export const StyledLoginDiv = styled.div`
     align-items: center;
     background: blue;
     height: 100%;
-    width: 70%;
+    width: 90%;
 `
 
 export const StyledLoginInputContainer = styled.div`

@@ -6,6 +6,9 @@ import (
 	"trivia-backend/internal/db"
 )
 
+type leaderboardUsername struct {
+}
+
 type LeaderboardEntry struct {
 	Name              string `json:"name"`
 	Score             int    `json:"scores"`
@@ -20,10 +23,11 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	//query to get the 20 rows with the highest marks
 	getScoresQuery := `
 		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty,
-		FROM scores AS A
-		JOIN users AS B WHERE A.user_id == B.id
+		FROM scores
+		JOIN users ON scores.user_id == users.id 
+		WHERE users.is_guest = 0
 		ORDER BY scores.score DESC 
-		LIMIT 10`
+		LIMIT 10;`
 
 	rows, err := db.DB.Query(getScoresQuery)
 	if err != nil {
@@ -55,3 +59,16 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(leaderboard)
 
 }
+
+// func GetUserLeaderboard(w http.ResponseWriter, r *http.Request) {
+// 	//query to get the 20 rows with the highest marks
+// 	getUserScoresQuery := `
+// 		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty,
+// 		FROM scores
+// 		JOIN users ON scores.user_id == users.id
+// 		WHERE users.name = ?
+// 		ORDER BY scores.score DESC
+// 		LIMIT 10`
+
+// 	rows, err = db.DB.Query(getUserScoresQuery)
+// }

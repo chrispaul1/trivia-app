@@ -1,4 +1,5 @@
 export * from './loginPage'
 export * from './settingsPage'
 export * from './quizPage'
+export * from './mainMenuPage'
 export * from './styles'

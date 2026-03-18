@@ -9,7 +9,8 @@ import (
 )
 
 type LoginRequest struct {
-	Name string `json:"username"`
+	Name    string `json:"username"`
+	IsGuest bool   `json:"isGuest"`
 }
 
 type LoginResponse struct {
@@ -34,7 +35,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("**user name : %s", request.Name)
 
 	//Adds or fetches the user if they exist in the users table
-	userID, err := db.AddOrFetchUser(request.Name)
+	userID, err := db.AddOrFetchUser(request.Name, request.IsGuest)
 	if err != nil {
 		http.Error(w, "Failed to Create or Fetch the user", http.StatusInternalServerError)
 		return

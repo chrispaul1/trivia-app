@@ -19,6 +19,7 @@ func Initialize() {
 	CREATE TABLE IF NOT EXISTS users(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL UNIQUE,
+		is_guest BOOLEAN DEFAULT 0,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);
 	CREATE TABLE IF NOT EXISTS session_tokens(
@@ -44,8 +45,8 @@ func Initialize() {
 	);
 	`
 
-	const ClearGuests = `
-		DELETE FROM users WHERE created_at < DATETIME('NOW',"-1 days")
+	const ClearOldGuests = `
+		DELETE FROM users WHERE is_guest = 1 AND created_at <= DATETIME('NOW',"-1 days");
 	`
 
 	_, err := DB.Exec(createTables)
@@ -53,18 +54,18 @@ func Initialize() {
 		log.Fatal("Failed to run migrations:", err)
 	}
 
-	_, err = DB.Exec(ClearGuests)
+	_, err = DB.Exec(ClearOldGuests)
 	if err != nil {
 		log.Printf("Failed to clear old guests: %v\n", err)
 	}
 }
 
 // Adds or Fetches a user from the table
-func AddOrFetchUser(name string) (int, error) {
+func AddOrFetchUser(name string, isGuest bool) (int, error) {
 	var userID int
 	err := DB.QueryRow("SELECT id FROM users WHERE name = (?)", name).Scan(&userID)
 	if err == sql.ErrNoRows {
-		res, err := DB.Exec("INSERT INTO users (name) values (?)", name)
+		res, err := DB.Exec("INSERT INTO users (name,is_guest) values (?,?)", name, isGuest)
 		if err != nil {
 			return 0, err
 		}

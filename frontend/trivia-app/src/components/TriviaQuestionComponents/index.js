@@ -1,4 +1,5 @@
 export * from './styles'
-export * from './Main'
+export * from './main'
 export * from './multipleChoice'
 export * from './trueFalse'
+export * from './quizSummary'
