@@ -63,7 +63,7 @@ export const StyledHeaderTitle = styled.div`
   display: flex;
   align-items center;
   justfy-content: center;
-  font-size: 2rem;
+  font-size: ${(props) => props.fontSize};
   color: black;
 `
 

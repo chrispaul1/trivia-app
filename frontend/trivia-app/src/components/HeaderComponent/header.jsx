@@ -27,7 +27,9 @@ export function Header({headerObjs=[{}],disableButton}) {
         ))}
       </StyledHeaderLeftDiv>
       <StyledHeaderMiddleDiv>
-        <StyledHeaderTitle>
+        <StyledHeaderTitle
+          fontSize={titleObj.fontSize ? titleObj.fontSize : "2rem" }
+        >
           {titleObj.text}
         </StyledHeaderTitle>
       </StyledHeaderMiddleDiv>

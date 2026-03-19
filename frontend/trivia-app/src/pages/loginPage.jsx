@@ -25,7 +25,6 @@ export function LoginPage() {
 
   //Function to handle login, will eventually send username to backend and receive a token, for now it just navigates to the settings page
   async function handleLogin(isGuest = false) {
-    console.log("Handling login on the frontend")
     try{
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -36,8 +35,6 @@ export function LoginPage() {
         })
       })
       const userData = await response.json()
-      console.log("userData :",userData)
-      console.log("user name",userData.username)
       quizDispatch({
         type:'SET_USER_DATA',
         payload: {id:userData.id,name:userData.username}

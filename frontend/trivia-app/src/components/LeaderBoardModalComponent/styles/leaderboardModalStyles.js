@@ -7,13 +7,15 @@ export const StyledLeaderboardBackground = styled.div`
     height: 100vh;
     width: 100vw;
     position: absolute;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
     /* Add a semi-transparent background color for better contrast */
     background-color: rgba(0, 0, 0, 0.4);
 `
 
 export const StyledLeaderboardContainer = styled.div`
     display: flex;
-    height: 60%;
-    width: 70%;
+    flex-direction: column;
+    height: fit-content;
+    width: 85%;
+    max-width: 900px;
 `

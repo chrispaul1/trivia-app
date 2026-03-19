@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"trivia-backend/internal/db"
 )
@@ -19,18 +20,35 @@ type LeaderboardEntry struct {
 }
 
 func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("username")
+	var query string
+	var args []interface{}
 
-	//query to get the 20 rows with the highest marks
-	getScoresQuery := `
-		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty,
+	if username != "" {
+		query = `
+		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty
+		FROM scores
+		JOIN users ON scores.user_id == users.id
+		WHERE users.name = ?
+		ORDER BY scores.score DESC
+		LIMIT 10
+		`
+		args = append(args, username)
+	} else {
+		//query to get the 20 rows with the highest marks
+		query = `
+		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty
 		FROM scores
 		JOIN users ON scores.user_id == users.id 
 		WHERE users.is_guest = 0
 		ORDER BY scores.score DESC 
-		LIMIT 10;`
+		LIMIT 10;
+		`
+	}
 
-	rows, err := db.DB.Query(getScoresQuery)
+	rows, err := db.DB.Query(query, args...)
 	if err != nil {
+		log.Printf("%v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -52,23 +70,8 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
-
 	//sets the content header and Marshal the struct into JSON bytes and write to the ResponseWriter
-	w.Header().Set("Context-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(leaderboard)
-
 }
-
-// func GetUserLeaderboard(w http.ResponseWriter, r *http.Request) {
-// 	//query to get the 20 rows with the highest marks
-// 	getUserScoresQuery := `
-// 		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty,
-// 		FROM scores
-// 		JOIN users ON scores.user_id == users.id
-// 		WHERE users.name = ?
-// 		ORDER BY scores.score DESC
-// 		LIMIT 10`
-
-// 	rows, err = db.DB.Query(getUserScoresQuery)
-// }

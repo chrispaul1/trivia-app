@@ -88,7 +88,7 @@ export function QuizPage() {
     try {
       const res = await fetch(apiUrl)
       if (!res.ok) {
-        throw new Error("Failed to fetch  questions")
+        throw new Error("Failed to fetch questions")
       }
       const data = await res.json()
       quizDispatch({type:"SET_QUESTIONS",payload:data.results})

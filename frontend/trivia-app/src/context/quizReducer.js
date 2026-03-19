@@ -15,7 +15,6 @@ export const initialState = {
   isLoggedIn: false,
   answeredCorrectly: 0, 
   reviewQuestions: [],
-  
 }
 
 export function quizReducer(state, action) {
@@ -25,7 +24,6 @@ export function quizReducer(state, action) {
     case "LOGOUT_USER":
       return { ...state, isLoggedIn: false }
     case "SET_USER_DATA":
-      console.log("setting user data", action.payload)
       return {
         ...state,
         userID: action.payload.id,
