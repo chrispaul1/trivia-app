@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useQuizState, useQuizDispatch } from "../../context/quizContext";
+import { useQuizState, useQuizDispatch } from "../../../context/quizContext";
 import { useNavigate } from "react-router-dom";
 import {
     StyledButtonDiv,
@@ -10,7 +10,7 @@ import {
     StyledSummaryBackground,
     StyledReviewQuestionBlock,
     StyledSummaryScrollableDiv
-} from "./styles";
+} from ".";
 
 export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset }) {
 

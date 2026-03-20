@@ -9,6 +9,7 @@ import {
 } from ".";
 import { useNavigate } from "react-router-dom";
 import { useQuizState, useQuizDispatch } from "../context/quizContext";
+import { useThemeContext } from "../context/themeContext";
 
 export function LoginPage() {
 
@@ -16,6 +17,9 @@ export function LoginPage() {
   const navigate = useNavigate()
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
+  const {theme,toggleTheme}  = useThemeContext()
+
+  console.log("Current Theme State:", theme);
 
   useEffect(()=>{
     if(quizState.isLoggedIn){
@@ -48,7 +52,9 @@ export function LoginPage() {
 
   return (
     <StyledLoginBackground>
-      <StyledLoginDiv>
+      <StyledLoginDiv
+        style={theme.panel.a5}
+      >
         <h2>Login</h2>
         <StyledLoginInputContainer>
           <StyledUserNameDiv>

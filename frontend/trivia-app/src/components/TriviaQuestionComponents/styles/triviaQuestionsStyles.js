@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+
+export const StyledTriviaBackground = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`
+
 export const StyledQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -7,12 +15,20 @@ export const StyledQuestionContainer = styled.div`
   //background: lightgreen;
   justify-content: center;                  
   width: 100%;
-  height: 100%;
+  height: 25%;
+`
+
+export const StyledTimerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25%;
+  width: 100%;
 `
 
 export const StyledQuestionTextDiv = styled.div`
   display: flex:
-  font-size: 2em;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-top: 5px;
   margin-bottom: 20px;
@@ -27,7 +43,7 @@ export const StyledAnswerContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 80%;
+  height: 50%;
 `
 
 export const StyledAnswerButton = styled.button`

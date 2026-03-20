@@ -18,12 +18,13 @@ export function Header({headerObjs=[{}],disableButton}) {
     <StyledHeaderOutline>
       <StyledHeaderLeftDiv>
         {leftSide.length > 0 && leftSide.map(obj => (
+          obj.showContent ?
           <StyledHeaderButton key={obj.id}
             onClick={obj.function}
           >
             {obj.text && obj.text}
             {obj.icon && obj.icon}
-          </StyledHeaderButton>
+          </StyledHeaderButton> : ""
         ))}
       </StyledHeaderLeftDiv>
       <StyledHeaderMiddleDiv>

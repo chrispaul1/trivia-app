@@ -26,8 +26,6 @@ export function QuizPage() {
   const hasFetched = useRef(false)
   const navigate = useNavigate()
 
-  console.log("quizState", quizState)
-
   //calls the fetchQuestion funcs and prevents the func being called twice
   useEffect(() => {
     if(!quizState.isGameStarted){

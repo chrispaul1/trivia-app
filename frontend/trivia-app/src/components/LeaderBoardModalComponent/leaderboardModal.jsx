@@ -9,11 +9,53 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
 
     const [generalLeaderboard, setGeneralLeaderboard] = useState([])
     const [userLeaderboard, setUserLeaderboard] = useState([])
+    const [showUserData,setShowUserData] = useState(false)
 
     function handleClosingModal(){
         setDisplayLeaderboard(false)
     }
+    useEffect(() => {
+        console.log("general leaderboard", generalLeaderboard)
+        const user1 = generalLeaderboard[0]
+        console.log(user1)
+    }, [generalLeaderboard])
+
+    useEffect(() => {
+        fetchLeaderboard()
+    }, [])
+
+    function fetchUserData(name = "unknown") {
+        setShowUserData(true)
+        fetchLeaderboard(name, true)
+    }
+
+    async function fetchLeaderboard(username = "", forSpecificUser = false) {
+        try {
+            const usernameUrl = `http://localhost:5000/leaderboard?username=${username}`
+            const response = await fetch(usernameUrl)
+            if (!response.ok) {
+                throw new Error("Failed to fetch leaderboard data")
+            }
+            const data = await response.json()
+            if (forSpecificUser) {
+                setUserLeaderboard(data)
+            } else {
+                setGeneralLeaderboard(data)
+            }
+        } catch (error) {
+            console.error('error', error)
+        }
+    }
+
     const headerState = [
+        {
+            id:1,
+            placement:'left',
+            type:'button',
+            text: "Back",
+            showContent: showUserData,
+            function:()=>setShowUserData(false)
+        },
         {
             id: 1,
             placement: "middle",
@@ -33,12 +75,23 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     const columns = [
         {
             name:'Username',
-            selector: row => row.name,
+            cell: (row) =>(
+                <div
+                    style={{cursor:'pointer',color:'#007bff'}}
+                    onClick={()=>fetchUserData(row.name)}
+                >
+                    {row.name}
+                </div>
+            ),
+            center:true,
+            
         },
         {
             name:'Score',
             selector: row => row.scores,
-            sortable:true
+            sortable:true,
+            center: true
+
         },
         {
             name:'Correct Count',
@@ -69,34 +122,6 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         }
     ]
 
-    useEffect(()=>{
-        fetchLeaderboard()
-    },[])
-
-    useEffect(()=>{
-        console.log("general leaderboard",generalLeaderboard)
-        const user1 = generalLeaderboard[0]
-        console.log(user1)
-    },[generalLeaderboard])
-
-    async function fetchLeaderboard(username="",forSpecificUser=false){
-        try{
-            const usernameUrl = `http://localhost:5000/leaderboard?username=${username}`
-            const response = await fetch(usernameUrl)
-            if (!response.ok){
-                throw new Error("Failed to fetch leaderboard data")
-            }
-            const data = await response.json()
-            if(forSpecificUser){
-                setUserLeaderboard(data)
-            } else {
-                setGeneralLeaderboard(data)
-            }
-        } catch(error){
-            console.error('error',error)
-        }
-    }
-
     return(
         <StyledLeaderboardBackground>
             <StyledLeaderboardContainer>
@@ -104,8 +129,8 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                     headerObjs={headerState}
                 />
                 <DataTable
-                columns={columns}
-                data={generalLeaderboard}
+                    columns={columns}
+                    data={showUserData ? userLeaderboard : generalLeaderboard}
                 />
             </StyledLeaderboardContainer>
         </StyledLeaderboardBackground>

@@ -1,2 +1,2 @@
-export * from './questionStyles'
+export * from './triviaQuestionsStyles'
 export * from "./quizSummaryStyles"
