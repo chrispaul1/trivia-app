@@ -86,7 +86,8 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
                     answeredCorrectly: quizState.answeredCorrectly,
                     totalQuestions: quizState.triviaQuestions.length,
                     category: quizState.settingsState.category,
-                    difficulty: quizState.settingsState.difficulty
+                    difficulty: quizState.settingsState.difficulty,
+                    mode: quizState.settingsState.mode
                 })
             })
             if (response.ok) {
