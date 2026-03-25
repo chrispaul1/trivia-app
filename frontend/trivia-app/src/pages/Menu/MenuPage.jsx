@@ -1,10 +1,10 @@
 import React,{useEffect,useState} from "react";
-import { useQuizState, useQuizDispatch } from "../context/quizContext";
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
-import { StyledMenuBackground,StyledMenuContainer, StyledButton } from ".";
-import { LeaderboardModal } from "../components/LeaderBoardModalComponent";
+import { StyledMenuBackground,StyledMenuContainer, StyledButton } from "..";
+import { LeaderboardModal } from "../../components/LeaderBoardModalComponent";
 
-export function MainMenu(){
+export function Menu(){
 
     const quizState = useQuizState()
     const quizDispatch = useQuizDispatch()

@@ -8,8 +8,8 @@ import {
   StyledLoginInputContainer,
 } from ".";
 import { useNavigate } from "react-router-dom";
-import { useQuizState, useQuizDispatch } from "../context/quizContext";
-import { useThemeContext } from "../context/themeContext";
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
+import { useThemeContext } from "../../contexts/theme/themeContext";
 
 export function LoginPage() {
 
@@ -39,11 +39,11 @@ export function LoginPage() {
         })
       })
       const userData = await response.json()
-      quizDispatch({
-        type:'SET_USER_DATA',
-        payload: {id:userData.id,name:userData.username}
-      })
-      quizDispatch({type:'LOGIN_USER'})
+      // quizDispatch({
+      //   type:'SET_USER_DATA',
+      //   payload: {id:userData.id,name:userData.username}
+      // })
+      quizDispatch({ type: 'LOGIN_USER', payload: { id: userData.id, name: userData.username } })
       navigate("/",{replace:true})
     } catch (error){
       console.error('error',error)

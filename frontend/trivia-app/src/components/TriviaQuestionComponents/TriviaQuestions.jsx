@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { MultipleChoice, TrueFalse, QuizSummary } from "."
-import { useQuizState, useQuizDispatch } from "../../context/quizContext";
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import "react-loading-skeleton/dist/skeleton.css";
 import {
 	StyledAnswerButton,
 	StyledTimerContainer,
@@ -11,7 +13,7 @@ import {
 	StyledQuestionContainer,
 } from '.'
 
-export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode = "standard" }) {
+export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuestions}) {
 
 	const [itemOffset, setItemOffset] = useState(0);
 	const itemsPerPage = 1;
@@ -20,7 +22,6 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 
 	//stores the curretn question sliced from the trivia questions
 	const currentQuestion = triviaQuestions.slice(itemOffset, endOffset)
-	const [showSummary, setShowSummary] = useState(false)
 	const [selectedAnswer, setSelectedAnswer] = useState("")
 
 	//tracks the current number of questions answered correctly
@@ -31,7 +32,7 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 	const quizDispatch = useQuizDispatch()
 	const quizState = useQuizState()
 	const isQuizFinished = triviaQuestions.length > 0 && itemOffset >= triviaQuestions.length
-	console.log(isQuizFinished)
+
 	//handles what score to add to the users score and increments it
 	function handleAnswerScoring(selectedAnswer, correctAnswer, qDifficulty) {
 		setSelectedAnswer(selectedAnswer)
@@ -52,8 +53,12 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 					pointsEarned = 100;
 			}
 
-			quizDispatch({ type: "INCREMENT_SCORE", score: pointsEarned })
+			setCurrentStreak(prevCount => prevCount +1)
+			if(currentStreak > maxStreak){
+				setMaxStreak(currentStreak)
+			}
 
+			quizDispatch({ type: "INCREMENT_SCORE", score: pointsEarned })
 			quizDispatch({ type: "INCREMENT_CORRECT_ANSWERS" })
 		}
 		else {
@@ -63,25 +68,24 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 				correct_answer: currentQuestion[0].correct_answer
 			}
 			quizDispatch({ type: "ADD_TO_REVIEW_QUESTIONS", payload: qObj })
+			setCurrentStreak(0)
 		}
 
 		//sets the itemoffset to go to display the next question
 		setTimeout(() => {
+			setSelectedAnswer("")
 			setItemOffset(prevOffset => prevOffset + 1)
 		}, 2000);
+
+		//fetches more questions in the endless mode if the user is close to finishing the questions
+		if (triviaQuestions.length - (itemOffset+1) <= 5 && quizState.settingsState.mode == "endless") {
+			fetchQuestions(true)
+		}
 	}
-
-	useEffect(() => {
-		console.log("wrong questions", quizState.reviewQuestions)
-	}, [quizState.reviewQuestions])
-
-	useEffect(()=>{
-		console.log("in here")
-	},[])
 
 	const renderTime = ({ remainingTime }) => {
 
-		if (selectedAnswer != null) {
+		if (selectedAnswer != "" && selectedAnswer != null) {
 			return <div className="timer">Moving onto Next Question...</div>;
 		}
 
@@ -103,54 +107,60 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 		<>
 			{!isQuizFinished ?
 				currentQuestion.map((questionObj, index) => {
-					return(
-					<StyledTriviaBackground
-						key={questionObj.question}
-					>
+					return (
+						<StyledTriviaBackground
+							key={questionObj.question}
+						>
+							<SkeletonTheme baseColor="#202020" highlightColor="#444">
+								<StyledQuestionContainer>
+									<StyledQuestionTextDiv>
 
-						<StyledQuestionContainer>
-							<StyledQuestionTextDiv>
-								{questionObj.category}
-							</StyledQuestionTextDiv>
-							<StyledQuestionTextDiv>
-								{itemOffset+1}.{" "}{questionObj.question}
-							</StyledQuestionTextDiv>
-						</StyledQuestionContainer>
+										{questionObj.category}
 
-						<StyledTimerContainer>
+									</StyledQuestionTextDiv>
+									<StyledQuestionTextDiv>
 
-							<CountdownCircleTimer
-								key={itemOffset+1}
-								isPlaying={selectedAnswer ? false : true}
-								duration={10}
-								colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-								colorsTime={[10, 6, 3, 0]}
-								onComplete={() => (selectedAnswer == null && setItemOffset(prev => prev + 1))}
-							>
-								{renderTime}
-							</CountdownCircleTimer>
+										{itemOffset + 1}.{" "}{questionObj.question}
 
-						</StyledTimerContainer>
-						<StyledAnswerContainer>
+									</StyledQuestionTextDiv>
+								</StyledQuestionContainer>
 
-							{questionObj.type === "multiple" ? (
-								<MultipleChoice
-									key={questionObj.question}
-									questionObj={questionObj}
-									selectedAnswer={selectedAnswer}
-									handleAnswerScoring={handleAnswerScoring}
-								/>
-							)	: 	(
-								<TrueFalse
-									key={questionObj.question}
-									questionObj={questionObj}
-									selectedAnswer={selectedAnswer}
-									handleAnswerScoring={handleAnswerScoring}
-								/>
-							)}
+								<StyledTimerContainer>
 
-						</StyledAnswerContainer>
-					</StyledTriviaBackground>
+									<CountdownCircleTimer
+										key={itemOffset + 1}
+										isPlaying={selectedAnswer ? false : true}
+										duration={10}
+										colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+										colorsTime={[10, 6, 3, 0]}
+										onComplete={() => (selectedAnswer == null && setItemOffset(prev => prev + 1))}
+									>
+										{renderTime}
+									</CountdownCircleTimer>
+
+
+								</StyledTimerContainer>
+								<StyledAnswerContainer>
+
+									{questionObj.type === "multiple" ? (
+										<MultipleChoice
+											key={questionObj.question}
+											questionObj={questionObj}
+											selectedAnswer={selectedAnswer}
+											handleAnswerScoring={handleAnswerScoring}
+										/>
+									) : (
+										<TrueFalse
+											key={questionObj.question}
+											questionObj={questionObj}
+											selectedAnswer={selectedAnswer}
+											handleAnswerScoring={handleAnswerScoring}
+										/>
+									)}
+
+								</StyledAnswerContainer>
+							</SkeletonTheme>
+						</StyledTriviaBackground>
 					)
 				}) :
 				(
@@ -158,8 +168,9 @@ export function TriviaQuestionsComponent({ triviaQuestions, fetchQuestions, mode
 						questionsLength={triviaQuestions.length}
 						fetchQuestions={fetchQuestions}
 						setItemOffset={setItemOffset}
+						maxStreak={maxStreak}
 					/>
-			)}
+				)}
 		</>
 	)
 }

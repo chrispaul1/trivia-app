@@ -16,7 +16,7 @@ export function TrueFalse({ questionObj, selectedAnswer,handleAnswerScoring }) {
       <>
         {["True","False"].map((answerOption, index) => {
           let buttonStatus = "default"
-          if(selectedAnswer !== null){
+          if (selectedAnswer !== ""){
             const isTheAnswerCorrect = answerOption === questionObj.correct_answer
             const didUserClickThisOption = answerOption === selectedAnswer
             if (isTheAnswerCorrect){

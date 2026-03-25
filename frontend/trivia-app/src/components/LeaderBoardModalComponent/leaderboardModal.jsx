@@ -43,7 +43,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                 setGeneralLeaderboard(data)
             }
         } catch (error) {
-            console.error('error', error)
+            console.error(error)
         }
     }
 
@@ -96,14 +96,14 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         {
             name:'Correct Count',
             selector: row => row.answered_correctly,
-            grow:2,
+            grow:3,
             center: true,
             sortable: true
         },
         {
             name:'Question Count',
             selector: row => row.totalQuestions,
-            grow:2,
+            grow:3,
             center: true,
             sortable: true
         },
@@ -119,6 +119,11 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             selector: row => row.difficulty,
             center: true
 
+        },
+        {
+            name:'Mode',
+            selector: row => row.Mode,
+            center: true
         }
     ]
 

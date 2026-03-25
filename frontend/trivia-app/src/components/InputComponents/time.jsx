@@ -9,7 +9,7 @@ import {
   StyledTimeContainer,
   StyledInputContainer
 } from '.'
-import { useQuizDispatch } from "../../context/quizContext" 
+import { useQuizDispatch } from "../../contexts/quiz/quizContext" 
 
 export function TimeQuestion({question,handleAnswer,selectedAnswer}){
 

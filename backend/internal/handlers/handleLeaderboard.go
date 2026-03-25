@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"trivia-backend/internal/db"
 )
@@ -17,6 +16,7 @@ type LeaderboardEntry struct {
 	TotalQuestions    int    `json:"totalQuestions"`
 	Category          string `json:"category"`
 	Difficulty        string `json:"difficulty"`
+	Mode              string `json:"mode"`
 }
 
 func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 
 	if username != "" {
 		query = `
-		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty
+		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty, scores.mode
 		FROM scores
 		JOIN users ON scores.user_id == users.id
 		WHERE users.name = ?
@@ -37,7 +37,7 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//query to get the 20 rows with the highest marks
 		query = `
-		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty
+		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty, scores.mode
 		FROM scores
 		JOIN users ON scores.user_id == users.id 
 		WHERE users.is_guest = 0
@@ -48,7 +48,6 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := db.DB.Query(query, args...)
 	if err != nil {
-		log.Printf("%v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -58,7 +57,7 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	var leaderboard []LeaderboardEntry
 	for rows.Next() {
 		var i LeaderboardEntry
-		err := rows.Scan(&i.Name, &i.Score, &i.AnsweredCorrectly, &i.TotalQuestions, &i.Category, &i.Difficulty)
+		err := rows.Scan(&i.Name, &i.Score, &i.AnsweredCorrectly, &i.TotalQuestions, &i.Category, &i.Difficulty, &i.Mode)
 		if err != nil {
 			http.Error(w, "Database error", http.StatusInternalServerError)
 			return

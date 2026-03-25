@@ -6,7 +6,7 @@ import {
   StyledQuestionLabel,
   StyledNumberContainer
 } from "."
-import { useQuizDispatch } from "../../context/quizContext"
+import { useQuizDispatch } from "../../contexts/quiz/quizContext"
 
 export function NumberQuestion({question,handleAnswer,selectedAnswer}){
 

@@ -3,29 +3,22 @@ import {
   StyledPaginate,
   StyledQuestionsOutline,
   StyledQuestionsBackground,
-} from "."
-import { TriviaQuestionsComponent} from "../components"
-import { useWindowSize } from "../hooks/SizeHook"
+} from ".."
+import { TriviaQuestionsComponent} from "../../components"
+import { useWindowSize } from "../../hooks/SizeHook"
 import { useLocation, useNavigate } from "react-router-dom"
-import { categoryNames } from "../assets/categories"
-import { useQuizState, useQuizDispatch } from "../context/quizContext"
-
-//function that decodes html entities in the question and answer strings, since the API returns them encoded
-function decodeHtmlEntities(encodedString) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(encodedString, 'text/html');
-    return doc.documentElement.textContent;
-}
+import { categoryNames } from "../../assets/categories"
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext"
+import "react-loading-skeleton/dist/skeleton.css";
 
 export function QuizPage() {
 
-  const [triviaQuestions, setTriviaQuestions] = useState([])
-  const [processedQuestions, setProcessedQuestions] = useState([])
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
   const hasFetched = useRef(false)
   const navigate = useNavigate()
-
+  const [isLoading,setIsLoading] = useState(true)
+ 
   //calls the fetchQuestion funcs and prevents the func being called twice
   useEffect(() => {
     if(!quizState.isGameStarted){
@@ -48,23 +41,6 @@ export function QuizPage() {
     } 
   }, [quizState.isGameStarted, navigate])
 
-  useEffect(() => {
-    //decode html entities in the question and answer strings
-    const decodedQuestions = triviaQuestions.map(item => ({
-      ...item,
-      question: decodeHtmlEntities(item.question),
-      category: decodeHtmlEntities(item.category),
-      correct_answer: decodeHtmlEntities(item.correct_answer),
-      incorrect_answers: item.incorrect_answers.map(ans => decodeHtmlEntities(ans))
-    }))
-    const shuffledQuestions = decodedQuestions.map((q) => ({
-      ...q,
-      shuffledAnswers: q.incorrect_answers.concat(q.correct_answer)
-        .sort(() => Math.random() - 0.5),
-    }));
-    setProcessedQuestions(shuffledQuestions)
-  }, [triviaQuestions])
-
   //pagination states and variables
   //const [itemOffset, setItemOffset] = useState(0);
   //const itemsPerPage = 1;
@@ -73,7 +49,7 @@ export function QuizPage() {
   //const size = useWindowSize();  
 
   //fetches the questions by calling an api endpoint with the settings data
-  async function fetchQuestions() {
+  async function fetchQuestions({ isRefill=false }={}) {
     let categoryID
 
     if (quizState.settingsState.category != undefined && quizState.settingsState.category != "" && quizState.settingsState.category.toLowerCase() != "randomized categories") {
@@ -84,34 +60,42 @@ export function QuizPage() {
 
     console.log("Fetching from API URL: ", apiUrl)
     try {
+
       const res = await fetch(apiUrl)
       if (!res.ok) {
         throw new Error("Failed to fetch questions")
       }
       const data = await res.json()
-      quizDispatch({type:"SET_QUESTIONS",payload:data.results})
-      setTriviaQuestions(data.results)
+
+      if(isRefill){
+        quizDispatch({type:"ADD_MORE_QUESTIONS",payload:data.results})
+      } else {
+        quizDispatch({type:"SET_QUESTIONS",payload:data.results})
+      }
+
+      setTimeout(()=>{
+        setIsLoading(false)
+      },1000)
+
     } catch (error) {
+
       console.error(error)
       alert("Oops! The trivia database is currently unavailable. Please try again.");
       quizDispatch({ type: "END_GAME" });
       navigate("/",{replace:true})
+
     }
   }
 
   return (
     <StyledQuestionsBackground>
-      {/*Header component here for the title and possible timer*/}
-      {/* <Header
-      //headerObjs={headerState}
-      //disableButton={disableButton}
-      /> */}
       <StyledQuestionsOutline>
         <TriviaQuestionsComponent
+          isLoading={isLoading}
           triviaQuestions={quizState.triviaQuestions}
           fetchQuestions={fetchQuestions}
           mode={""}
-        />
+        /> 
         {/* <StyledPaginate
           //breakLabel="..."
           //previousLabel={size.width > 650 ? "< Previous" : "<"}

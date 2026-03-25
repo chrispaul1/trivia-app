@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useQuizState, useQuizDispatch } from "../../../context/quizContext";
+import { useQuizState, useQuizDispatch } from "../../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
 import {
     StyledButtonDiv,
@@ -12,7 +12,7 @@ import {
     StyledSummaryScrollableDiv
 } from ".";
 
-export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset }) {
+export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxStreak }) {
 
     const quizDispatch = useQuizDispatch()
     const quizState = useQuizState()
@@ -112,11 +112,11 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset }) {
                     You answered {quizState.answeredCorrectly}/{questionsLength} questions correctly!!
                 </StyledSummaryItemDiv>                
                 <StyledSummaryItemDiv>
-                    Your Max Streak is :
+                    Your Max Streak is : {maxStreak}
                    
                 </StyledSummaryItemDiv>  
                 <StyledSummaryItemDiv>
-                    Quiz Difficulty :
+                    Quiz Difficulty : {quizState.settingsState.difficulty}
                 </StyledSummaryItemDiv>
                 <ReviewQuestionsList/>
                 <StyledButtonDiv>

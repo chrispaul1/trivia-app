@@ -39,6 +39,7 @@ func Initialize() {
 		total_questions INTEGER NOT NULL,
 		category TEXT,
 		difficulty TEXT,
+		mode Text,
 		completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		CONSTRAINT fk_users
 		FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
@@ -83,15 +84,15 @@ func AddOrFetchUser(name string, isGuest bool) (int, error) {
 }
 
 // Add a score record to the scores table
-func AddScore(userID int, score int, answeredCorrectly int, totalQuestions int, category string, difficulty string) error {
+func AddScore(userID int, score int, answeredCorrectly int, totalQuestions int, category string, difficulty string, mode string) error {
 	if DB == nil {
 		return fmt.Errorf("Failed to add score, DB connection is nil")
 	}
 
-	insertScoreQuery := `INSERT INTO scores(user_id,score,answered_correctly,total_questions,category,difficulty) 
-					VALUES (?,?,?,?,?,?)`
+	insertScoreQuery := `INSERT INTO scores(user_id,score,answered_correctly,total_questions,category,difficulty,mode) 
+					VALUES (?,?,?,?,?,?,?)`
 
-	_, err := DB.Exec(insertScoreQuery, userID, score, answeredCorrectly, totalQuestions, category, difficulty)
+	_, err := DB.Exec(insertScoreQuery, userID, score, answeredCorrectly, totalQuestions, category, difficulty, mode)
 	if err != nil {
 		return fmt.Errorf("Failed to add score into database: %w", err)
 	}

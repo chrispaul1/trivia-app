@@ -2,10 +2,10 @@ import React, {useState, useEffect, use} from "react"
 import { 
     StyledParametersBackground,
     StyledParametersOutline } from '.'
-import { Form,Header } from "../components"
-import { questions } from "../assets/questions"
+import { Form,Header } from "../../components"
+import { questions } from "../../assets/questions"
 import { useNavigate } from "react-router-dom"
-import { useQuizState, useQuizDispatch } from "../context/quizContext"
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext"
 
 export function SettingsPage(){
 
@@ -16,10 +16,6 @@ export function SettingsPage(){
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
   const navigate = useNavigate()
-  //get the number of required questions and their IDs
-  const reqCount = questions.filter(q => q.required).length
-  const reqID = questions.filter(q => q.required == true).map(item => item.id)
-
 
   useEffect(()=>{
     quizDispatch({type:"END_GAME"})
@@ -55,30 +51,6 @@ export function SettingsPage(){
     console.log(quizState.settingsState.category)
   }, [quizState]) 
 
-  //handle disabling the start button until all required questions are answered
-  useEffect(()=>{
-    let ansCount = 0
-    //console.log("answers state changed:", answers)
-    reqID.forEach((id)=>{
-      var value = quizState.settingsState[id]
-      //console.log("id:",id,"value:",value)
-      if (value !== "" && value !== undefined && value != 0 && value != [0,0] && value !== null){
-        ansCount += 1
-      }
-      else{
-        ansCount -= 1
-      }
-    })
-    if (ansCount < 0) { 
-      ansCount = 0 
-    }
-    if(ansCount == reqCount){
-      setDisableButton(false)
-    }else{
-      setDisableButton(true)
-    }
-  },[quizState.settingsState])
-
   //function to handle the user answers, based on the question id, it changes the answer
   function handleSettingsAnswer(id, value){
     setBufferSettings(prev =>({
@@ -90,15 +62,21 @@ export function SettingsPage(){
   //handles starting the quiz, by dispatching the quiz settings to the reducer
   //and call the fetchQuestions func to retrieve the trivia question and navigate to the quiz
   function handleStartQuiz(){
-    quizDispatch({
-      type:"SET_QUIZ_SETTINGS",  
-      payload:bufferSettings
-    })
+    if (!bufferSettings.amount || bufferSettings.amount < 1){
+      alert("Please enter how many questions you want to play!");
+      return;
+    }
+
+    if (!bufferSettings.amount > 50) {
+      alert("The maximum number of questions per game is 50");
+      return;
+    }
+
+    quizDispatch({type:"SET_QUIZ_SETTINGS",payload:bufferSettings})
     quizDispatch({type:"RESET_GAME"})
     quizDispatch({type:"START_GAME"})
     navigate("/quiz")
   }
-
 
   return(
     <StyledParametersBackground>
