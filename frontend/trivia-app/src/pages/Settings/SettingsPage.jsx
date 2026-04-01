@@ -17,8 +17,10 @@ export function SettingsPage(){
   const quizDispatch = useQuizDispatch()
   const navigate = useNavigate()
 
-  useEffect(()=>{
+  useEffect(()=>{    
     quizDispatch({type:"END_GAME"})
+    quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
+    quizDispatch({type:"RESET_QUIZ_SETTINGS"})
   },[])
 
   const headerState = [
@@ -46,11 +48,6 @@ export function SettingsPage(){
     mode: quizState.settingsState.mode || 'standard'
   })
 
-  useEffect(()=>{
-    console.log("State answers from context:", quizState)
-    console.log(quizState.settingsState.category)
-  }, [quizState]) 
-
   //function to handle the user answers, based on the question id, it changes the answer
   function handleSettingsAnswer(id, value){
     setBufferSettings(prev =>({
@@ -71,7 +68,7 @@ export function SettingsPage(){
       alert("The maximum number of questions per game is 50");
       return;
     }
-
+    console.log("calling from the settings")
     quizDispatch({type:"SET_QUIZ_SETTINGS",payload:bufferSettings})
     quizDispatch({type:"RESET_GAME"})
     quizDispatch({type:"START_GAME"})
@@ -88,7 +85,7 @@ export function SettingsPage(){
         <Form
           questions={questions}
           handleAnswer={handleSettingsAnswer}
-          answers={quizState.settingsState}
+          answers={bufferSettings}
         />
       </StyledParametersOutline>
     </StyledParametersBackground>

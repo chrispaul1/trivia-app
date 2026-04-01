@@ -6,12 +6,10 @@ import {
   StyledQuestionLabel,
   StyledNumberContainer
 } from "."
-import { useQuizDispatch } from "../../contexts/quiz/quizContext"
 
-export function NumberQuestion({question,handleAnswer,selectedAnswer}){
+export function NumberQuestion({question,handleAnswer,selectedAnswer,disabled}){
 
   const [validAns, setValidAns] = useState(false)
-  const quizDispatch = useQuizDispatch()
 
   function validateNumberInput(value){
     if(value > question.limit || value <= 0) {
@@ -45,6 +43,7 @@ export function NumberQuestion({question,handleAnswer,selectedAnswer}){
           min={1}
           max={question.limit}
           onChange={(e) => validateNumberInput(e.target.value)}
+          disabled={disabled}
         />
       </StyledNumberLabel>
     </StyledNumberContainer>

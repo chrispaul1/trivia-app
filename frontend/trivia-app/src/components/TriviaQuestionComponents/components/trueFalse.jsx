@@ -3,13 +3,13 @@ import {
   StyledAnswerButton, 
 } from "."
 
-export function TrueFalse({ questionObj, selectedAnswer,handleAnswerScoring }) {
+export function TrueFalse({ question, selectedAnswer,handleAnswerScoring }) {
   
   const [isDisabled, setIsDisabled] = useState(false);
   
   function handleAnswerClick(answerOption) {
     setIsDisabled(true)
-    handleAnswerScoring(answerOption, questionObj.correct_answer, questionObj.difficulty)
+    handleAnswerScoring(answerOption, question.correct_answer, question.difficulty)
   }
 
   return ( 
@@ -17,7 +17,7 @@ export function TrueFalse({ questionObj, selectedAnswer,handleAnswerScoring }) {
         {["True","False"].map((answerOption, index) => {
           let buttonStatus = "default"
           if (selectedAnswer !== ""){
-            const isTheAnswerCorrect = answerOption === questionObj.correct_answer
+            const isTheAnswerCorrect = answerOption === question.correct_answer
             const didUserClickThisOption = answerOption === selectedAnswer
             if (isTheAnswerCorrect){
               buttonStatus="correct"

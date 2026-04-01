@@ -42,6 +42,7 @@ export function Form({ questions, handleAnswer, answers }) {
         question={questions['amount']}
         handleAnswer={handleAnswer}
         selectedAnswer={answers['amount']}
+        disabled={isEndless}
       />
 
       <DropdownQuestion

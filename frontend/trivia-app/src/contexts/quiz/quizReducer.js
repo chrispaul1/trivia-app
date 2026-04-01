@@ -4,7 +4,7 @@ export const initialState = {
     category: "General Knowledge",
     difficulty: "medium",
     type: "",
-    amount: 3,
+    amount: 4,
     mode: 'standard'
   },
   triviaQuestions: [],
@@ -72,8 +72,17 @@ export function quizReducer(state, action) {
       return { ...state, settingsState: { ...state.settingsState, [paramType]: newValue } }
 
     case "SET_QUIZ_SETTINGS":
-      console.log("payload", action.payload)
       return { ...state, settingsState: action.payload }
+
+    case "RESET_QUIZ_SETTINGS":
+      const payload = {
+        category: "General Knowledge",
+        difficulty: "medium",
+        type: "",
+        amount: 4,
+        mode: 'standard'
+      }
+      return { ...state, settingsState:payload}
 
     case "SET_QUESTIONS":
       if(action.payload.length == 0){
@@ -83,9 +92,7 @@ export function quizReducer(state, action) {
       return {...state, triviaQuestions:shuffledQuestions}
 
     case "APPEND_QUESTIONS":
-      if (action.payload.length == 0) {
-        return { ...state, triviaQuestions: action.payload }
-      }
+      
       const moreShuffledQuestions = decodeAndShuffleQuestion(action.payload)
       return {...state, triviaQuestions: [...state.triviaQuestions, ...moreShuffledQuestions]}
 
@@ -96,7 +103,7 @@ export function quizReducer(state, action) {
       return {...state, isGameStarted: false}
 
     case "RESET_GAME":
-      return {...state, score:0,answeredCorrectly:0,reviewQuestions:[]}
+      return {...state, triviaQuestions:[],score:0,answeredCorrectly:0,reviewQuestions:[]}
 
     case "INCREMENT_SCORE":
       return { ...state, score: state.score + action.score }

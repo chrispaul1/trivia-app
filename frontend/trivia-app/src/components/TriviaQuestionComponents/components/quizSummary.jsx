@@ -50,21 +50,22 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
 
     async function handlePlayAgain() {
         quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
-        quizDispatch({ type: "SET_QUESTIONS", payload: [] })
+        //quizDispatch({ type: "SET_QUESTIONS", payload: [] })
         setItemOffset(0)
+        navigate("/quiz", { replace: true })
         await fetchQuestions()
+
     }
 
     function handleChangeSettings(){
         quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
-        quizDispatch({type: "SET_QUESTIONS",payload:[]})
-        console.log("go to settings")
+        //quizDispatch({type: "SET_QUESTIONS",payload:[]})
         navigate("/settings",{replace:true})
     }
 
     function handleReturnToMenu(){
         quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
-        quizDispatch({ type: "SET_QUESTIONS", payload: [] })
+        //quizDispatch({ type: "SET_QUESTIONS", payload: [] })
         navigate("/", { replace: true })
     }
 

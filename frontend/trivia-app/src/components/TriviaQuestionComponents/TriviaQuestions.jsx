@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { MultipleChoice, TrueFalse, QuizSummary } from "."
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
@@ -13,15 +13,19 @@ import {
 	StyledQuestionContainer,
 } from '.'
 
-export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuestions}) {
+export function TriviaQuestionsComponent({ isLoading, fetchQuestions }) {
 
+	const quizDispatch = useQuizDispatch()
+	const quizState = useQuizState()
+	const { triviaQuestions } = quizState
+	const [isQuizFinished, setIsQuizFinished] = useState(false)
 	const [itemOffset, setItemOffset] = useState(0);
 	const itemsPerPage = 1;
 	const endOffset = itemOffset + itemsPerPage
 	const pageCount = Math.ceil(triviaQuestions.length / itemsPerPage)
 
 	//stores the curretn question sliced from the trivia questions
-	const currentQuestion = triviaQuestions.slice(itemOffset, endOffset)
+	const question = triviaQuestions.slice(itemOffset, endOffset)[0]
 	const [selectedAnswer, setSelectedAnswer] = useState("")
 
 	//tracks the current number of questions answered correctly
@@ -29,9 +33,12 @@ export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuest
 	//stores the longest number of answered correctly
 	const [maxStreak, setMaxStreak] = useState(0)
 
-	const quizDispatch = useQuizDispatch()
-	const quizState = useQuizState()
-	const isQuizFinished = triviaQuestions.length > 0 && itemOffset >= triviaQuestions.length
+	const isEndless = quizState.settingsState.mode == "endless"
+	const timerKey = isEndless ? "endless-timer" : itemOffset
+
+	useEffect(() => {
+		console.log("current questions", triviaQuestions)
+	}, [triviaQuestions])
 
 	//handles what score to add to the users score and increments it
 	function handleAnswerScoring(selectedAnswer, correctAnswer, qDifficulty) {
@@ -53,8 +60,8 @@ export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuest
 					pointsEarned = 100;
 			}
 
-			setCurrentStreak(prevCount => prevCount +1)
-			if(currentStreak > maxStreak){
+			setCurrentStreak(prevCount => prevCount + 1)
+			if (currentStreak > maxStreak) {
 				setMaxStreak(currentStreak)
 			}
 
@@ -63,9 +70,9 @@ export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuest
 		}
 		else {
 			let qObj = {
-				question: currentQuestion[0].question,
+				question: question.question,
 				your_answer: selectedAnswer,
-				correct_answer: currentQuestion[0].correct_answer
+				correct_answer: question.correct_answer
 			}
 			quizDispatch({ type: "ADD_TO_REVIEW_QUESTIONS", payload: qObj })
 			setCurrentStreak(0)
@@ -75,17 +82,24 @@ export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuest
 		setTimeout(() => {
 			setSelectedAnswer("")
 			setItemOffset(prevOffset => prevOffset + 1)
-		}, 2000);
+		}, 1000);
+
 
 		//fetches more questions in the endless mode if the user is close to finishing the questions
-		if (triviaQuestions.length - (itemOffset+1) <= 5 && quizState.settingsState.mode == "endless") {
+		if (triviaQuestions.length - (itemOffset + 1) <= 3 && quizState.settingsState.mode == "endless") {
+			console.log("fetch more questions")
 			fetchQuestions(true)
+		}
+
+		if (triviaQuestions.length > 0 && itemOffset == triviaQuestions.length-1) {
+			setIsQuizFinished(true)
+			return
 		}
 	}
 
 	const renderTime = ({ remainingTime }) => {
 
-		if (selectedAnswer != "" && selectedAnswer != null) {
+		if (selectedAnswer != "" && selectedAnswer != null && !isEndless) {
 			return <div className="timer">Moving onto Next Question...</div>;
 		}
 
@@ -101,76 +115,79 @@ export function TriviaQuestionsComponent({ isLoading,triviaQuestions, fetchQuest
 			</div>
 		);
 	};
-	console.log(currentQuestion)
 
 	return (
 		<>
-			{!isQuizFinished ?
-				currentQuestion.map((questionObj, index) => {
-					return (
-						<StyledTriviaBackground
-							key={questionObj.question}
-						>
-							<SkeletonTheme baseColor="#202020" highlightColor="#444">
-								<StyledQuestionContainer>
-									<StyledQuestionTextDiv>
+			{!isQuizFinished && question ?(
+				<StyledTriviaBackground>
+					<SkeletonTheme baseColor="#202020" highlightColor="#444">
+						<StyledQuestionContainer>
+							<StyledQuestionTextDiv>
 
-										{questionObj.category}
+								{question.category}
 
-									</StyledQuestionTextDiv>
-									<StyledQuestionTextDiv>
+							</StyledQuestionTextDiv>
+							<StyledQuestionTextDiv>
 
-										{itemOffset + 1}.{" "}{questionObj.question}
+								{itemOffset + 1}.{" "}{question.question}
 
-									</StyledQuestionTextDiv>
-								</StyledQuestionContainer>
+							</StyledQuestionTextDiv>
+						</StyledQuestionContainer>
 
-								<StyledTimerContainer>
+						<StyledTimerContainer>
 
-									<CountdownCircleTimer
-										key={itemOffset + 1}
-										isPlaying={selectedAnswer ? false : true}
-										duration={10}
-										colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-										colorsTime={[10, 6, 3, 0]}
-										onComplete={() => (selectedAnswer == null && setItemOffset(prev => prev + 1))}
-									>
-										{renderTime}
-									</CountdownCircleTimer>
+							<CountdownCircleTimer
+								key={timerKey}
+								isPlaying={!isEndless && selectedAnswer ? false : true}
+								duration={isEndless ? 100 : 10}
+								colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+								colorsTime={[10, 6, 3, 0]}
+								onComplete={() => {
+									if (isEndless) {
+										setItemOffset(triviaQuestions.length)
+									} else {
+										handleAnswerScoring(
+											"Time Expired",
+											question.correct_answer,
+											question.difficulty
+										)
+									}
+								}}
+							>
+								{renderTime}
+							</CountdownCircleTimer>
 
 
-								</StyledTimerContainer>
-								<StyledAnswerContainer>
+						</StyledTimerContainer>
+						<StyledAnswerContainer>
 
-									{questionObj.type === "multiple" ? (
-										<MultipleChoice
-											key={questionObj.question}
-											questionObj={questionObj}
-											selectedAnswer={selectedAnswer}
-											handleAnswerScoring={handleAnswerScoring}
-										/>
-									) : (
-										<TrueFalse
-											key={questionObj.question}
-											questionObj={questionObj}
-											selectedAnswer={selectedAnswer}
-											handleAnswerScoring={handleAnswerScoring}
-										/>
-									)}
+							{question.type === "multiple" ? (
+								<MultipleChoice
+									key={question.question}
+									question={question}
+									selectedAnswer={selectedAnswer}
+									handleAnswerScoring={handleAnswerScoring}
+								/>
+							) : (
+								<TrueFalse
+									key={question.question}
+									question={question}
+									selectedAnswer={selectedAnswer}
+									handleAnswerScoring={handleAnswerScoring}
+								/>
+							)}
 
-								</StyledAnswerContainer>
-							</SkeletonTheme>
-						</StyledTriviaBackground>
-					)
-				}) :
-				(
-					<QuizSummary
-						questionsLength={triviaQuestions.length}
-						fetchQuestions={fetchQuestions}
-						setItemOffset={setItemOffset}
-						maxStreak={maxStreak}
-					/>
-				)}
+						</StyledAnswerContainer>
+					</SkeletonTheme>
+				</StyledTriviaBackground>
+			) :(
+				<QuizSummary
+					questionsLength={triviaQuestions.length}
+					fetchQuestions={fetchQuestions}
+					setItemOffset={setItemOffset}
+					maxStreak={maxStreak}
+				/>
+			)}
 		</>
 	)
 }
