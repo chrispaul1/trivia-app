@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const StyledTriviaBackground = styled.div`
   display: flex;
   flex-direction: column;
@@ -17,18 +16,15 @@ export const StyledQuestionContainer = styled.div`
   justify-content: center;                  
   width: 100%;
   height: 25%;
+  max-height: 25%;
+  //border: solid 1px red;
 `
 
-export const StyledTimerContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 25%;
-  max-width: 100%;
-`
 
 export const StyledQuestionTextDiv = styled.div`
-  display: flex:
+  display: flex;
+  align-items: center;
+  justify-content: center;    
   font-size: 1.5rem;
   font-weight: bold;
   margin-top: 5px;
@@ -37,7 +33,25 @@ export const StyledQuestionTextDiv = styled.div`
   max-width: 90%;
   padding: 5px;  
   border: solid 1px black;
-`
+
+  span {
+    width: 100%;
+  }
+  `
+  export const StyledTimerContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25%;
+    width: 100%;
+    min-height: 25%;
+    max-width: 100%;
+    //border: solid 1px black;
+
+    span {
+      width: 60%;
+    }
+  `
 
 export const StyledAnswerContainer = styled.div`
   display: flex;
@@ -46,6 +60,11 @@ export const StyledAnswerContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 50%;
+  row-gap: 5px;
+
+  span {
+    width: 100%;
+  }
 `
 
 export const StyledAnswerButton = styled.button`

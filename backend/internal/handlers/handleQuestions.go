@@ -25,6 +25,11 @@ type TriviaQuestion struct {
 
 func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	category := r.URL.Query().Get("category")
 	difficulty := r.URL.Query().Get("difficulty")
 	amount := r.URL.Query().Get("amount")
@@ -57,7 +62,6 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 	//Ensure we have a valid token before making the API call
 	sessionToken, err := EnsureToken(userID)
 	if err != nil {
-		log.Printf("we have an error")
 		http.Error(w, "Failed to validate token: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -68,7 +72,6 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 	//Fetch trivia questions from OpenTDB API
 	res, err := http.Get(apiUrl)
 	if err != nil {
-		fmt.Println("err", err)
 		http.Error(w, "Failed to fetch trivia questions", http.StatusInternalServerError)
 		return
 	}
@@ -90,6 +93,7 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 	//If the token is invalid or empty, reset it and try again
 	if apiData.ResponseCode == 3 || apiData.ResponseCode == 4 {
+		log.Println("Token expired or empty, resetting...")
 		if err := ResetToken(userID, sessionToken); err != nil {
 			http.Error(w, "Failed to reset Token: "+err.Error(), http.StatusInternalServerError)
 			return

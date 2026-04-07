@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
-import { SettingsPage, QuizPage, LoginPage, Menu } from './pages'
+import { SettingsPage, QuizPage, LoginPage, Menu, QuizSummary } from './pages'
 //import {QuizPage}  from "./pages"
 
 function App() {
@@ -33,6 +33,12 @@ function App() {
           path="/quiz"
           element={
             <QuizPage/>
+          }
+        />
+        <Route
+          path="/summary"
+          element={
+            <QuizSummary/>
           }
         />
       </Routes>

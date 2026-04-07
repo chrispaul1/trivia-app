@@ -19,8 +19,6 @@ export function LoginPage() {
   const quizDispatch = useQuizDispatch()
   const {theme,toggleTheme}  = useThemeContext()
 
-  console.log("Current Theme State:", theme);
-
   useEffect(()=>{
     if(quizState.isLoggedIn){
       navigate("/",{replace:true})

@@ -1,4 +1,4 @@
-import React,{useState} from "react"
+import React,{useEffect, useState} from "react"
 import { IoMdAlert } from "react-icons/io";
 import {
   StyledInput, 
@@ -21,6 +21,15 @@ export function NumberQuestion({question,handleAnswer,selectedAnswer,disabled}){
       handleAnswer(question.id, value)
     } 
   }
+
+  useEffect(()=>{
+    if(disabled){
+      handleAnswer(question.id,10)
+    } else{
+      handleAnswer(question.id,0)
+    }
+  },[disabled])
+
   return(
     <StyledNumberContainer>
       <StyledQuestionLabel>

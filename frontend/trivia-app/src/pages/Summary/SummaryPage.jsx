@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useQuizState, useQuizDispatch } from "../../../contexts/quiz/quizContext";
+import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
+import { fetchTriviaQuestions, decodeAndShuffleQuestion } from "../../helpers/apiHelpers";
 import {
     StyledButtonDiv,
     StyledSummaryTitle,
@@ -11,14 +12,15 @@ import {
     StyledReviewQuestionBlock,
     StyledSummaryScrollableDiv
 } from ".";
+import { categoryNames } from "../../assets/categories";
 
-export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxStreak }) {
+export function QuizSummary({ }) {
 
+    const hasFetched = useRef(false)
     const quizDispatch = useQuizDispatch()
     const quizState = useQuizState()
     const hasSubmitted = useRef(false); // Our old StrictMode friend!
     const navigate = useNavigate()
-    console.log(quizState.reviewQuestions)
     const ReviewQuestionsList = ({ }) => {
         return (
             <>
@@ -49,31 +51,73 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
     }
 
     async function handlePlayAgain() {
-        quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
         //quizDispatch({ type: "SET_QUESTIONS", payload: [] })
-        setItemOffset(0)
-        await fetchQuestions()
-        navigate("/quiz", { replace: true })
+        const { settingsState: { category, difficulty, type, amount }, userID } = quizState
+        
+        //Category string cannot be passed to the backend, we have to send back the integer id for category
+        let categoryID
+        if (category != undefined && category != "" && category.toLowerCase() != "randomized categories") {
+            categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === category.toLowerCase()).id
+        }
+
+        //functions calls the fetchtriviaquestiosn function
+        async function callFetchTriviaQuestions(){
+            
+            //check if an call was already made in the last 5 seconds
+            if(quizState.isFetching && hasFetched.current){
+                setTimeout(callFetchTriviaQuestions,1000)
+                return;
+            }
+
+            //if we can call again, set the isFetching to true
+            quizDispatch({ type: " START_FETCHING"})
+            hasFetched.current = true
+
+            //call the function, reset the game and set the questions
+            try{
+                console.log("lets get some questions")
+                const questions = await fetchTriviaQuestions(categoryID, difficulty, type, amount, userID)
+                quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
+                quizDispatch({ type: "SET_QUESTIONS", payload: decodeAndShuffleQuestion(questions) })
+                navigate("/quiz", { replace: true })
+
+            } catch (error) {
+
+                alert("Error, Failed to fetch the questions for the game")
+                quizDispatch({ type: "END_GAME" }); // End the session intentionally
+                quizDispatch({ type: "RESET_GAME" });
+                quizDispatch({ type: "RESET_QUIZ_SETTINGS" })
+                navigate("/", { replace: true })
+
+            } finally{
+
+                setTimeout(()=>{
+                    quizDispatch({ type: "STOP_FETCHING"})
+                    hasFetched.current = false
+                },5000)
+
+            }
+        }
+        callFetchTriviaQuestions()
     }
 
-    function handleChangeSettings(){
+    function handleChangeSettings() {
         quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
         //quizDispatch({type: "SET_QUESTIONS",payload:[]})
-        navigate("/settings",{replace:true})
+        navigate("/settings", { replace: true })
     }
 
-    function handleReturnToMenu(){
+    function handleReturnToMenu() {
         quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
         //quizDispatch({ type: "SET_QUESTIONS", payload: [] })
         navigate("/", { replace: true })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (hasSubmitted.current) return
         hasSubmitted.current = true
-        console.log("hitting this")
-        //submitScore()
-    },[])
+           //submitScore()
+    }, [])
 
     //handles updating the score state in the context
     async function submitScore() {
@@ -100,7 +144,7 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
         }
     }
 
-    return(
+    return (
         <StyledSummaryBackground>
             <StyledSummaryTitle>
                 Quiz Summary
@@ -110,16 +154,16 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
                     Your Score : {quizState.score}
                 </StyledSummaryItemDiv>
                 <StyledSummaryItemDiv>
-                    You answered {quizState.answeredCorrectly}/{questionsLength} questions correctly!!
-                </StyledSummaryItemDiv>                
+                    You answered {quizState.answeredCorrectly}/{quizState.triviaQuestions.length} questions correctly!!
+                </StyledSummaryItemDiv>
                 <StyledSummaryItemDiv>
-                    Your Max Streak is : {maxStreak}
-                   
-                </StyledSummaryItemDiv>  
+                    Your Max Streak is : {quizState.maxStreak}
+
+                </StyledSummaryItemDiv>
                 <StyledSummaryItemDiv>
                     Quiz Difficulty : {quizState.settingsState.difficulty}
                 </StyledSummaryItemDiv>
-                <ReviewQuestionsList/>
+                <ReviewQuestionsList />
                 <StyledButtonDiv>
                     <StyledSummaryButton
                         onClick={() => handlePlayAgain()}
@@ -140,4 +184,4 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
             </StyledSummaryDiv>
         </StyledSummaryBackground>
     )
- }
+}

@@ -24,7 +24,6 @@ export function Menu(){
     // handles starting the game, resets the game states, score, question correctly answered 
     // and wrong questions saved
     function handleStartQuiz(){
-        console.log("start the game")
         quizDispatch({ type: "RESET_GAME" }); 
         quizDispatch({ type: "START_GAME" })
         navigate("/quiz")

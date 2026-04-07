@@ -8,7 +8,9 @@ export const initialState = {
     mode: 'standard'
   },
   triviaQuestions: [],
+  isFetching:false,
   score: 0,
+  maxStreak: 0,
   userID: null,
   userName: null,
   isGameStarted: false,
@@ -88,13 +90,12 @@ export function quizReducer(state, action) {
       if(action.payload.length == 0){
         return {...state, triviaQuestions:action.payload}
       }
-      const shuffledQuestions = decodeAndShuffleQuestion(action.payload)
-      return {...state, triviaQuestions:shuffledQuestions}
+      
+      return { ...state, triviaQuestions: action.payload }
 
     case "APPEND_QUESTIONS":
       
-      const moreShuffledQuestions = decodeAndShuffleQuestion(action.payload)
-      return {...state, triviaQuestions: [...state.triviaQuestions, ...moreShuffledQuestions]}
+      return { ...state, triviaQuestions: [...state.triviaQuestions, ...action.payload]}
 
     case "START_GAME":
       return {...state, isGameStarted: true}
@@ -107,14 +108,22 @@ export function quizReducer(state, action) {
 
     case "INCREMENT_SCORE":
       return { ...state, score: state.score + action.score }
-    // case "DECREMENT_SCORE":
-    //   return { ...state, score: state.score - 1 }
+
+    case "SET_MAX_STREAK":
+       return { ...state, maxStreak: action.payload}
 
     case "INCREMENT_CORRECT_ANSWERS":
       return { ...state, answeredCorrectly: state.answeredCorrectly + 1 }
 
     case "ADD_TO_REVIEW_QUESTIONS":
       return { ...state, reviewQuestions: [...state.reviewQuestions,action.payload]};
+    
+    case "START_FETCHING":
+      return { ...state, isFetching: true}
+
+    case "STOP_FETCHING":
+      return { ...state, isFetching: false}
+
     default:
       return state
   }
