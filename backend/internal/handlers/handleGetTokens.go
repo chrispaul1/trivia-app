@@ -4,9 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
-	"os"
 	"sync"
 	"trivia-backend/internal/db"
 )
@@ -77,7 +75,6 @@ func EnsureToken(userID int) (string, error) {
 
 	query := `SELECT token FROM session_tokens WHERE user_id = (?)`
 	err := db.DB.QueryRow(query, userID).Scan(&token)
-	fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			newToken, fetchErr := FetchToken()

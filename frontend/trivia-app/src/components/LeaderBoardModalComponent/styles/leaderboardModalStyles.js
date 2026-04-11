@@ -10,6 +10,9 @@ export const StyledLeaderboardBackground = styled.div`
     backdrop-filter: blur(4px);
     /* Add a semi-transparent background color for better contrast */
     background-color: rgba(0, 0, 0, 0.4);
+    &: hover{
+        cursor: pointer;
+    }
 `
 
 export const StyledLeaderboardContainer = styled.div`
@@ -18,4 +21,8 @@ export const StyledLeaderboardContainer = styled.div`
     height: fit-content;
     width: 85%;
     max-width: 900px;
+    z-index: 1000;
+    &: hover{
+        cursor: default;
+    }
 `

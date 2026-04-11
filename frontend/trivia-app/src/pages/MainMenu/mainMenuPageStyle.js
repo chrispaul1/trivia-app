@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-
-
 export const StyledMenuBackground = styled.div`
     display: flex;
     flex-direction: column;
@@ -9,7 +7,7 @@ export const StyledMenuBackground = styled.div`
     align-items: center;
     background: red;
     height: 100vh;
-    width: 90vw;
+    width: 100%;
 `
 
 export const StyledMenuContainer = styled.div`
@@ -18,6 +16,6 @@ export const StyledMenuContainer = styled.div`
     justify-content: space-evenly;
     align-items: center;
     background: purple;
-    height: 40%;
+    height: 60%;
     width: 100%;
 `

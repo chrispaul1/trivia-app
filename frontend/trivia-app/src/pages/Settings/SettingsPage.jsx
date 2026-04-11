@@ -77,10 +77,10 @@ export function SettingsPage(){
 
   return(
     <StyledParametersBackground>
-      <Header
+      {/* <Header
         headerObjs={headerState}
         disableButton={disableButton}
-      />
+      /> */}
       <StyledParametersOutline>
         <Form
           questions={questions}

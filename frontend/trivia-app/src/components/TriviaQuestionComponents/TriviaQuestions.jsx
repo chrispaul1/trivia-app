@@ -154,7 +154,7 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 							<CountdownCircleTimer
 								key={timerKey}
 								isPlaying={!isEndless && selectedAnswer ? false : true}
-								duration={isEndless ? 100 : 10}
+								duration={isEndless ? 60 : 10}
 								colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
 								colorsTime={[10, 6, 3, 0]}
 								onComplete={() => {

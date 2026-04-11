@@ -1,4 +1,6 @@
+export * from './GameLayout'
 export * from './FormComponent'
 export * from './InputComponents'
 export * from './HeaderComponent'
+export * from './GlobalHeaderComponent'
 export * from './TriviaQuestionComponents'

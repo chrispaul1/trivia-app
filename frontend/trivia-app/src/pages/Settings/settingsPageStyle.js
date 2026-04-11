@@ -7,7 +7,7 @@ export const StyledParametersBackground = styled.div`
   align-items: center;
   background: white;
   height: 100vh;
-  width: 90vw;
+  width: 100%;
 `
 
 export const StyledParametersOutline = styled.div`
@@ -16,6 +16,6 @@ export const StyledParametersOutline = styled.div`
   background: red;
   align-items: center;
   height: 80vh;
-  width: 50vw;
+  width: 60%;
   color: black;
 `

@@ -1,23 +1,25 @@
-import React,{useState,useEffect} from "react";
+import React,{ useState, useEffect, useRef} from "react";
 import { 
     StyledLeaderboardContainer,
     StyledLeaderboardBackground } from ".";
 import { Header } from "../HeaderComponent";
 import DataTable from 'react-data-table-component';
+import { useOnClickOutside } from "../../hooks/SizeHook";
 
 export function LeaderboardModal({ setDisplayLeaderboard }){
 
+    const modalRef = useRef()
     const [generalLeaderboard, setGeneralLeaderboard] = useState([])
     const [userLeaderboard, setUserLeaderboard] = useState([])
     const [showUserData,setShowUserData] = useState(false)
+    useOnClickOutside(modalRef, ()=>setDisplayLeaderboard(false))
 
     function handleClosingModal(){
         setDisplayLeaderboard(false)
     }
+
     useEffect(() => {
-        console.log("general leaderboard", generalLeaderboard)
         const user1 = generalLeaderboard[0]
-        console.log(user1)
     }, [generalLeaderboard])
 
     useEffect(() => {
@@ -122,14 +124,16 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         },
         {
             name:'Mode',
-            selector: row => row.Mode,
+            selector: row => row.mode,
             center: true
         }
     ]
 
     return(
         <StyledLeaderboardBackground>
-            <StyledLeaderboardContainer>
+            <StyledLeaderboardContainer
+                ref={modalRef}
+            >
                 <Header
                     headerObjs={headerState}
                 />

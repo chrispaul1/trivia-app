@@ -1,16 +1,15 @@
-import React,{useEffect,useState} from "react";
+import React,{ useEffect,useState, useRef} from "react";
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
 import { StyledMenuBackground,StyledMenuContainer, StyledButton } from "..";
 import { LeaderboardModal } from "../../components/LeaderBoardModalComponent";
 
-export function Menu(){
+export function MainMenu(){
 
     const quizState = useQuizState()
     const quizDispatch = useQuizDispatch()
     const [displayleaderboard, setDisplayLeaderboard] = useState(false)
     const navigate = useNavigate()
-
     // sets isGameStarted to false if we navigated from quiz summary,
     // if the the users is not logged in, moves the user to the login page
     useEffect(()=>{
@@ -38,9 +37,6 @@ export function Menu(){
 
     return(
         <StyledMenuBackground>
-            <h2>
-                Trivia Quiz Menu
-            </h2>
             <StyledMenuContainer>
                 <StyledButton
                     onClick={(e) => handleStartQuiz()}
@@ -57,11 +53,6 @@ export function Menu(){
                     onClick={()=>setDisplayLeaderboard(true)}
                 >
                     View Leaderboard
-                </StyledButton>
-                <StyledButton
-                    onClick={()=>handleLogOut()}
-                >
-                    Log Out
                 </StyledButton>
             </StyledMenuContainer>
             {displayleaderboard && 

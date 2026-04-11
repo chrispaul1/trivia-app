@@ -1,49 +1,32 @@
 import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
-import { SettingsPage, QuizPage, LoginPage, Menu, QuizSummary } from './pages'
-//import {QuizPage}  from "./pages"
+import { GameLayout } from './components';
+import {
+	SettingsPage,
+	QuizPage,
+	LoginPage,
+	MainMenu,
+	QuizSummary
+} from './pages'
 
 function App() {
 
-  return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Menu/>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <LoginPage/>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <SettingsPage/>
-          }
-        />
-        <Route
-          path="/quiz"
-          element={
-            <QuizPage/>
-          }
-        />
-        <Route
-          path="/summary"
-          element={
-            <QuizSummary/>
-          }
-        />
-      </Routes>
-    </Router>
-  )
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/login" element={ <LoginPage/> } />
+				<Route element={ <GameLayout/> } >
+					<Route path="/" element={ <MainMenu/> } />
+					<Route path="/settings" element={ <SettingsPage/> } />
+					<Route path="/quiz" element={ <QuizPage/> } />
+					<Route path="/summary" element={ <QuizSummary/> } />
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	)
 }
 
 export default App

@@ -46,7 +46,7 @@ export const StyledButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width:75px;
+    min-width:250px;
     width: fit-content;
 
     &: hover{
