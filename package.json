@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "babel-plugin-styled-components": "^2.1.4"
+  },
+  "dependencies": {
+    "@theme-toggles/react": "^4.1.0",
+    "polished": "^4.3.1"
+  }
+}

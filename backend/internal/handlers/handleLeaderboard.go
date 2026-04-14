@@ -21,6 +21,9 @@ type LeaderboardEntry struct {
 
 func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
+	//mode := r.URL.Query().Get("mode")
+	//category := r.URL.Query().Get("category")
+
 	var query string
 	var args []interface{}
 

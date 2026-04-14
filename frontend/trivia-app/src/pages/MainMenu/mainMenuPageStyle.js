@@ -13,9 +13,12 @@ export const StyledMenuBackground = styled.div`
 export const StyledMenuContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    padding-top: 10vh;
+    gap: 10vh;
     align-items: center;
-    background: purple;
-    height: 60%;
+    height: 100%;
     width: 100%;
+    ${({theme}) => theme.panel.a2};
+
 `

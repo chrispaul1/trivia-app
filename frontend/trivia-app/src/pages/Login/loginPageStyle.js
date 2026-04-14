@@ -5,19 +5,19 @@ export const StyledLoginBackground = styled.div`
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    background: red;
     height: 100vh;
     width: 100vw;
   `
 
 export const StyledLoginDiv = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: column;   
     justify-content: start;
     align-items: center;
-    background: blue;
     height: 100%;
-    width: 95%;
+    width: 100%;
+    ${({theme}) => theme.panel.a1};
+    
 `
 
 export const StyledLoginInputContainer = styled.div`
@@ -25,9 +25,9 @@ export const StyledLoginInputContainer = styled.div`
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    background: purple;
     height: 40%;
     width: 100%;
+    ${({theme}) => theme.panel.a2};
 `
 
 export const StyledUserNameDiv = styled.div`
@@ -48,6 +48,7 @@ export const StyledButton = styled.button`
     justify-content: center;
     min-width:250px;
     width: fit-content;
+    ${({theme}) => theme.primaryButton};
 
     &: hover{
         pointer: cursor

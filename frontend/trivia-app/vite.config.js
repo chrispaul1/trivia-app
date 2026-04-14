@@ -4,7 +4,21 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          [
+            'babel-plugin-styled-components',
+            {
+              displayName: true, // This makes debugging 100x easier!
+              fileName: false,
+            },
+          ],
+        ],
+      },
+    }),
+  ],
   resolve: {
     alias: {
         crypto: 'crypto-browserify'

@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuizDispatch, useQuizState } from "../../contexts/quiz/quizContext";
+import { useThemeContext } from "../../contexts/theme/themeContext";
 import { 
-    StyledGlobalHeader,
+    StyledGlobalHeaderTitle,
     StyledGlobalHeaderButton,
     StyledGlobalHeaderLeftDiv,
     StyledGlobalHeaderRightDiv,
     StyledGlobalHeaderContainer,
  } from "./styles";
-
+import "@theme-toggles/react/css/classic.css"
+import { Classic } from "@theme-toggles/react"
+ 
 export function GlobalHeader() {
 
     const quizState = useQuizState()
     const quizDispatch = useQuizDispatch()
     const navigate = useNavigate()
     const location = useLocation()
+    const { theme,toggleTheme } = useThemeContext()
+    const [isToggled, setToggle] = useState(false)
+    console.log(theme)
 
     function getPageTitle(path){
         switch(path) {
@@ -39,14 +45,23 @@ export function GlobalHeader() {
 
     }
 
+    useEffect(()=>{
+        toggleTheme()
+    },[isToggled])
+
   return(
       <StyledGlobalHeaderContainer>
         <StyledGlobalHeaderLeftDiv>
-            <StyledGlobalHeader>
+              <StyledGlobalHeaderTitle>
                 {getPageTitle(location.pathname)}
-            </StyledGlobalHeader>
+              </StyledGlobalHeaderTitle>
         </StyledGlobalHeaderLeftDiv>
         <StyledGlobalHeaderRightDiv>
+            <Classic
+                style={{color:theme.textColor,fontSize:'2rem'}}
+                toggled={isToggled}
+                toggle={setToggle}
+            />
             <StyledGlobalHeaderButton
                 onClick={()=>handleLogout()}
                 disabled={quizState.isGameStarted}

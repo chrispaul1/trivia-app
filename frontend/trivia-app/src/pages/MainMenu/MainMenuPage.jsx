@@ -3,6 +3,7 @@ import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
 import { StyledMenuBackground,StyledMenuContainer, StyledButton } from "..";
 import { LeaderboardModal } from "../../components/LeaderBoardModalComponent";
+import { useThemeContext } from "../../contexts/theme/themeContext";
 
 export function MainMenu(){
 
@@ -10,6 +11,8 @@ export function MainMenu(){
     const quizDispatch = useQuizDispatch()
     const [displayleaderboard, setDisplayLeaderboard] = useState(false)
     const navigate = useNavigate()
+    const {theme,toggleTheme}  = useThemeContext()
+    
     // sets isGameStarted to false if we navigated from quiz summary,
     // if the the users is not logged in, moves the user to the login page
     useEffect(()=>{

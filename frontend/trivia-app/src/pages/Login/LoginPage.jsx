@@ -17,7 +17,8 @@ export function LoginPage() {
   const navigate = useNavigate()
   const quizState = useQuizState()
   const quizDispatch = useQuizDispatch()
-  const {theme,toggleTheme}  = useThemeContext()
+  const {theme}  = useThemeContext()
+  console.log(useThemeContext())
 
   useEffect(()=>{
     if(quizState.isLoggedIn){
@@ -50,9 +51,7 @@ export function LoginPage() {
 
   return (
     <StyledLoginBackground>
-      <StyledLoginDiv
-        style={theme.panel.a5}
-      >
+      <StyledLoginDiv>
         <h2>Login</h2>
         <StyledLoginInputContainer>
           <StyledUserNameDiv>
