@@ -74,7 +74,6 @@ export function QuizPage() {
 			if (category != undefined && category != "" && category.toLowerCase() != "randomized categories") {
 				categoryID = categoryNames.trivia_categories.find(cat => cat.name.toLowerCase() === category.toLowerCase()).id
 			}
-			console.log("calling from quiz page")
 			const newQuestions = await fetchTriviaQuestions(categoryID, difficulty, type, amount, userID)
 
 			if (newQuestions && newQuestions.length > 0) {

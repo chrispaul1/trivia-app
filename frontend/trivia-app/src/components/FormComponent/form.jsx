@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyledFormOutline } from ".";
-import { DropdownQuestion, NumberQuestion, TimeQuestion } from "../InputComponents";
+import { DropdownQuestion,NumberQuestion } from "./components";
 
 export function Form({ questions, handleAnswer, answers }) {
   const formRef = useRef(null)
@@ -16,7 +16,7 @@ export function Form({ questions, handleAnswer, answers }) {
     }
   }, [formRef])
 
-  const isEndless = answers['mode']
+  const isEndless = answers['mode'] == 'endless'
 
   return (
     <StyledFormOutline>

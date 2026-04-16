@@ -1,8 +1,6 @@
 import React, {useState, useEffect, use} from "react"
-import { 
-    StyledParametersBackground,
-    StyledParametersOutline } from '.'
-import { Form,Header } from "../../components"
+import {  StyledParametersBackground } from '.'
+import { Form } from "../../components"
 import { questions } from "../../assets/questions"
 import { useNavigate } from "react-router-dom"
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext"
@@ -22,22 +20,6 @@ export function SettingsPage(){
     quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
     quizDispatch({type:"RESET_QUIZ_SETTINGS"})
   },[])
-
-  const headerState = [
-    {
-      id:1,
-      placement:"middle",
-      type:"title",
-      text:"Settings"
-    },
-    {
-      id:1,
-      placement:"right",
-      type:"button",
-      text:"Start Game",
-      function:handleStartQuiz,
-    }
-  ]
 
   //quiz settings buffer state
   const [bufferSettings,setBufferSettings] = useState({
@@ -77,18 +59,12 @@ export function SettingsPage(){
 
   return(
     <StyledParametersBackground>
-      {/* <Header
-        headerObjs={headerState}
-        disableButton={disableButton}
-      /> */}
-      <StyledParametersOutline>
-        <Form
-          questions={questions}
-          handleAnswer={handleSettingsAnswer}
-          answers={bufferSettings}
-        />
-      </StyledParametersOutline>
-    </StyledParametersBackground>
+      <Form
+        questions={questions}
+        handleAnswer={handleSettingsAnswer}
+        answers={bufferSettings}
+      />
+  </StyledParametersBackground>
   )
 }
 

@@ -1,18 +1,22 @@
 import React,{ useState, useEffect, useRef} from "react";
 import { 
+    StyledTable,
+    StyledColumnCell,
     StyledLeaderboardContainer,
     StyledLeaderboardBackground } from ".";
 import { Header } from "../HeaderComponent";
 import DataTable from 'react-data-table-component';
 import { useOnClickOutside } from "../../hooks/SizeHook";
+import { useThemeContext } from "../../contexts/theme/themeContext";
 
 export function LeaderboardModal({ setDisplayLeaderboard }){
 
     const modalRef = useRef()
-    const [generalLeaderboard, setGeneralLeaderboard] = useState([])
-    const [userLeaderboard, setUserLeaderboard] = useState([])
-    const [showUserData,setShowUserData] = useState(false)
-    useOnClickOutside(modalRef, ()=>setDisplayLeaderboard(false))
+    const [ generalLeaderboard, setGeneralLeaderboard ] = useState( [] )
+    const [ userLeaderboard, setUserLeaderboard ] = useState( [] )
+    const [ showUserData,setShowUserData ] = useState( false )
+    const { theme, toggleTheme } = useThemeContext()
+    useOnClickOutside( modalRef, () => setDisplayLeaderboard( false) )
 
     function handleClosingModal(){
         setDisplayLeaderboard(false)
@@ -39,6 +43,9 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                 throw new Error("Failed to fetch leaderboard data")
             }
             const data = await response.json()
+            if(data.length == 0){
+                setUserLeaderboard([])
+            }
             if (forSpecificUser) {
                 setUserLeaderboard(data)
             } else {
@@ -78,12 +85,11 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         {
             name:'Username',
             cell: (row) =>(
-                <div
-                    style={{cursor:'pointer',color:'#007bff'}}
+                <StyledColumnCell
                     onClick={()=>fetchUserData(row.name)}
                 >
                     {row.name}
-                </div>
+                </StyledColumnCell>
             ),
             center:true,
             
@@ -137,7 +143,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                 <Header
                     headerObjs={headerState}
                 />
-                <DataTable
+                <StyledTable
                     columns={columns}
                     data={showUserData ? userLeaderboard : generalLeaderboard}
                 />

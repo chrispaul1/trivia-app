@@ -4,8 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"log"
 	"net/http"
 	"sync"
+	"time"
 	"trivia-backend/internal/db"
 )
 
@@ -23,26 +26,52 @@ type resetTokenResponse struct {
 	Token        string `json:"token"`
 }
 
+var httpClient = &http.Client{
+	Timeout: 15 * time.Second,
+}
+
 func FetchToken() (string, error) {
 	tokenLock.Lock()
 	defer tokenLock.Unlock()
 	tokenUrl := "https://opentdb.com/api_token.php?command=request"
-	resp, err := http.Get(tokenUrl)
 
-	if err != nil || resp.StatusCode != http.StatusOK {
-		return "", err
+	var resp *http.Response
+	var err error
+
+	//Try 3 times to contact OpenTDB
+	maxRetries := 3
+	for i := range maxRetries {
+
+		resp, err = httpClient.Get(tokenUrl)
+
+		if err == nil || resp.StatusCode == http.StatusOK {
+			break
+		}
+
+		if i < maxRetries-1 {
+			time.Sleep(5 * time.Second)
+		}
 	}
+
+	//If we fail return an error msg
+	if err != nil || resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("Failed to reach OpenTDB after %d attempts: %w", maxRetries, err)
+	}
+
 	defer resp.Body.Close()
 
+	//Otherwise decode the msg and return the token
 	var tokenResp tokenResponse
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&tokenResp)
+
 	if err != nil || tokenResp.ResponseCode != 0 {
 		return "", errors.New("failed to fetch a valid token")
 	}
 	return tokenResp.Token, nil
 }
 
+// Resets the token if it has expired after 6 hours
 func ResetToken(userID int, token string) error {
 	tokenLock.Lock()
 	defer tokenLock.Unlock()
@@ -53,12 +82,14 @@ func ResetToken(userID int, token string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
 	var resetResp resetTokenResponse
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&resetResp)
 	if err != nil || resetResp.ResponseCode != 0 {
 		return errors.New("failed to reset token")
 	}
+
 	sessionToken = resetResp.Token
 	updateTokenQuery := `UPDATE session_tokens SET token = (?) WHERE user_id = (?)`
 	_, err = db.DB.Exec(updateTokenQuery, resetResp.Token, userID)
@@ -72,7 +103,7 @@ func ResetToken(userID int, token string) error {
 // Ensure token checks to see if a token currently exists for the user or guest
 func EnsureToken(userID int) (string, error) {
 	var token string
-
+	log.Printf("userID : %d", userID)
 	query := `SELECT token FROM session_tokens WHERE user_id = (?)`
 	err := db.DB.QueryRow(query, userID).Scan(&token)
 	if err != nil {

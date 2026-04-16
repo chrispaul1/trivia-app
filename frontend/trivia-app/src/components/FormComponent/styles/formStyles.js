@@ -4,12 +4,12 @@ export const StyledFormOutline = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   height: 90%;
-  width: 90%;
-  background: purple;
-  gap: 5px;
-  padding: 1rem;
-  padding: 5px 0 5px 0;
+  width: 80%;
+  gap: 5vh;
+  padding: 5vh 5px 0 5px;
+  border-radius: 12px;
+  ${({theme}) => theme.panel.a2}
 `
 

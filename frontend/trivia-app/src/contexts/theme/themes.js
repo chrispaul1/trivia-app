@@ -16,17 +16,17 @@ export const lightTheme = {
 
     panel: { 
         a1: { backgroundColor: LIGHT_BASE, color: LIGHT_TEXT },  // App Background (Alice Blue / Ice)
-        a2: { backgroundColor: mix(0.10, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },  // Cards / Main Content
-        a3: { backgroundColor: mix(0.20, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },  // Elevated Elements / Modals
-        a4: { backgroundColor: mix(0.30, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },
-        a5: { backgroundColor: mix(0.40, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT }, 
+        a2: { backgroundColor: mix(0.15, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },  // Cards / Main Content
+        a3: { backgroundColor: mix(0.30, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },  // Elevated Elements / Modals
+        a4: { backgroundColor: mix(0.45, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT },
+        a5: { backgroundColor: mix(0.60, DARK_TINT, LIGHT_BASE), color: LIGHT_TEXT }, 
     },
     glass: {
-        a1: { backgroundColor: rgba(LIGHT_BASE,0.70), backdropFilter: 'blur(12px)', color: '#0A192F' },
-        a2: { backgroundColor: rgba(mix(0.10, DARK_TINT, LIGHT_BASE),0.75), backdropFilter: 'blur(10px)', color: '#0A192F' },
-        a3: { backgroundColor: rgba(mix(0.20, DARK_TINT, LIGHT_BASE),0.80), backdropFilter: 'blur(8px)', color: '#0A192F' },
-        a4: { backgroundColor: rgba(mix(0.30, DARK_TINT, LIGHT_BASE),0.95), backdropFilter: 'blur(6px)', color: '#0A192F' },
-        a5: { backgroundColor: rgba(mix(0.40, DARK_TINT, LIGHT_BASE),0.90), backdropFilter: 'blur(4px)', color: '#0A192F' },
+        a1: { backgroundColor: rgba(LIGHT_BASE, 0.70), backdropFilter: 'blur(12px)', color: LIGHT_TEXT },
+        a2: { backgroundColor: rgba(mix(0.15, DARK_TINT, LIGHT_BASE), 0.75), backdropFilter: 'blur(10px)', color: LIGHT_TEXT },
+        a3: { backgroundColor: rgba(mix(0.30, DARK_TINT, LIGHT_BASE), 0.80), backdropFilter: 'blur(8px)', color: LIGHT_TEXT },
+        a4: { backgroundColor: rgba(mix(0.45, DARK_TINT, LIGHT_BASE), 0.95), backdropFilter: 'blur(6px)', color: LIGHT_TEXT },
+        a5: { backgroundColor: rgba(mix(0.60, DARK_TINT, LIGHT_BASE), 0.90), backdropFilter: 'blur(4px)', color: LIGHT_TEXT },
     },
 
     primaryButton: {
@@ -59,24 +59,23 @@ export const lightTheme = {
 
 export const darkTheme = {
 
-
     baseColor: DARK_BASE,
     textColor: DARK_TEXT,
 
     panel: {
         a1: { backgroundColor: DARK_BASE, color: DARK_TEXT },  // App Background (Alice Blue / Ice)
-        a2: { backgroundColor: mix(0.10, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },  // Cards / Main Content
-        a3: { backgroundColor: mix(0.20, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },  // Elevated Elements / Modals
-        a4: { backgroundColor: mix(0.30, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },
-        a5: { backgroundColor: mix(0.40, LIGHT_TINT, DARK_BASE), color: DARK_TEXT }, 
+        a2: { backgroundColor: mix(0.15, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },  // Cards / Main Content
+        a3: { backgroundColor: mix(0.30, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },  // Elevated Elements / Modals
+        a4: { backgroundColor: mix(0.45, LIGHT_TINT, DARK_BASE), color: DARK_TEXT },
+        a5: { backgroundColor: mix(0.60, LIGHT_TINT, DARK_BASE), color: DARK_TEXT }, 
     },
 
     glass: {
-        a1: { backgroundColor: rgba(DARK_BASE, 0.70), backdropFilter: 'blur(12px)', color: '#0A192F' },
-        a2: { backgroundColor: rgba(mix(0.10, LIGHT_TINT, DARK_BASE), 0.75), backdropFilter: 'blur(10px)', color: '#0A192F' },
-        a3: { backgroundColor: rgba(mix(0.20, LIGHT_TINT, DARK_BASE), 0.80), backdropFilter: 'blur(8px)', color: '#0A192F' },
-        a4: { backgroundColor: rgba(mix(0.30, LIGHT_TINT, DARK_BASE), 0.95), backdropFilter: 'blur(6px)', color: '#0A192F' },
-        a5: { backgroundColor: rgba(mix(0.40, LIGHT_TINT, DARK_BASE), 0.90), backdropFilter: 'blur(4px)', color: '#0A192F' },
+        a1: { backgroundColor: rgba(DARK_BASE, 0.70), backdropFilter: 'blur(12px)', color: DARK_TEXT },
+        a2: { backgroundColor: rgba(mix(0.15, LIGHT_TINT, DARK_BASE), 0.75), backdropFilter: 'blur(10px)', color: DARK_TEXT },
+        a3: { backgroundColor: rgba(mix(0.30, LIGHT_TINT, DARK_BASE), 0.80), backdropFilter: 'blur(8px)', color: DARK_TEXT },
+        a4: { backgroundColor: rgba(mix(0.45, LIGHT_TINT, DARK_BASE), 0.95), backdropFilter: 'blur(6px)', color: DARK_TEXT },
+        a5: { backgroundColor: rgba(mix(0.60, LIGHT_TINT, DARK_BASE), 0.90), backdropFilter: 'blur(4px)', color: DARK_TEXT },
     },
 
     primaryButton: {

@@ -8,12 +8,11 @@ export const StyledQuestionsBackground = styled.div`
     align-items: center;
     background: white;
     height: 100vh; 
-    width: 95vw; 
+    width: 100vw; 
 `
 export const StyledQuestionsOutline = styled.div` 
     display: flex; 
     flex-direction: column;
-    background: lightgreen;
     align-items: center; 
     height: 100%; 
     width: 100%; 

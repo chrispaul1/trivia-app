@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import DataTable from "react-data-table-component";
 
 export const StyledLeaderboardBackground = styled.div`
     display: flex;
@@ -26,3 +27,38 @@ export const StyledLeaderboardContainer = styled.div`
         cursor: default;
     }
 `
+
+export const StyledColumnCell = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    ${({theme}) => theme.panel.a1};
+    cursor: pointer;
+    color: blue;
+`
+
+export const StyledTable = styled(DataTable)`
+    .rdt_Table {
+        border: 1px solid #ccc;
+        background-color: ${({ theme }) => theme.baseColor};
+    }
+
+    .rdt_TableHead {
+        background-color: ${({theme}) => theme.baseColor};
+    }
+    
+    .rdt_TableCell {
+        ${({ theme }) => theme.panel.a1};
+    }
+        
+    .rdt_TableHeadRow {
+        ${({ theme }) => theme.panel.a3};
+    }
+    
+
+`
+
+
+

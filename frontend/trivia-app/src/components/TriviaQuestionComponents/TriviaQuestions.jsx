@@ -124,7 +124,6 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 	};
 
 	return (
-
 		<StyledTriviaBackground>
 			<SkeletonTheme baseColor="#202020" highlightColor="#444">
 				<StyledQuestionContainer>

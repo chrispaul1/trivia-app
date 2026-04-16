@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"trivia-backend/internal/db"
 	"trivia-backend/internal/handlers"
-
-	"github.com/rs/cors"
 )
 
 func main() {
@@ -24,20 +22,34 @@ func main() {
 	mux.HandleFunc("GET /leaderboard", handlers.GetLeaderboard)
 
 	//Configure CORS
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173"},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"Content-Type", "Authorization"},
-		AllowCredentials: true,
-	})
+	handlerWithCORS := enableCors(mux)
 
 	//Start the server
 	server := &http.Server{
 		Addr:    ":5000",
-		Handler: c.Handler(mux),
+		Handler: handlerWithCORS,
 	}
 	err := server.ListenAndServe()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Server failed to start", err)
 	}
+}
+
+func enableCors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+
 }

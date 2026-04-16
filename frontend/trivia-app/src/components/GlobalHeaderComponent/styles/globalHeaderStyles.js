@@ -16,8 +16,15 @@ export const StyledGlobalHeaderLeftDiv = styled.div`
   justify-content: center;
   height: 100%;
   width: 50%;
-  ${({ theme }) => theme.panel.a1};
+  ${({ theme }) => theme.panel.a2};
+`
 
+export const StyledGlobalHeaderTitle = styled.h2`
+  display: flex;
+  align-items center;
+  justfy-content: center;
+  font-size: calc(1.5rem + 1vh);
+  ${({ theme }) => theme.panel.a2};
 `
 
 export const StyledGlobalHeaderRightDiv = styled.div`
@@ -27,7 +34,7 @@ export const StyledGlobalHeaderRightDiv = styled.div`
   padding-right: 15px;
   height: 100%;
   width: 50%;
-  ${({ theme }) => theme.panel.a1};
+  ${({ theme }) => theme.panel.a2};
 `
 
 export const StyledGlobalHeaderButton = styled.button`
@@ -36,9 +43,9 @@ export const StyledGlobalHeaderButton = styled.button`
   justify-content: center;
   height: 30px;
   width: fit-content;
-  font-size: 1rem;
+  font-size: calc(.25rem + 1vh);
   border-radius: 5px;
-  ${({theme}) => theme.primaryButton}
+  ${({theme}) => theme.primaryButton};
   // background: ${props => props.disabled ? "grey" : "white"};
   // color: black;
 
@@ -46,11 +53,4 @@ export const StyledGlobalHeaderButton = styled.button`
   //   background: lightblue;
   //   cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   // }
-`
-
-export const StyledGlobalHeaderTitle = styled.h2`
-  display: flex;
-  align-items center;
-  justfy-content: center;
-  ${({ theme }) => theme.panel.a1};
 `

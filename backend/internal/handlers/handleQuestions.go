@@ -79,7 +79,6 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 	for {
 		//Fetch trivia questions from OpenTDB API
 		apiUrl := buildOpenTDBUrl(currentAmountStr)
-		log.Printf("\nurl : %s", apiUrl)
 		res, err := http.Get(apiUrl)
 		if err != nil {
 			http.Error(w, "Failed to fetch trivia questions", http.StatusInternalServerError)

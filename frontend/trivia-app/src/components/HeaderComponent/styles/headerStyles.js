@@ -17,7 +17,7 @@ export const StyledHeaderLeftDiv = styled.div`
   width: 25%;
   align-items: center;
   justify-content: center;
-  border: solid 1px black;
+  ${({theme}) => theme.panel.a5};
 `
 
 export const StyledHeaderMiddleDiv = styled.div`
@@ -27,7 +27,8 @@ export const StyledHeaderMiddleDiv = styled.div`
   width: 50%;
   align-items: center;
   justify-content: center;
-  border: solid 1px black;
+  ${({ theme }) => theme.panel.a5};
+
 `
 
 export const StyledHeaderRightDiv = styled.div`
@@ -38,8 +39,9 @@ export const StyledHeaderRightDiv = styled.div`
   background: red;
   align-items: center;
   justify-content: center;
-  border: solid 1px black;
   color: black;
+  ${({ theme }) => theme.panel.a5};
+
 `
 
 export const StyledHeaderButton = styled.button`
@@ -57,6 +59,8 @@ export const StyledHeaderButton = styled.button`
     background: lightblue;
     cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   }
+  ${({ theme }) => theme.primaryButton};
+
 `
 
 export const StyledHeaderTitle = styled.div`

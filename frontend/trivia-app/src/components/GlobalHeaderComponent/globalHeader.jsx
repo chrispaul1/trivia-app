@@ -11,6 +11,7 @@ import {
  } from "./styles";
 import "@theme-toggles/react/css/classic.css"
 import { Classic } from "@theme-toggles/react"
+import { FaCheck } from "react-icons/fa6";
  
 export function GlobalHeader() {
 
@@ -20,7 +21,6 @@ export function GlobalHeader() {
     const location = useLocation()
     const { theme,toggleTheme } = useThemeContext()
     const [isToggled, setToggle] = useState(false)
-    console.log(theme)
 
     function getPageTitle(path){
         switch(path) {
@@ -42,7 +42,7 @@ export function GlobalHeader() {
         quizDispatch({ type: "RESET_GAME" })
         quizDispatch({ type: "END_GAME" })
         navigate('/login',{ replace: true})
-
+        console.log("logging out")
     }
 
     useEffect(()=>{
