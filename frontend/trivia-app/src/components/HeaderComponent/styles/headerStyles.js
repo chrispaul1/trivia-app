@@ -6,18 +6,16 @@ export const StyledHeaderOutline = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  background: orange;
+  ${({theme}) => theme.panel.a3};
 `
 
 export const StyledHeaderLeftDiv = styled.div`
   display: flex;
   height: 100%;
-  background: blue;
   width: stretch;
   width: 25%;
   align-items: center;
   justify-content: center;
-  ${({theme}) => theme.panel.a5};
 `
 
 export const StyledHeaderMiddleDiv = styled.div`
@@ -25,10 +23,9 @@ export const StyledHeaderMiddleDiv = styled.div`
   height: 100%;
   min-width: fit-content;
   width: 50%;
+  flex-grow: 1;
   align-items: center;
   justify-content: center;
-  ${({ theme }) => theme.panel.a5};
-
 `
 
 export const StyledHeaderRightDiv = styled.div`
@@ -36,11 +33,9 @@ export const StyledHeaderRightDiv = styled.div`
   height: 100%;
   width: stretch;
   width: 25%;
-  background: red;
   align-items: center;
   justify-content: center;
   color: black;
-  ${({ theme }) => theme.panel.a5};
 
 `
 
@@ -67,8 +62,9 @@ export const StyledHeaderTitle = styled.div`
   display: flex;
   align-items center;
   justfy-content: center;
-  font-size: ${(props) => props.fontSize};
-  color: black;
+  font-size: ${(props) => props.fontSize ? props.fontSize : `calc(.75rem + 1vw)`};
+  ${({ theme }) => theme.panel.a3};
+
 `
 
 export const StyledSubmitDiv = styled.div`

@@ -11,7 +11,7 @@ import { FaCheck } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa";
 
-export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
+export function DropdownQuestion({question, handleSettingsAnswer, selectedAnswer}) {
   const [isOpen,setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -28,7 +28,7 @@ export function DropdownQuestion({question, handleAnswer, selectedAnswer}) {
   }, [dropdownRef])
 
   function handleOptionClick(id,value){
-    handleAnswer(id, value)
+    handleSettingsAnswer(id, value)
     setIsOpen(false)
   }
 

@@ -61,8 +61,9 @@ export function SettingsPage(){
     <StyledParametersBackground>
       <Form
         questions={questions}
-        handleAnswer={handleSettingsAnswer}
-        answers={bufferSettings}
+        bufferSettings={bufferSettings}
+        handleStartQuiz={handleStartQuiz}
+        handleSettingsAnswer={handleSettingsAnswer}
       />
   </StyledParametersBackground>
   )

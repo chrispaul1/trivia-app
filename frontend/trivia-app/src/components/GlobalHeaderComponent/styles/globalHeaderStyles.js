@@ -7,7 +7,7 @@ export const StyledGlobalHeaderContainer = styled.div`
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  background: orange;
+  ${({ theme }) => theme.panel.a2};
 `
 
 export const StyledGlobalHeaderLeftDiv = styled.div`
@@ -21,9 +21,11 @@ export const StyledGlobalHeaderLeftDiv = styled.div`
 
 export const StyledGlobalHeaderTitle = styled.h2`
   display: flex;
-  align-items center;
-  justfy-content: center;
-  font-size: calc(1.5rem + 1vh);
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: calc(1.5rem + 1vw);
   ${({ theme }) => theme.panel.a2};
 `
 

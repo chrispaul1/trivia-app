@@ -39,7 +39,6 @@ export const StyledDropdownContent = styled.ul`
   -ms-overflow-style: none;
   z-index: 100;
   ${({ theme }) => theme.glass.a4};
-
 `
 export const StyledDropdownLabel = styled.label`
   display: flex;

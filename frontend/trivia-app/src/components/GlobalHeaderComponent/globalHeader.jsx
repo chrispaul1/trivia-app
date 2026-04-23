@@ -42,7 +42,6 @@ export function GlobalHeader() {
         quizDispatch({ type: "RESET_GAME" })
         quizDispatch({ type: "END_GAME" })
         navigate('/login',{ replace: true})
-        console.log("logging out")
     }
 
     useEffect(()=>{
@@ -64,7 +63,7 @@ export function GlobalHeader() {
             />
             <StyledGlobalHeaderButton
                 onClick={()=>handleLogout()}
-                disabled={quizState.isGameStarted}
+                disabled={quizState.isGameStarted && location.pathname != '/summary'}
             >
                 Log Out
             </StyledGlobalHeaderButton>

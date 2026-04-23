@@ -11,6 +11,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useThemeContext } from "../../contexts/theme/themeContext";
+import "@theme-toggles/react/css/classic.css"
+import { Classic } from "@theme-toggles/react"
 
 export function LoginPage() {
 
@@ -18,7 +20,12 @@ export function LoginPage() {
     const navigate = useNavigate()
     const quizState = useQuizState()
     const quizDispatch = useQuizDispatch()
-    const { theme } = useThemeContext()
+    const { theme,toggleTheme } = useThemeContext()
+    const [isToggled, setToggle] = useState(false)
+
+    useEffect(()=>{
+        toggleTheme()
+    },[isToggled])
 
     useEffect(() => {
         if (quizState.isLoggedIn) {
@@ -58,7 +65,19 @@ export function LoginPage() {
         <StyledLoginBackground>
             <StyledLoginDiv>
                 <StyledLoginTitle>
-                    Login
+                    <div
+                        style={{transform:'translateX(100%)'}}
+                    >
+                        Login
+                    </div>
+                    <Classic
+                        style={{
+                            marginLeft: 'auto',
+                            color: theme.textColor, 
+                            fontSize: '2rem' }}
+                        toggled={isToggled}
+                        toggle={setToggle}
+                    />
                 </StyledLoginTitle>
                 <StyledLoginInputContainer>
                     <StyledUserNameInputDiv>

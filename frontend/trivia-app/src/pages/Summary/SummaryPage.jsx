@@ -4,15 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { fetchTriviaQuestions, decodeAndShuffleQuestion } from "../../helpers/apiHelpers";
 import {
     StyledButtonDiv,
+    StyledSummaryDiv,
     StyledSummaryTitle,
     StyledSummaryButton,
     StyledSummaryItemDiv,
-    StyledSummaryDiv,
     StyledSummaryBackground,
+    StyledReviewQuestionDiv,
     StyledReviewQuestionBlock,
-    StyledSummaryScrollableDiv
+    StyledSummaryScrollableDiv,
+    StyledReviewQuestionContainer,
 } from ".";
 import { categoryNames } from "../../assets/categories";
+import { Header } from "../../components";
 
 export function QuizSummary({ }) {
 
@@ -21,32 +24,43 @@ export function QuizSummary({ }) {
     const quizState = useQuizState()
     const hasSubmitted = useRef(false); // Our old StrictMode friend!
     const navigate = useNavigate()
+
+    const headerState = [
+        {
+            id: 1,
+            placement: "middle",
+            type: "title",
+            text: "Review Missed Questions"
+        }
+    ]
     const ReviewQuestionsList = ({ }) => {
         return (
-            <>
-                <StyledSummaryItemDiv
-                    height="fit-content"
-                >
-                    Review Missed Questions
-                </StyledSummaryItemDiv>
+            <StyledReviewQuestionContainer>
+                <Header
+                    headerObjs={headerState}
+                />
                 <StyledSummaryScrollableDiv>
-                    {quizState.reviewQuestions.map((item, index) => {
+                   {quizState.reviewQuestions.length ? quizState.reviewQuestions.map((item, index) => {
                         return (
                             <StyledReviewQuestionBlock>
-                                <StyledSummaryItemDiv>
+                                <StyledReviewQuestionDiv>
                                     Question : {item.question}
-                                </StyledSummaryItemDiv>
-                                <StyledSummaryItemDiv>
+                                </StyledReviewQuestionDiv>
+                                <StyledReviewQuestionDiv>
                                     Your Choice : {item.your_answer}
-                                </StyledSummaryItemDiv>
-                                <StyledSummaryItemDiv>
+                                </StyledReviewQuestionDiv>
+                                <StyledReviewQuestionDiv>
                                     Correct Answer : {item.correct_answer}
-                                </StyledSummaryItemDiv>
+                                </StyledReviewQuestionDiv>
                             </StyledReviewQuestionBlock>
                         )
-                    })}
+                    }) :
+                        <StyledReviewQuestionDiv>
+                            You have no missed questions
+                        </StyledReviewQuestionDiv>
+                    }
                 </StyledSummaryScrollableDiv>
-            </>
+            </StyledReviewQuestionContainer>
         )
     }
 
@@ -146,9 +160,6 @@ export function QuizSummary({ }) {
 
     return (
         <StyledSummaryBackground>
-            <StyledSummaryTitle>
-                Quiz Summary
-            </StyledSummaryTitle>
             <StyledSummaryDiv>
                 <StyledSummaryItemDiv>
                     Your Score : {quizState.score}
@@ -158,12 +169,13 @@ export function QuizSummary({ }) {
                 </StyledSummaryItemDiv>
                 <StyledSummaryItemDiv>
                     Your Max Streak is : {quizState.maxStreak}
-
                 </StyledSummaryItemDiv>
                 <StyledSummaryItemDiv>
                     Quiz Difficulty : {quizState.settingsState.difficulty}
                 </StyledSummaryItemDiv>
+
                 <ReviewQuestionsList />
+
                 <StyledButtonDiv>
                     <StyledSummaryButton
                         onClick={() => handlePlayAgain()}

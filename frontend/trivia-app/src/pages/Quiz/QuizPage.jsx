@@ -6,7 +6,7 @@ import {
 } from ".."
 import { TriviaQuestionsComponent } from "../../components"
 import { useWindowSize } from "../../hooks/SizeHook"
-import { useLocation, useNavigate } from "react-router-dom"
+import { replace, useLocation, useNavigate } from "react-router-dom"
 import { categoryNames } from "../../assets/categories"
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext"
 import { fetchTriviaQuestions, decodeAndShuffleQuestion } from "../../helpers/apiHelpers"
@@ -44,12 +44,12 @@ export function QuizPage() {
 			quizDispatch({ type: "RESET_QUIZ_SETTINGS" })
 			navigate('/', { replace: true });
 		}
+		console.log("quiz state : ",quizState)
 	}, [])
 
 	//if the game hasn't started officially, send the user back to the menu
 	useEffect(() => {
 		if (!quizState.isGameStarted || !quizState.userID) {
-			console.log("game hasnt started, im going back to menu")
 			quizDispatch({ type: "RESET_GAME" }); // End the session intentionally
 			quizDispatch({ type: "RESET_QUIZ_SETTINGS" })
 			navigate('/', { replace: true });
@@ -82,6 +82,7 @@ export function QuizPage() {
 				} else {
 					quizDispatch({ type: "SET_QUESTIONS", payload: decodeAndShuffleQuestion(newQuestions) })
 				}
+				navigate('/quiz',{ replace: true })
 			}
 
 		} catch (error) {
@@ -89,7 +90,6 @@ export function QuizPage() {
 			quizDispatch({ type: "END_GAME" }); // End the session intentionally
 			quizDispatch({ type: "RESET_GAME" });
 			quizDispatch({ type: "RESET_QUIZ_SETTINGS" })
-			navigate("/", { replace: true })
 
 		} finally {
 

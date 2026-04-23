@@ -13,10 +13,13 @@ export const StyledQuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;                  
+  justify-content: flex-start;                  
   width: 100%;
   height: 25%;
+  padding-top: 5%;
   max-height: 25%;
+  overflow-Y: scroll;
+  border: solid 1px red;
 `
 
 export const StyledQuestionTextDiv = styled.div`

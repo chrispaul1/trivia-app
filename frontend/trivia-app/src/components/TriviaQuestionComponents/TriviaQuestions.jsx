@@ -6,6 +6,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import { useNavigate } from "react-router-dom";
 import "react-loading-skeleton/dist/skeleton.css";
 import './styles/styles.css'
+import { useThemeContext } from "../../contexts/theme/themeContext";
 import {
 	StyledAnswerButton,
 	StyledTimerContainer,
@@ -20,6 +21,7 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 	const navigate = useNavigate()
 	const quizDispatch = useQuizDispatch()
 	const quizState = useQuizState()
+	const { theme } = useThemeContext()
 	const { triviaQuestions } = quizState
 	const [itemOffset, setItemOffset] = useState(0);
 	const isQuizFinished = triviaQuestions.length > 0 && itemOffset >= triviaQuestions.length;
@@ -88,7 +90,6 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 			setItemOffset(prevOffset => prevOffset + 1)
 		}, 1000);
 
-
 		//fetches more questions in the endless mode if the user is close to finishing the questions
 		if (triviaQuestions.length - (itemOffset + 1) <= 3 && quizState.settingsState.mode == "endless") {
 
@@ -123,9 +124,12 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 		);
 	};
 
+	const baseColor = theme.panel.baseColor
+	const highlightColor = theme.panel.a2.backgroundColor
+
 	return (
 		<StyledTriviaBackground>
-			<SkeletonTheme baseColor="#202020" highlightColor="#444">
+			<SkeletonTheme baseColor={baseColor} highlightColor={highlightColor}>
 				<StyledQuestionContainer>
 					<StyledQuestionTextDiv>
 
@@ -175,8 +179,8 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 					) : (
 						<Skeleton
 							circle
-							width={"40vw"}
-							height={"40vw"}
+							width={"35vw"}
+							height={"35vw"}
 							count={1}
 						/>
 					)}

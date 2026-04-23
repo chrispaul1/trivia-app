@@ -26,7 +26,8 @@ export const StyledLoginTitle = styled.h2`
     font-size: 2.5rem;
     align-items: center;
     justify-content: center;
-    ${({ theme }) => theme.panel.a2};
+    ${({ theme }) => theme.panel.a3};
+    border: solid 5px ${({ theme }) => theme.panel.a4};
     border-radius: 12px;
 `
 
@@ -58,15 +59,17 @@ export const StyledLoginInput = styled.input`
     border: 1px solid #ccc;
     border-radius: 4px; 
     width: 70%;
-    ${({ theme }) => theme.glass.a4};
+    ${({ theme }) => theme.panel.a4};
 `
 
 export const StyledButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width:2 50px;
+    min-width: 250px;
+    min-height: 50px;
     width: 70%;
+    font-size: calc(.75rem + 1vw);
     ${({theme}) => theme.primaryButton};
 
     &: hover{

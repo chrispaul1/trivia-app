@@ -4,10 +4,10 @@ export const StyledSummaryBackground = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    background: purple;
-    width: 95vw;
+    justify-content: center;
+    width: 100%;
     height: 100vh;
+    ${({ theme }) => theme.panel.a1};
 `
 
 export const StyledSummaryTitle = styled.h2`
@@ -22,11 +22,12 @@ export const StyledSummaryDiv = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    padding-top: 15px;
     row-gap: 1rem;
-    background: lightblue;
-    height: 90%;ssss
-    width: 90%;
-    border: solid 1px black;
+    height: 90%;
+    width: 80%;
+    border-radius: 12px;
+    ${({ theme }) => theme.panel.a2};
 `
 
 export const StyledSummaryItemDiv = styled.div`
@@ -36,9 +37,20 @@ export const StyledSummaryItemDiv = styled.div`
     justify-content: center;
     color: black;
     height: ${(props) => props.height ? props.height : 'fit-content'};
-    width: ${(props) => props.width ? props.width : "90%"};
+    width: ${(props) => props.width ? props.width : "80%"};
+    ${({ theme }) => theme.panel.a3};
     padding: 15px 0px 15px 0px;
-    //border: solid 1px black;
+    border-radius: 12px;
+`
+
+export const StyledReviewQuestionContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-height: 15%;
+    max-height: 30%;
+    width: 80%;
+    border-radius: 12px;
+    ${({ theme }) => theme.panel.a1};
 `
 
 export const StyledSummaryScrollableDiv = styled.div`
@@ -47,21 +59,38 @@ export const StyledSummaryScrollableDiv = styled.div`
     align-items: center;
     justify-content: flex-start;
     background: white;
-    height: 20%;
+    height: 100%;
     row-gap: 15px;
     padding-top: 20px;
-    max-height: 200px;
-    width: 90%;
+    width: 100%;
     overflow-y: auto;
+    ${({ theme }) => theme.panel.a1};
+    /* hide page scrollbar */
+    html { scrollbar-width: none; } /* Firefox */
+    body { -ms-overflow-style: none; } /* IE and Edge */
+    body::-webkit-scrollbar, body::-webkit-scrollbar-button { display: none; } /* Chrome */
+    /* end hide page scrollbar */
 `
 
 export const StyledReviewQuestionBlock = styled.div`
     display: flex;
-    background: lightseagreen;
     flex-direction: column;
     width: 100%;
     align-items: center;
     justify-content: flex-start;
+    ${({ theme }) => theme.panel.a3};
+`
+
+export const StyledReviewQuestionDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    height: ${(props) => props.height ? props.height : 'fit-content'};
+    width: ${(props) => props.width ? props.width : "100%"};
+    ${({ theme }) => theme.panel.a4};
+    padding: 15px 0px 15px 0px;
 `
 
 export const StyledButtonDiv = styled.div`
@@ -76,6 +105,7 @@ export const StyledSummaryButton = styled.button`
     justify-content: center;
     min-width: 75px;
     width: fit-content;
+    ${({ theme }) => theme.primaryButton};
 
     &: hover{
         pointer: cursor

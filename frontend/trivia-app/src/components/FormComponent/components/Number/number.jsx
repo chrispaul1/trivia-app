@@ -7,26 +7,26 @@ import {
 } from "./numberStyles"
 import { StyledQuestionLabel } from "../Dropdown/dropdownStyles";
 
-export function NumberQuestion({question,handleAnswer,selectedAnswer,disabled}){
+export function NumberQuestion({ question, handleSettingsAnswer,selectedAnswer,disabled}){
 
   const [validAns, setValidAns] = useState(false)
 
   function validateNumberInput(value){
     if(value > question.limit || value <= 0) {
       setValidAns(false)
-      handleAnswer(question.id,0)
+      handleSettingsAnswer(question.id,0)
     }
     else{
       setValidAns(true)
-      handleAnswer(question.id, value)
+      handleSettingsAnswer(question.id, value)
     } 
   }
 
   useEffect(()=>{
     if(disabled){
-      handleAnswer(question.id,10)
+      handleSettingsAnswer(question.id,10)
     } else{
-      handleAnswer(question.id,0)
+      handleSettingsAnswer(question.id,0)
     }
   },[disabled])
 

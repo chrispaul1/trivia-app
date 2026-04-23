@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyledFormOutline } from ".";
+import { StyledButton } from "../../pages";
 import { DropdownQuestion,NumberQuestion } from "./components";
 
-export function Form({ questions, handleAnswer, answers }) {
+export function Form({ questions, bufferSettings, handleStartQuiz, handleSettingsAnswer }) {
   const formRef = useRef(null)
   useEffect(() => {
     function handleClickOutside(event) {
@@ -16,40 +17,47 @@ export function Form({ questions, handleAnswer, answers }) {
     }
   }, [formRef])
 
-  const isEndless = answers['mode'] == 'endless'
+  const isEndless = bufferSettings['mode'] == 'endless'
 
   return (
     <StyledFormOutline>
       <DropdownQuestion
         question={questions['mode']}
-        handleAnswer={handleAnswer}
-        selectedAnswer={answers['mode']}
+        handleSettingsAnswer={handleSettingsAnswer}
+        selectedAnswer={bufferSettings['mode']}
       />
 
       <DropdownQuestion
         question={questions['category']}
-        handleAnswer={handleAnswer}
-        selectedAnswer={answers['category']} 
+        handleSettingsAnswer={handleSettingsAnswer}
+        selectedAnswer={bufferSettings['category']} 
       />
 
       <DropdownQuestion
         question={questions['difficulty']}
-        handleAnswer={handleAnswer}
-        selectedAnswer={answers['difficulty']} 
+        handleSettingsAnswer={handleSettingsAnswer}
+        selectedAnswer={bufferSettings['difficulty']} 
       />
 
       <NumberQuestion
         question={questions['amount']}
-        handleAnswer={handleAnswer}
-        selectedAnswer={answers['amount']}
+        handleSettingsAnswer={handleSettingsAnswer}
+        selectedAnswer={bufferSettings['amount']}
         disabled={isEndless}
       />
 
       <DropdownQuestion
         question={questions['type']}
-        handleAnswer={handleAnswer}
-        selectedAnswer={answers['type']}
+        handleSettingsAnswer={handleSettingsAnswer}
+        selectedAnswer={bufferSettings['type']}
       />
+
+      <StyledButton
+        onClick={()=>handleStartQuiz()}
+      >
+        Start Quiz
+      </StyledButton>
+
     </StyledFormOutline>
   )
 }
