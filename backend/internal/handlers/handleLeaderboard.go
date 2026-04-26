@@ -21,8 +21,8 @@ type LeaderboardEntry struct {
 
 func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
-	//mode := r.URL.Query().Get("mode")
-	//category := r.URL.Query().Get("category")
+	category := r.URL.Query().Get("category")
+	difficulty := r.URL.Query().Get("difficulty")
 
 	var query string
 	var args []interface{}
@@ -33,21 +33,29 @@ func GetLeaderboard(w http.ResponseWriter, r *http.Request) {
 		FROM scores
 		JOIN users ON scores.user_id == users.id
 		WHERE users.name = ?
-		ORDER BY scores.score DESC
-		LIMIT 10
 		`
 		args = append(args, username)
 	} else {
-		//query to get the 20 rows with the highest marks
+		//query to get the 10 rows with the highest marks
 		query = `
 		SELECT users.name, scores.score, scores.answered_correctly, scores.total_questions, scores.category, scores.difficulty, scores.mode
 		FROM scores
 		JOIN users ON scores.user_id == users.id 
 		WHERE users.is_guest = 0
-		ORDER BY scores.score DESC 
-		LIMIT 10;
 		`
 	}
+
+	if category != "" {
+		query += " AND scores.category = ?"
+		args = append(args, category)
+	}
+
+	if difficulty != "" {
+		query += " AND scores.difficulty = ?"
+		args = append(args, difficulty)
+	}
+
+	query += " ORDER BY scores.score DESC LIMIT 10;"
 
 	rows, err := db.DB.Query(query, args...)
 	if err != nil {

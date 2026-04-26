@@ -6,31 +6,31 @@ export const categoryNames = {
     },
     {
       "id": 10,
-      "name": "Entertainment: Books"
+      "name": "Books"
     },
     {
       "id": 11,
-      "name": "Entertainment: Film"
+      "name": "Film"
     },
     {
       "id": 12,
-      "name": "Entertainment: Music"
+      "name": "Music"
     },
     {
       "id": 13,
-      "name": "Entertainment: Musicals & Theatres"
+      "name": "Musicals & Theatres"
     },
     {
       "id": 14,
-      "name": "Entertainment: Television"
+      "name": "Television"
     },
     {
       "id": 15,
-      "name": "Entertainment: Video Games"
+      "name": "Video Games"
     },
     {
       "id": 16,
-      "name": "Entertainment: Board Games"
+      "name": "Board Games"
     },
     {
       "id": 17,
@@ -38,11 +38,11 @@ export const categoryNames = {
     },
     {
       "id": 18,
-      "name": "Science: Computers"
+      "name": "Computers"
     },
     {
       "id": 19,
-      "name": "Science: Mathematics"
+      "name": "Mathematics"
     },
     {
       "id": 20,
@@ -82,19 +82,19 @@ export const categoryNames = {
     },
     {
       "id": 29,
-      "name": "Entertainment: Comics"
+      "name": "Comics"
     },
     {
       "id": 30,
-      "name": "Science: Gadgets"
+      "name": "Gadgets"
     },
     {
       "id": 31,
-      "name": "Entertainment: Japanese Anime & Manga"
+      "name": "Japanese Anime & Manga"
     },
     {
       "id": 32,
-      "name": "Entertainment: Cartoon & Animations"
+      "name": "Cartoon & Animations"
     }
   ]
 }

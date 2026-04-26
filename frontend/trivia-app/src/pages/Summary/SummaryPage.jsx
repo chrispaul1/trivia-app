@@ -12,6 +12,7 @@ import {
     StyledReviewQuestionDiv,
     StyledReviewQuestionBlock,
     StyledSummaryScrollableDiv,
+    StyledReviewQuestionHeaderDiv,
     StyledReviewQuestionContainer,
 } from ".";
 import { categoryNames } from "../../assets/categories";
@@ -33,12 +34,15 @@ export function QuizSummary({ }) {
             text: "Review Missed Questions"
         }
     ]
-    const ReviewQuestionsList = ({ }) => {
+    function ReviewQuestionsList({}){
         return (
             <StyledReviewQuestionContainer>
+                <StyledReviewQuestionHeaderDiv>
+
                 <Header
                     headerObjs={headerState}
-                />
+                    />
+                </StyledReviewQuestionHeaderDiv>
                 <StyledSummaryScrollableDiv>
                    {quizState.reviewQuestions.length ? quizState.reviewQuestions.map((item, index) => {
                         return (
@@ -130,7 +134,7 @@ export function QuizSummary({ }) {
     useEffect(() => {
         if (hasSubmitted.current) return
         hasSubmitted.current = true
-           //submitScore()
+        submitScore()
     }, [])
 
     //handles updating the score state in the context

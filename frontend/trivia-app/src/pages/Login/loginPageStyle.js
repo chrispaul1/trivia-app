@@ -28,7 +28,7 @@ export const StyledLoginTitle = styled.h2`
     justify-content: center;
     ${({ theme }) => theme.panel.a3};
     border: solid 5px ${({ theme }) => theme.panel.a4};
-    border-radius: 12px;
+    border-radius: 8px;
 `
 
 export const StyledLoginInputContainer = styled.div`
@@ -41,7 +41,7 @@ export const StyledLoginInputContainer = styled.div`
     height: 100%;
     width: 100%;
     ${({theme}) => theme.panel.a2};
-    border-radius: 12px;
+    border-radius: 8px;
 `
 
 export const StyledUserNameInputDiv = styled.div`

@@ -9,7 +9,7 @@ export const StyledFormOutline = styled.div`
   width: 80%;
   gap: 5vh;
   padding: 5vh 5px 0 5px;
-  border-radius: 12px;
+  border-radius: 8px;
   ${({theme}) => theme.panel.a2}
 `
 

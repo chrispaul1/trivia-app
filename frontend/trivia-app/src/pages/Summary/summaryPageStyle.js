@@ -26,7 +26,7 @@ export const StyledSummaryDiv = styled.div`
     row-gap: 1rem;
     height: 90%;
     width: 80%;
-    border-radius: 12px;
+    border-radius: 8px;
     ${({ theme }) => theme.panel.a2};
 `
 
@@ -40,17 +40,27 @@ export const StyledSummaryItemDiv = styled.div`
     width: ${(props) => props.width ? props.width : "80%"};
     ${({ theme }) => theme.panel.a3};
     padding: 15px 0px 15px 0px;
-    border-radius: 12px;
+    border-radius: 8px;
 `
 
 export const StyledReviewQuestionContainer = styled.div`
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
     min-height: 15%;
     max-height: 30%;
     width: 80%;
-    border-radius: 12px;
-    ${({ theme }) => theme.panel.a1};
+    border-radius: 8px;
+    contain: paint;
+`
+
+export const StyledReviewQuestionHeaderDiv = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 25px;
+    width: 100%;
+    ${({ theme }) => theme.panel.a3};
 `
 
 export const StyledSummaryScrollableDiv = styled.div`
@@ -61,7 +71,6 @@ export const StyledSummaryScrollableDiv = styled.div`
     background: white;
     height: 100%;
     row-gap: 15px;
-    padding-top: 20px;
     width: 100%;
     overflow-y: auto;
     ${({ theme }) => theme.panel.a1};
@@ -70,6 +79,7 @@ export const StyledSummaryScrollableDiv = styled.div`
     body { -ms-overflow-style: none; } /* IE and Edge */
     body::-webkit-scrollbar, body::-webkit-scrollbar-button { display: none; } /* Chrome */
     /* end hide page scrollbar */
+
 `
 
 export const StyledReviewQuestionBlock = styled.div`

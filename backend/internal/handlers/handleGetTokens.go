@@ -30,18 +30,17 @@ var httpClient = &http.Client{
 	Timeout: 15 * time.Second,
 }
 
-func FetchToken() (string, error) {
-	tokenLock.Lock()
-	defer tokenLock.Unlock()
+func FetchTokenSafe() (string, error) {
 	tokenUrl := "https://opentdb.com/api_token.php?command=request"
 
 	var resp *http.Response
 	var err error
+	log.Printf("Fetching the new token")
 
 	//Try 3 times to contact OpenTDB
 	maxRetries := 3
 	for i := range maxRetries {
-
+		log.Printf("tries : %d", i)
 		resp, err = httpClient.Get(tokenUrl)
 
 		if err == nil || resp.StatusCode == http.StatusOK {
@@ -55,6 +54,7 @@ func FetchToken() (string, error) {
 
 	//If we fail return an error msg
 	if err != nil || resp.StatusCode != http.StatusOK {
+		log.Printf("error returning")
 		return "", fmt.Errorf("Failed to reach OpenTDB after %d attempts: %w", maxRetries, err)
 	}
 
@@ -68,7 +68,15 @@ func FetchToken() (string, error) {
 	if err != nil || tokenResp.ResponseCode != 0 {
 		return "", errors.New("failed to fetch a valid token")
 	}
+
+	log.Printf("new token returned")
 	return tokenResp.Token, nil
+}
+
+func FetchToken() (string, error) {
+	tokenLock.Lock()
+	defer tokenLock.Unlock()
+	return FetchTokenSafe()
 }
 
 // Resets the token if it has expired after 6 hours
@@ -77,22 +85,41 @@ func ResetToken(userID int, token string) error {
 	defer tokenLock.Unlock()
 
 	resetUrl := "https://opentdb.com/api_token.php?command=reset&token=" + token
+	log.Printf("reset token url : %s", resetUrl)
 	resp, err := http.Get(resetUrl)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
-	var resetResp resetTokenResponse
+	var resetResponse resetTokenResponse
 	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&resetResp)
-	if err != nil || resetResp.ResponseCode != 0 {
-		return errors.New("failed to reset token")
+	err = decoder.Decode(&resetResponse)
+	log.Printf("token response : %v", resetResponse)
+
+	var finalToken string
+
+	switch resetResponse.ResponseCode {
+	case 0:
+		finalToken = resetResponse.Token
+	case 3:
+		log.Printf("get new token")
+		newToken, err := FetchTokenSafe()
+
+		if err != nil {
+			return errors.New("failed to fetch new token")
+		}
+		log.Printf("newToke : %s", newToken)
+
+		finalToken = newToken
+	default:
+		log.Printf("Err with resetting token : %v", err)
+		return fmt.Errorf("OpenTDB returned code %d during rest", resetResponse.ResponseCode)
 	}
 
-	sessionToken = resetResp.Token
+	log.Printf("update new token")
 	updateTokenQuery := `UPDATE session_tokens SET token = (?) WHERE user_id = (?)`
-	_, err = db.DB.Exec(updateTokenQuery, resetResp.Token, userID)
+	_, err = db.DB.Exec(updateTokenQuery, finalToken, userID)
 	if err != nil {
 		return errors.New("failed to update the session token")
 	}

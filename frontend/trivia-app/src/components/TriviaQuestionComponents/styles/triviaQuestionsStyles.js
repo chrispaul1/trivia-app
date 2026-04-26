@@ -18,8 +18,7 @@ export const StyledQuestionContainer = styled.div`
   height: 25%;
   padding-top: 5%;
   max-height: 25%;
-  overflow-Y: scroll;
-  border: solid 1px red;
+  overflow-y: scroll;
 `
 
 export const StyledQuestionTextDiv = styled.div`
@@ -64,7 +63,7 @@ export const StyledAnswerContainer = styled.div`
   width: 80%;
   height: 50%;
   row-gap: 5px;
-  border-radius: 12px;
+  border-radius: 8px;
   ${({ theme }) => theme.panel.a2};
 
   span {

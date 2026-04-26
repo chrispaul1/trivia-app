@@ -19,7 +19,7 @@ export const StyledMenuContainer = styled.div`
     align-items: center;
     height: 90%;
     width: 80%;
-    border-radius: 12px;
+    border-radius: 8px;
     ${({theme}) => theme.panel.a2};
 
 `

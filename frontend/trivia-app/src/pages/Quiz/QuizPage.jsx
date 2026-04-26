@@ -90,7 +90,7 @@ export function QuizPage() {
 			quizDispatch({ type: "END_GAME" }); // End the session intentionally
 			quizDispatch({ type: "RESET_GAME" });
 			quizDispatch({ type: "RESET_QUIZ_SETTINGS" })
-
+			navigate('/', { replace: true })
 		} finally {
 
 			setTimeout(() => {

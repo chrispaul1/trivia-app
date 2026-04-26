@@ -2,20 +2,33 @@ import React,{ useState, useEffect, useRef} from "react";
 import { 
     StyledTable,
     StyledColumnCell,
+    StyledFilterIcon,
+    StyledUsernameCell,
+    StyledHeaderRowText,
+    StyledFilterContainer,
     StyledLeaderboardContainer,
     StyledLeaderboardBackground } from ".";
 import { Header } from "../HeaderComponent";
-import DataTable from 'react-data-table-component';
 import { useOnClickOutside } from "../../hooks/SizeHook";
 import { useThemeContext } from "../../contexts/theme/themeContext";
+import { FaFilter } from "react-icons/fa";
+import { updatedCategories, difficulties } from "../../assets/questions";
+import Select from 'react-select'
 
 export function LeaderboardModal({ setDisplayLeaderboard }){
 
     const modalRef = useRef()
     const [ generalLeaderboard, setGeneralLeaderboard ] = useState( [] )
-    const [ userLeaderboard, setUserLeaderboard ] = useState( [] )
+    //const [ userLeaderboard, setUserLeaderboard ] = useState( [] )
     const [ showUserData,setShowUserData ] = useState( false )
     const { theme, toggleTheme } = useThemeContext()
+
+    //States dealing with the filter
+    const [ showFilterOptions, setShowFilterOptions] = useState(false)
+    const [ selectedCategory, setSelectedCategory ] = useState("")
+    const [ selectedDifficulty, setSelectedDifficulty ] = useState("")
+    const [ selectedUsername, setSelectedUsername ] = useState("") 
+
     useOnClickOutside( modalRef, () => setDisplayLeaderboard( false) )
 
     function handleClosingModal(){
@@ -35,10 +48,20 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         fetchLeaderboard(name, true)
     }
 
-    async function fetchLeaderboard(username = "", forSpecificUser = false) {
+    //Function to fetch the leaderboard data from the backend
+    async function fetchLeaderboard() {
         try {
-            const usernameUrl = `http://localhost:5000/leaderboard?username=${username}`
-            const response = await fetch(usernameUrl)
+            let leaderboardUrl = `http://localhost:5000/leaderboard?username=${selectedUsername}`
+            
+            if (selectedCategory) {
+                leaderboardUrl += `&category=${selectedCategory}`
+            }
+
+            if (selectedDifficulty) {
+                leaderboardUrl += `&difficulty=${selectedDifficulty}`
+            }
+
+            const response = await fetch(leaderboardUrl)
             if (!response.ok) {
                 throw new Error("Failed to fetch leaderboard data")
             }
@@ -46,15 +69,29 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             if(data.length == 0){
                 setUserLeaderboard([])
             }
-            if (forSpecificUser) {
-                setUserLeaderboard(data)
-            } else {
-                setGeneralLeaderboard(data)
-            }
+
+            setGeneralLeaderboard(data)
+  
         } catch (error) {
             console.error(error)
         }
     }
+
+    function handleSettingUserName(name){
+        setSelectedUsername(name)
+    }
+
+    function handleSettingCategory(newValue,actionMeta) {
+        setSelectedCategory(newValue)
+    }
+
+    function handleSettingDifficulty(newValue, actionMeta) {
+        setSelectedDifficulty(newValue)
+    }
+
+    useEffect(() => {
+        fetchLeaderboard()
+    }, [selectedCategory, selectedDifficulty, selectedUsername])
 
     const headerState = [
         {
@@ -69,27 +106,28 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             id: 1,
             placement: "middle",
             type: "title",
-            fontSize: "1.5rem",
+            fontSize: "calc(1rem + .75vw)",
             text: "User Leaderboard"
         },
         {
-            id: 1,
+            id:1,
             placement: "right",
             type: "button",
-            text: "Exit",
-            function: handleClosingModal,
+            icon: <StyledFilterIcon/>,
+            function:()=>setShowFilterOptions(prev => !prev)
         }
+
     ]
 
     const columns = [
         {
             name:'Username',
             cell: (row) =>(
-                <StyledColumnCell
-                    onClick={()=>fetchUserData(row.name)}
+                <StyledUsernameCell
+                    onClick={()=>handleSettingUserName(row.name)}
                 >
                     {row.name}
-                </StyledColumnCell>
+                </StyledUsernameCell>
             ),
             center:true,
             
@@ -111,20 +149,21 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
         {
             name:'Question Count',
             selector: row => row.totalQuestions,
-            grow:3,
+            grow:4,
             center: true,
             sortable: true
         },
         {
-            name:'Category',
+            name:"Category",
             selector: row => row.category,
-            grow:4,
+            grow:3,
             center: true
 
         },
         {
-            name:'Difficulty',
+            name:"Difficulty", 
             selector: row => row.difficulty,
+            grow:3,
             center: true
 
         },
@@ -134,6 +173,31 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             center: true
         }
     ]
+ 
+    const filterStyles = {
+
+        control: (provided) => ({
+            ...provided,
+            width: 250,
+            color: 'white',
+            background: theme.panel.a4.backgroundColor,
+            minWidth: 'max-content',
+        }),
+        menu: (provided) => ({
+            ...provided,
+            width: 'max-content',
+            background: theme.panel.a4.backgroundColor,
+            minWidth: '100%',
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected
+            ? theme.panel.a2.backgroundColor
+            : state.isFocused
+            ? theme.panel.a3.backgroundColor
+            : theme.panel.a4.backgroundColor
+        })
+    };
 
     return(
         <StyledLeaderboardBackground>
@@ -143,9 +207,39 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                 <Header
                     headerObjs={headerState}
                 />
+                {showFilterOptions&&
+                    <StyledFilterContainer>
+
+                        <Select
+                            options={updatedCategories}
+                            styles={filterStyles}
+                            closeMenuOnSelect={true}
+                            menuPlacement="auto"
+                            menuPosition="absolute"
+                            menuPortalTarget={document.body}
+                            onChange={handleSettingCategory}
+                            isClearable
+                            width={200}
+                            placeholder="Filter Categories"
+                        />
+
+                        <Select
+                            options={difficulties}
+                            styles={filterStyles}
+                            closeMenuOnSelect={true}
+                            menuPlacement="auto"
+                            menuPosition="absolute"
+                            menuPortalTarget={document.body}
+                            placeholder="Filter Difficulty"
+                            isClearable
+                            onChange={handleSettingDifficulty}
+                        />
+
+                    </StyledFilterContainer>
+                }
                 <StyledTable
                     columns={columns}
-                    data={showUserData ? userLeaderboard : generalLeaderboard}
+                    data={generalLeaderboard}
                 />
             </StyledLeaderboardContainer>
         </StyledLeaderboardBackground>

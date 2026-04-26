@@ -14,12 +14,14 @@ export function Header({headerObjs=[{}],disableButton}) {
   const middle = headerObjs.filter(obj => obj.placement == "middle")
   const rightSide = headerObjs.filter(obj => obj.placement == "right")
   const titleObj = middle.find(obj => obj.type == "title")
+  
   return(
     <StyledHeaderOutline>
       <StyledHeaderLeftDiv>
         {leftSide.length > 0 && leftSide.map(obj => (
           obj.showContent ?
-          <StyledHeaderButton key={obj.id}
+          <StyledHeaderButton 
+            key={obj.id}
             onClick={obj.function}
           >
             {obj.text && obj.text}

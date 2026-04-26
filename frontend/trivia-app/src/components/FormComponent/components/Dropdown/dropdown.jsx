@@ -48,12 +48,12 @@ export function DropdownQuestion({question, handleSettingsAnswer, selectedAnswer
         <StyledDropdownContent>
           {question.options.map(option=>( 
             <StyledDropdownLabel
-              key={option.text ? option.text : option}
+              key={option.value}
             >
               <StyledDropdownItem
-                onClick={() => handleOptionClick(question.id, option.text ? option.value.toLowerCase() : option.toLowerCase())}
+                onClick={() => handleOptionClick(question.id, option.value.toLowerCase() )}
               >
-                {option.text || option}
+                {option.label}
                 {(option.value == selectedAnswer.toLowerCase() || String(option).toLowerCase() == selectedAnswer.toLowerCase()) && 
                   <FaCheck/>
                 }                

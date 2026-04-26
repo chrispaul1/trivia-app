@@ -33,7 +33,7 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 	var apiData ApiResponse
 
-	//Get the params value
+	//Get the parameters value
 	amount := r.URL.Query().Get("amount")
 	category := r.URL.Query().Get("category")
 	difficulty := r.URL.Query().Get("difficulty")
@@ -142,28 +142,15 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 			//Try the API call again with the new token
 			sessionToken, err = GetToken(userID)
-			if err != nil {
-				http.Error(w, "Failed to get token : "+err.Error(), http.StatusInternalServerError)
-				return
-			}
 
-			apiUrl = buildOpenTDBUrl(currentAmountStr)
+			time.Sleep(5 * time.Second)
+			continue
+		}
 
-			res, err = http.Get(apiUrl)
-			if err != nil || res.StatusCode != http.StatusOK {
-				http.Error(w, "Failed to fetch trivia questions", http.StatusInternalServerError)
-				return
-			}
-			defer res.Body.Close()
-
-			decoder = json.NewDecoder(res.Body)
-			err = decoder.Decode(&apiData)
-			if err != nil || res.StatusCode != http.StatusOK {
-				{
-					http.Error(w, "Failed to parse API response after token reset", http.StatusInternalServerError)
-					return
-				}
-			}
+		//If the openTDB api was called too quickly, wait and then call it again
+		if apiData.ResponseCode == 5 {
+			time.Sleep(5 * time.Second)
+			continue
 		}
 	}
 
