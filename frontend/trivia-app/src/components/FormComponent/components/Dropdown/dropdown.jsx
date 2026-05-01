@@ -54,7 +54,7 @@ export function DropdownQuestion({question, handleSettingsAnswer, selectedAnswer
                 onClick={() => handleOptionClick(question.id, option.value.toLowerCase() )}
               >
                 {option.label}
-                {(option.value == selectedAnswer.toLowerCase() || String(option).toLowerCase() == selectedAnswer.toLowerCase()) && 
+                {(option.value.toLowerCase() == selectedAnswer.toLowerCase() || String(option).toLowerCase() == selectedAnswer.toLowerCase()) && 
                   <FaCheck/>
                 }                
               </StyledDropdownItem>

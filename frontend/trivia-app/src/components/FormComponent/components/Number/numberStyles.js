@@ -4,7 +4,7 @@ export const StyledNumberContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 90%;
   row-gap: 5px;
   position: relative;
 `
@@ -23,7 +23,7 @@ export const StyledInput = styled.input`
   background: white;
   padding: .5rem 0 .5rem .5rem;
   border-radius: .25rem;
-  ${({ theme }) => theme.glass.a4};
+  ${({ theme }) => theme.panel.a4};
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;

@@ -1,6 +1,6 @@
 import { categoryNames } from "../assets/categories"
 
-const modeTypes = [
+export const modeTypes = [
     {
         value: "Standard",
         label: "Standard"
@@ -42,10 +42,19 @@ export const difficulties = [
 
 ]
 //question type
-const questionType = [
-    {label:"Any Type",value:"any type"},
-    {label:"Multiple Choice",value:"multiple"},
-    {text:"True / False",value:"boolean"}
+export const questionTypes = [
+    {
+        label:"Any Type",
+        value:"any type"
+    },
+    {
+        label:"Multiple Choice",
+        value:"multiple"
+    },
+    {
+        label:"True / False",
+        value:"boolean"
+    }
 ]
 //questions array objets
 export const questions = {
@@ -53,6 +62,6 @@ export const questions = {
     category : { id: "category", type: 'dropdown', label: "Select your Categories", options: updatedCategories, required: false },
     difficulty: { id: "difficulty", type: 'dropdown', label: "Select your difficulty", options: difficulties, required: false },
     amount : { id: "amount", type: "numerical", limit: 50,text: "Enter the Number of Questions", required: true },
-    type : { id: "type", type: "dropdown", label: "Select the question type", options: questionType, required: false },
+    type : { id: "type", type: "dropdown", label: "Select the question type", options: questionTypes, required: false },
     //{ id: "timeLimit", type: "time", text: "Set the time limit" }
 }

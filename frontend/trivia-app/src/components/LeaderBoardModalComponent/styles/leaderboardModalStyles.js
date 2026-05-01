@@ -26,21 +26,20 @@ export const StyledLeaderboardContainer = styled.div`
     z-index: 1000;
     ${({ theme }) => theme.panel.a3};
     border-radius: 6px;
-    transform: translateY(-100%);
     &: hover{
         cursor: default;
     }
 `
 
-export const StyledUsernameCell = styled.div`
+export const StyledUsernameCell = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    width: 100%;
-    ${({ theme }) => theme.panel.a1};
+    height: fit-content;
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
     cursor: pointer;
-    color: blue;
+    ${({ theme }) => theme.primaryButton};
 `
 
 export const StyledColumnCell = styled.div`
@@ -57,7 +56,7 @@ export const StyledColumnCell = styled.div`
 export const StyledHeaderRowText = styled.div`
     display: flex;
     width: 100%;
-    justify-content: space-evenly;
+    justify-content:  space-evenly;
 `
 
 export const StyledFilterIcon = styled(FaFilter)`
@@ -76,25 +75,55 @@ export const StyledFilterContainer = styled.div`
 
 export const StyledTable = styled(DataTable)`
     .rdt_Table {
-        background-color: ${({ theme }) => theme.baseColor};
-        border-radius: inherit;
+        background-color: ${({ theme }) => theme.panel.a5.backgroundColor};
         min-width: 500px;
+    }
+    
+    .rdt_TableRow {
+
+    }
+
+    .rdt_TableCol {
+    
+    }
+
+    .rdt_TableCol_Sortable {
+    
+    }
+
+    .rdt_TableCell {
+        display: flex;
+        flex-wrap: wrap;
+        ${({ theme }) => theme.panel.a2};
+    }
+    
+    .rdt_TableHeader{
+        ${({ theme }) => theme.panel.a5};
     }
 
     .rdt_TableHead {
         background-color: ${({theme}) => theme.baseColor};
     }
 
-    .rdt_TableCell {
-        ${({ theme }) => theme.panel.a1};
-        border-radius: inherit;
-    }
         
     .rdt_TableHeadRow {
+        font-size: 1rem;
+        font-weight: bold;
         ${({ theme }) => theme.panel.a3};
-        min-width: 175px;
     }
     
+    .rdt_TableBody {
+
+    }
+`
+export const StyledEmptyState = styled.div`
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 100%;
+    border-radius: 0px;
+    ${({ theme }) => theme.panel.a2};
 `
 
 

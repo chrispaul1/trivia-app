@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -108,7 +107,7 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 		//If there are fewer questions than what was requested, retry with less questions
 		if apiData.ResponseCode == 1 {
-			log.Println("calling from the waterfall")
+			//log.Println("calling from the waterfall")
 			amountInt, _ := strconv.Atoi(currentAmountStr)
 
 			if amountInt > 40 {
@@ -134,7 +133,7 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 		//If the token is invalid or empty, reset it and try again
 		if apiData.ResponseCode == 3 || apiData.ResponseCode == 4 {
-			log.Println("Token expired or empty, resetting...")
+			//log.Println("Token expired or empty, resetting...")
 			if err := ResetToken(userID, sessionToken); err != nil {
 				http.Error(w, "Failed to reset Token: "+err.Error(), http.StatusInternalServerError)
 				return
@@ -156,7 +155,7 @@ func HandleQuestion(w http.ResponseWriter, r *http.Request) {
 
 	//Check if the API call was not successful
 	if apiData.ResponseCode != 0 && apiData.ResponseCode != 1 {
-		log.Printf("OpenTDB API returned response code %d", apiData.ResponseCode)
+		//log.Printf("OpenTDB API returned response code %d", apiData.ResponseCode)
 		http.Error(w, "OpenTDB returned an error", http.StatusBadGateway)
 		return
 	}

@@ -1,6 +1,7 @@
 import React,{ useState, useEffect, useRef} from "react";
 import { 
     StyledTable,
+    StyledEmptyState,
     StyledColumnCell,
     StyledFilterIcon,
     StyledUsernameCell,
@@ -12,7 +13,7 @@ import { Header } from "../HeaderComponent";
 import { useOnClickOutside } from "../../hooks/SizeHook";
 import { useThemeContext } from "../../contexts/theme/themeContext";
 import { FaFilter } from "react-icons/fa";
-import { updatedCategories, difficulties } from "../../assets/questions";
+import { updatedCategories, difficulties, modeTypes } from "../../assets/questions";
 import Select from 'react-select'
 
 export function LeaderboardModal({ setDisplayLeaderboard }){
@@ -27,6 +28,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     const [ showFilterOptions, setShowFilterOptions] = useState(false)
     const [ selectedCategory, setSelectedCategory ] = useState("")
     const [ selectedDifficulty, setSelectedDifficulty ] = useState("")
+    const [ selectedMode, setSelectedMode ] = useState("")
     const [ selectedUsername, setSelectedUsername ] = useState("") 
 
     useOnClickOutside( modalRef, () => setDisplayLeaderboard( false) )
@@ -54,23 +56,31 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             let leaderboardUrl = `http://localhost:5000/leaderboard?username=${selectedUsername}`
             
             if (selectedCategory) {
-                leaderboardUrl += `&category=${selectedCategory}`
+                const safeCategory = encodeURIComponent(selectedCategory)
+                leaderboardUrl += `&category=${safeCategory}`
             }
 
             if (selectedDifficulty) {
                 leaderboardUrl += `&difficulty=${selectedDifficulty}`
             }
 
+            if (selectedMode) {
+                leaderboardUrl += `&mode=${selectedMode}`
+            }
+
+            console.log("leaderboardUrl :",leaderboardUrl)
+
             const response = await fetch(leaderboardUrl)
             if (!response.ok) {
                 throw new Error("Failed to fetch leaderboard data")
             }
             const data = await response.json()
-            if(data.length == 0){
-                setUserLeaderboard([])
-            }
 
-            setGeneralLeaderboard(data)
+            if(data == null || data.length == 0){
+                setGeneralLeaderboard([])
+            } else {
+                setGeneralLeaderboard(data)
+            }
   
         } catch (error) {
             console.error(error)
@@ -82,11 +92,31 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     }
 
     function handleSettingCategory(newValue,actionMeta) {
-        setSelectedCategory(newValue)
+        if (newValue && newValue.value != null) {
+            setSelectedCategory(newValue.value)
+            return
+        }
+        setSelectedCategory("")
     }
 
     function handleSettingDifficulty(newValue, actionMeta) {
-        setSelectedDifficulty(newValue)
+        if (newValue && newValue.value != null) {
+            setSelectedDifficulty(newValue.value)
+            return
+        }
+        setSelectedDifficulty("")
+    }
+
+    function handleSettingMode(newValue, actionMeta) {
+        if (newValue && newValue.value != null) {
+            setSelectedMode(newValue.value)
+            return
+        }
+        setSelectedMode("")
+    }
+
+    function handleCapitalizeWords(stringVal){
+        return stringVal.split(" ").map(([ firstLetter, ...otherLetters ]) => `${firstLetter.toUpperCase()}${otherLetters.join("")}`).join(" ");
     }
 
     useEffect(() => {
@@ -129,6 +159,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                     {row.name}
                 </StyledUsernameCell>
             ),
+            grow:3,
             center:true,
             
         },
@@ -140,42 +171,48 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
 
         },
         {
-            name:'Correct Count',
-            selector: row => row.answered_correctly,
-            grow:3,
-            center: true,
-            sortable: true
-        },
-        {
-            name:'Question Count',
-            selector: row => row.totalQuestions,
-            grow:4,
+            name:'Accuracy',
+            cell: (row) => {
+                const correct = row.answered_correctly
+                const total = row.total_questions
+                const percentage = total > 0 ? Math.round((correct/total)*100) : 0;
+                return (
+                    <StyledColumnCell>
+                        <strong>
+                            {percentage}%
+                        </strong>
+                        <span>
+                            ({correct}/{total})
+                        </span>
+                    </StyledColumnCell>
+                )
+            },
+            grow: 3,
             center: true,
             sortable: true
         },
         {
             name:"Category",
-            selector: row => row.category,
-            grow:3,
+            selector: row => handleCapitalizeWords(row.category),
+            minWidth: '150px',
             center: true
 
         },
         {
             name:"Difficulty", 
-            selector: row => row.difficulty,
+            selector: row => handleCapitalizeWords(row.difficulty),
             grow:3,
             center: true
 
         },
         {
             name:'Mode',
-            selector: row => row.mode,
+            selector: row => handleCapitalizeWords(row.mode),
             center: true
         }
     ]
  
-    const filterStyles = {
-
+    const filterStyles = { 
         control: (provided) => ({
             ...provided,
             width: 250,
@@ -189,6 +226,11 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             background: theme.panel.a4.backgroundColor,
             minWidth: '100%',
         }),
+        placeholder: (defaultStyles) => ({
+            ...defaultStyles,
+            color: theme.textColor
+        })
+        ,
         option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
@@ -196,6 +238,10 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             : state.isFocused
             ? theme.panel.a3.backgroundColor
             : theme.panel.a4.backgroundColor
+        }),
+        singleValue: (baseStyles) => ({
+            ...baseStyles,
+            color: theme.panel.textColor
         })
     };
 
@@ -208,7 +254,9 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                     headerObjs={headerState}
                 />
                 {showFilterOptions&&
-                    <StyledFilterContainer>
+                    <StyledFilterContainer
+                        onClick={(e) => e.stopPropagation()}
+                    >
 
                         <Select
                             options={updatedCategories}
@@ -235,11 +283,28 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
                             onChange={handleSettingDifficulty}
                         />
 
+                        <Select
+                            options={modeTypes}
+                            styles={filterStyles}
+                            closeMenuOnSelect={true}
+                            menuPlacement="auto"
+                            menuPosition="absolute"
+                            menuPortalTarget={document.body}
+                            placeholder="Filter Mode"
+                            isClearable
+                            onChange={handleSettingMode}
+                        />
+
                     </StyledFilterContainer>
                 }
                 <StyledTable
                     columns={columns}
                     data={generalLeaderboard}
+                    noDataComponent={
+                        <StyledEmptyState>
+                            No records to display
+                        </StyledEmptyState>
+                    }
                 />
             </StyledLeaderboardContainer>
         </StyledLeaderboardBackground>

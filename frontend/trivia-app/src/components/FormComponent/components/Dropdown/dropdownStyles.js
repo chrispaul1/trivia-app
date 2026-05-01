@@ -15,10 +15,11 @@ export const StyledQuestionLabel = styled.label`
   padding: .5rem .25rem .5rem .25rem;
   height: fit-content;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
   border-radius: 0.25rem;
   box-shadow: 0px 8px 24px rgb(149,157,165,.2);
-  ${({ theme }) => theme.panel.a3}
+  ${({ theme }) => theme.panel.a4}
 `
 export const StyledDropdownContent = styled.ul`
   display: flex;
