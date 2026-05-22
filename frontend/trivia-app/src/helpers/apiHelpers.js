@@ -11,6 +11,7 @@
       if (difficulty) apiUrl += `&difficulty=${encodeURIComponent(difficulty)}`
       if (type) apiUrl += `&type=${encodeURIComponent(type)}`
       if (userID) apiUrl += `&userid=${userID}`
+      console.log("apiUrl :",apiUrl)
       const res = await fetch(apiUrl)
 
       if (!res.ok) {

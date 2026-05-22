@@ -16,7 +16,6 @@ export const StyledQuestionLabel = styled.label`
   height: fit-content;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   border-radius: 0.25rem;
   box-shadow: 0px 8px 24px rgb(149,157,165,.2);
   ${({ theme }) => theme.panel.a4}

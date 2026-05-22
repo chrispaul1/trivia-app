@@ -17,6 +17,7 @@ export const StyledLoginDiv = styled.div`
     align-items: center;
     height: 100%;
     width: 80%;
+    min-width: 400px;
 `
 
 export const StyledLoginTitle = styled.h2`

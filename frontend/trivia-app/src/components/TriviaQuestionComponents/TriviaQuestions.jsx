@@ -37,7 +37,7 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 	const [currentStreak, setCurrentStreak] = useState(0)
 
 
-	const isEndless = quizState.settingsState.mode == "endless"
+	const isEndless = quizState.settingsState.mode.toLowerCase() == "endless"
 	const timerKey = isEndless ? "endless-timer" : itemOffset
 
 	useEffect(() => {

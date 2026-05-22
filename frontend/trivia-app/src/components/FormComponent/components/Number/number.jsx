@@ -7,26 +7,26 @@ import {
 } from "./numberStyles"
 import { StyledQuestionLabel } from "../Dropdown/dropdownStyles";
 
-export function NumberQuestion({ question, handleSettingsAnswer,selectedAnswer,disabled}){
+export function NumberQuestion({ question, handleInputChange, selectedAnswer,disabled}){
 
   const [validAns, setValidAns] = useState(false)
 
   function validateNumberInput(value){
     if(value > question.limit || value <= 0) {
       setValidAns(false)
-      handleSettingsAnswer(question.id,0)
+      handleInputChange(0)
     }
     else{
       setValidAns(true)
-      handleSettingsAnswer(question.id, value)
+      handleInputChange(value)
     } 
   }
 
   useEffect(()=>{
     if(disabled){
-      handleSettingsAnswer(question.id,10)
+      handleInputChange(10)
     } else{
-      handleSettingsAnswer(question.id,0)
+      handleInputChange(0)
     }
   },[disabled])
 
@@ -35,7 +35,7 @@ export function NumberQuestion({ question, handleSettingsAnswer,selectedAnswer,d
       <StyledQuestionLabel>
         {question.text} 
         {question.required && "*"}
-        {!validAns && 
+        {!validAns &&  !disabled &&
           <IoMdAlert 
             style={{color:"red",marginLeft:"5px"}}
             />
@@ -53,6 +53,7 @@ export function NumberQuestion({ question, handleSettingsAnswer,selectedAnswer,d
           max={question.limit}
           onChange={(e) => validateNumberInput(e.target.value)}
           disabled={disabled}
+          $status={disabled ? 'disabled' : 'active'}
         />
       </StyledNumberLabel>
     </StyledNumberContainer>

@@ -61,14 +61,12 @@ export function SettingsPage() {
             alert("The maximum number of questions per game is 50");
             return;
         }
-        console.log("calling from the settings")
+
         quizDispatch({ type: "SET_QUIZ_SETTINGS", payload: bufferSettings })
         quizDispatch({ type: "RESET_GAME" })
         quizDispatch({ type: "START_GAME" })
         navigate("/quiz")
     }
-
-    const isEndless = bufferSettings['mode'] == 'endless'
 
     function handleQuestionAnswers(option, questionID) {
         if (option && option != null) {
@@ -80,15 +78,9 @@ export function SettingsPage() {
 
     function handleInputChange(inputValue){
         
-        if(inputValue == "" || inputValue == null){
-            setInputValue("")
-            return
-        }
-
-        let newVal = inputValue.replace(/\D/g, "")
-        if (newVal >= 0 && newVal < questions['amount'].limit){
-            setInputValue(newVal)
-            handleQuestionAnswers(newVal,questions['amount'].id)
+        if (inputValue >= 0 && inputValue < questions['amount'].limit){
+            setInputValue(inputValue)
+            handleSettingsAnswer(questions['amount'].id, inputValue)
         }
     }
 
@@ -96,11 +88,14 @@ export function SettingsPage() {
         container: (base) => ({
             ...base,
             width:'90%',
+            height:'10%',
         }),
         control: (provided) => ({
             ...provided,
             color: 'white',
             width: '100%',
+            height: '100%',
+            fontSize: 'calc(.75rem + .75vw)',
             background: theme.panel.a4.backgroundColor,
         }),
         menu: (provided) => ({
@@ -141,6 +136,11 @@ export function SettingsPage() {
         DropdownIndicatior: null,
     };
 
+    const isEndless = bufferSettings['mode'].toLowerCase() == 'endless'
+
+    useEffect(()=>{
+        console.log("bufferSettings : ",bufferSettings)
+    },[bufferSettings])
 
     return (
         <StyledParametersBackground>
@@ -196,7 +196,7 @@ export function SettingsPage() {
 
                 <NumberQuestion
                     question={questions['amount']}
-                    handleSettingsAnswer={handleSettingsAnswer}
+                    handleInputChange={handleInputChange}
                     selectedAnswer={bufferSettings['amount']}
                     disabled={isEndless}
                 />

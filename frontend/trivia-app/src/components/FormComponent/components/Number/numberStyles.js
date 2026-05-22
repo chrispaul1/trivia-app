@@ -32,4 +32,11 @@ export const StyledInput = styled.input`
     input[type=number] {
     -moz-appearance: textfield;
   }
+
+  &:hover {
+    ${({ $status }) => $status === 'disabled' && `
+      cursor: not-allowed;
+    `}
+  }
+
 `

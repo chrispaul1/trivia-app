@@ -10,6 +10,7 @@ export const StyledQuestionsBackground = styled.div`
     height: 100vh; 
     width: 100vw; 
 `
+
 export const StyledQuestionsOutline = styled.div` 
     display: flex; 
     flex-direction: column;
@@ -18,6 +19,7 @@ export const StyledQuestionsOutline = styled.div`
     width: 100%; 
     color: black; 
 `
+
 export const StyledPaginate = styled(ReactPaginate)`
   display: flex;
   list-style: none;
@@ -58,11 +60,8 @@ export const StyledPaginate = styled(ReactPaginate)`
     &:hover {
       background-color: #eee;
     }
-
-
   }
     
-
   li.active a {
     background-color: #007bff;
     color: white;
