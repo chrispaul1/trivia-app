@@ -138,9 +138,9 @@ export function SettingsPage() {
 
     const isEndless = bufferSettings['mode'].toLowerCase() == 'endless'
 
-    useEffect(()=>{
-        console.log("bufferSettings : ",bufferSettings)
-    },[bufferSettings])
+    // useEffect(()=>{
+    //     console.log("bufferSettings : ",bufferSettings)
+    // },[bufferSettings])
 
     return (
         <StyledParametersBackground>

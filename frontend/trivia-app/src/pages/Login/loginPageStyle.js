@@ -24,6 +24,7 @@ export const StyledLoginTitle = styled.h2`
     display: flex;
     height: 10%;
     width: 100%;
+    min-height: 75px;
     font-size: 2.5rem;
     align-items: center;
     justify-content: center;

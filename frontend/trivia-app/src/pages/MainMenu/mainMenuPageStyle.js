@@ -6,7 +6,7 @@ export const StyledMenuBackground = styled.div`
     justify-content: center;
     align-items: center;
     height: 100vh;
-    width: 100%;
+    width: 100vw;
     ${({ theme }) => theme.panel.a1};
 `
 

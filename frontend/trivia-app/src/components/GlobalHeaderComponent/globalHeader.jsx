@@ -9,9 +9,9 @@ import {
     StyledGlobalHeaderRightDiv,
     StyledGlobalHeaderContainer,
  } from "./styles";
-import "@theme-toggles/react/css/classic.css"
-import { Classic } from "@theme-toggles/react"
-import { FaCheck } from "react-icons/fa6";
+import { Classic } from "@theme-toggles/react";
+import "@theme-toggles/react/styles/classic.css";
+// import { FaCheck } from "react-icons/fa6";
  
 export function GlobalHeader() {
 
@@ -20,7 +20,7 @@ export function GlobalHeader() {
     const navigate = useNavigate()
     const location = useLocation()
     const { theme,toggleTheme } = useThemeContext()
-    const [isToggled, setToggle] = useState(false)
+    const [toggled, setToggled] = useState(false)
 
     function getPageTitle(path){
         switch(path) {
@@ -46,7 +46,7 @@ export function GlobalHeader() {
 
     useEffect(()=>{
         toggleTheme()
-    },[isToggled])
+    },[toggled])
 
   return(
       <StyledGlobalHeaderContainer>
@@ -57,9 +57,12 @@ export function GlobalHeader() {
         </StyledGlobalHeaderLeftDiv>
         <StyledGlobalHeaderRightDiv>
             <Classic
-                style={{color:theme.textColor,fontSize:'2rem'}}
-                toggled={isToggled}
-                toggle={setToggle}
+                style={{
+                    background:theme.panel.a2.backgroundColor,
+                    color:theme.textColor,
+                    fontSize:'1.5rem'}}
+                toggled={toggled}
+                onClick={()=> setToggled((value) => !value)}
             />
             <StyledGlobalHeaderButton
                 onClick={()=>handleLogout()}

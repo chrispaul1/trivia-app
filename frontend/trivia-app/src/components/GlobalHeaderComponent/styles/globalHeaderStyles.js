@@ -4,7 +4,7 @@ export const StyledGlobalHeaderContainer = styled.div`
   display: flex;
   height: 5vh;
   min-height: 75px;
-  width: 100%;
+  width: 100vw;
   align-items: center;
   justify-content: space-between;
   ${({ theme }) => theme.panel.a2};
@@ -45,7 +45,7 @@ export const StyledGlobalHeaderButton = styled.button`
   justify-content: center;
   height: 30px;
   width: fit-content;
-  font-size: calc(.25rem + 1vh);
+  font-size: calc(.5rem + 1vh);
   border-radius: 5px;
   ${({theme}) => theme.primaryButton};
   // background: ${props => props.disabled ? "grey" : "white"};

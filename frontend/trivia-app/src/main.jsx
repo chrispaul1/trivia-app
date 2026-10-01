@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')).render(
       <QuizProvider>
         <ThemeProvider>
           <ErrorBoundary
-            FallbackComponent={ErrorBoundary}
+            FallbackComponent={ErrorFallback}
           >
             <App/>
           </ErrorBoundary>

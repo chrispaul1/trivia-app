@@ -7,7 +7,7 @@ export const StyledParametersBackground = styled.div`
   align-items: center;
   background: white;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   ${({theme}) => theme.panel.a1};
 `
 

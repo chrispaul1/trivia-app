@@ -15,6 +15,8 @@ import { useThemeContext } from "../../contexts/theme/themeContext";
 import { FaFilter } from "react-icons/fa";
 import { updatedCategories, difficulties, modeTypes } from "../../assets/questions";
 import Select from 'react-select'
+import DataTable from "react-data-table-component";
+
 
 export function LeaderboardModal({ setDisplayLeaderboard }){
 
@@ -30,7 +32,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     const [ selectedDifficulty, setSelectedDifficulty ] = useState("")
     const [ selectedMode, setSelectedMode ] = useState("")
     const [ selectedUsername, setSelectedUsername ] = useState("") 
-
+    console.log("What is DataTable?", DataTable);
     useOnClickOutside( modalRef, () => setDisplayLeaderboard( false) )
 
     function handleClosingModal(){
@@ -171,6 +173,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
 
         },
         {
+            selector: row => row.answered_correctly/(row.total_questions || 1),
             name:'Accuracy',
             cell: (row) => {
                 const correct = row.answered_correctly
@@ -297,6 +300,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
 
                     </StyledFilterContainer>
                 }
+
                 <StyledTable
                     columns={columns}
                     data={generalLeaderboard}

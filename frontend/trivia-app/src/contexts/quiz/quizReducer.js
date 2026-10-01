@@ -4,7 +4,7 @@ export const initialState = {
     category: "General Knowledge",
     difficulty: "medium",
     type: "",
-    amount: 4,
+    amount: 5,
     mode: 'standard'
   },
   triviaQuestions: [],

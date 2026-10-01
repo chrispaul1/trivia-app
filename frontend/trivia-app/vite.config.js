@@ -19,6 +19,11 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    css: false
+  },
   resolve: {
     alias: {
         crypto: 'crypto-browserify'

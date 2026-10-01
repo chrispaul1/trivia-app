@@ -1,7 +1,8 @@
 import React from "react";
-import { StyledErrorBackground } from ".";
+import { StyledErrorBackground } from './styles/errorFallbackStyle'
+import { StyledButton } from "../../pages";
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
-import { ErrorBoundary, getErrorMessage } from "react-error-boundary";
+import { getErrorMessage } from "react-error-boundary";
 
 export function ErrorFallback({error, resetErrorBoundary}) {
 
@@ -21,12 +22,9 @@ export function ErrorFallback({error, resetErrorBoundary}) {
             <h2>
                 Sorry! Something went wrong
             </h2>
-            <pre>
-                {getErrorMessage(error)}
-            </pre>
-            <P>
+            <p>
                 Please try refreshing the page, or return to the main menu
-            </P>
+            </p>
             <StyledButton
                 onClick={() => handleBackToMenu()}
             >

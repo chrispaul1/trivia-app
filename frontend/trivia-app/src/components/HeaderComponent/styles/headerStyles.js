@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const StyledHeaderOutline = styled.div`
   display: flex;
   height: 5vh;
+  min-height: 50px;
   align-items: center;
   justify-content: center;
 `
