@@ -32,7 +32,6 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     const [ selectedDifficulty, setSelectedDifficulty ] = useState("")
     const [ selectedMode, setSelectedMode ] = useState("")
     const [ selectedUsername, setSelectedUsername ] = useState("") 
-    console.log("What is DataTable?", DataTable);
     useOnClickOutside( modalRef, () => setDisplayLeaderboard( false) )
 
     function handleClosingModal(){
@@ -55,7 +54,7 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
     //Function to fetch the leaderboard data from the backend
     async function fetchLeaderboard() {
         try {
-            let leaderboardUrl = `http://localhost:5000/leaderboard?username=${selectedUsername}`
+            let leaderboardUrl = `http://localhost:8080/leaderboard?username=${selectedUsername}`
             
             if (selectedCategory) {
                 const safeCategory = encodeURIComponent(selectedCategory)
@@ -69,8 +68,6 @@ export function LeaderboardModal({ setDisplayLeaderboard }){
             if (selectedMode) {
                 leaderboardUrl += `&mode=${selectedMode}`
             }
-
-            console.log("leaderboardUrl :",leaderboardUrl)
 
             const response = await fetch(leaderboardUrl)
             if (!response.ok) {

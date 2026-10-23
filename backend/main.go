@@ -26,7 +26,7 @@ func main() {
 
 	//Start the server
 	server := &http.Server{
-		Addr:    ":5000",
+		Addr:    ":8080",
 		Handler: handlerWithCORS,
 	}
 	err := server.ListenAndServe()

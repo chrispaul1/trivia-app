@@ -9,6 +9,8 @@ import {
 	MainMenu,
 	QuizSummary
 } from './pages'
+import { ErrorBoundary } from "react-error-boundary"
+import { ErrorFallback } from './components/index.js'
 
 function App() {
 
@@ -16,15 +18,17 @@ function App() {
 		<>
 			<GlobalStyles />
 			<BrowserRouter>
-				<Routes>
-					<Route path="/login" element={<LoginPage />} />
-					<Route element={<GameLayout />} >
-						<Route path="/" element={<MainMenu />} />
-						<Route path="/settings" element={<SettingsPage />} />
-						<Route path="/quiz" element={<QuizPage />} />
-						<Route path="/summary" element={<QuizSummary />} />
-					</Route>
-				</Routes>
+				<ErrorBoundary FallbackComponent={ErrorFallback}>
+					<Routes>
+						<Route path="/login" element={<LoginPage />} />
+						<Route element={<GameLayout />} >
+							<Route path="/" element={<MainMenu />} />
+							<Route path="/settings" element={<SettingsPage />} />
+							<Route path="/quiz" element={<QuizPage />} />
+							<Route path="/summary" element={<QuizSummary />} />
+						</Route>
+					</Routes>
+				</ErrorBoundary>
 			</BrowserRouter>
 		</>
 	)

@@ -21,11 +21,7 @@ export function LoginPage() {
     const quizState = useQuizState()
     const quizDispatch = useQuizDispatch()
     const { theme,toggleTheme } = useThemeContext()
-    const [toggled, setToggled] = useState(false)
-
-    useEffect(()=>{
-        toggleTheme()
-    }, [toggled])
+    const isDarkMode = theme.name === 'dark'
 
     useEffect(() => {
         if (quizState.isLoggedIn) {
@@ -41,7 +37,7 @@ export function LoginPage() {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/login", {
+            const response = await fetch("http://localhost:8080/login", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -76,8 +72,8 @@ export function LoginPage() {
                             marginLeft: 'auto',
                             color: theme.textColor, 
                             fontSize: '1.5rem' }}
-                        toggled={toggled}
-                        onClick={() => setToggled(prev => !prev)}
+                        toggled={isDarkMode}
+                        onClick={() => toggleTheme()}
                     />
                 </StyledLoginTitle>
                 <StyledLoginInputContainer>

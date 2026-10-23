@@ -10,7 +10,7 @@ const DARK_TEXT = '#ede6f5'
 
 
 export const lightTheme = {
-
+    name:'light',
     baseColor: LIGHT_BASE,
     textColor: LIGHT_TEXT,
 
@@ -59,6 +59,7 @@ export const lightTheme = {
 
 export const darkTheme = {
 
+    name:'dark',
     baseColor: DARK_BASE,
     textColor: DARK_TEXT,
 

@@ -2,17 +2,19 @@ import React from "react";
 import { StyledErrorBackground } from './styles/errorFallbackStyle'
 import { StyledButton } from "../../pages";
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
+import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "react-error-boundary";
 
 export function ErrorFallback({error, resetErrorBoundary}) {
 
     const quizState = useQuizState()
-
+    const navigate = useNavigate()
+    
     function handleBackToMenu(){
         if(quizState.isLoggedIn){
-            window.location.assign("/");        
+            navigate("/");        
         } else {
-            window.location.assign("/login");        
+            navigate("/login");        
         }
         resetErrorBoundary()
     }

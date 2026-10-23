@@ -95,7 +95,7 @@ export function QuizPage() {
 
 			setTimeout(() => {
 				quizDispatch({ type: "STOP_FETCHING" })
-			}, 5000)
+			}, 8080)
 
 		}
 	}

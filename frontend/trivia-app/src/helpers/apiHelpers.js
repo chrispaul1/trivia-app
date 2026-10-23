@@ -5,7 +5,7 @@
   export async function fetchTriviaQuestions(categoryID,difficulty,type,amount,userID ) {
     try {
       
-      let apiUrl = `http://localhost:5000/questions?amount=${amount}`;
+      let apiUrl = `http://localhost:8080/questions?amount=${amount}`;
 
       if (categoryID) apiUrl += `&category=${categoryID}`
       if (difficulty) apiUrl += `&difficulty=${encodeURIComponent(difficulty)}`

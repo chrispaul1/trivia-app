@@ -186,6 +186,7 @@ export function TriviaQuestionsComponent({ handleLoadQuestion }) {
 					)}
 
 				</StyledTimerContainer>
+				
 				<StyledAnswerContainer>
 
 					{question ? (

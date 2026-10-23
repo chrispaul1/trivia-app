@@ -18,7 +18,17 @@ export const StyledQuestionContainer = styled.div`
   height: 25%;
   padding-top: 5%;
   max-height: 25%;
-  overflow-y: scroll;
+   /* Enable vertical scrolling */
+  overflow-y: auto; 
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 `
 
 export const StyledQuestionTextDiv = styled.div`

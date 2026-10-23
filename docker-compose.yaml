@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    container_name: trivia-backend
+    volumes:
+      - ./backend/trivia.db:/root/trivia.db
+
+  frontend:
+    build: ./frontend/trivia-app
+    ports:
+      - "5173:80"
+    container_name: trivia-frontend
+    depends_on:
+      - backend

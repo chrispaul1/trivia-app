@@ -78,7 +78,7 @@ export function QuizSummary({ questionsLength,fetchQuestions,setItemOffset,maxSt
     //handles updating the score state in the context
     async function submitScore() {
         try {
-            const response = await fetch("http://localhost:5000/score", {
+            const response = await fetch("http://localhost:8080/score", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -12,7 +12,7 @@ export function MainMenu(){
     const [displayleaderboard, setDisplayLeaderboard] = useState(false)
     const navigate = useNavigate()
     const {theme,toggleTheme}  = useThemeContext()
-    
+
     // sets isGameStarted to false if we navigated from quiz summary,
     // if the the users is not logged in, moves the user to the login page
     useEffect(()=>{
@@ -29,13 +29,6 @@ export function MainMenu(){
         quizDispatch({ type: "RESET_GAME" }); 
         quizDispatch({ type: "START_GAME" })
         navigate("/quiz")
-    }
-
-    // handles logging out the user
-    function handleLogOut(){
-        quizDispatch({ type: "RESET_GAME" }); 
-        quizDispatch({ type: "LOGOUT_USER" })
-        navigate("/login")
     }
 
     return(

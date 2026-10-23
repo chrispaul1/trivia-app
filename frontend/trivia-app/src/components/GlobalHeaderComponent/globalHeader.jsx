@@ -20,7 +20,7 @@ export function GlobalHeader() {
     const navigate = useNavigate()
     const location = useLocation()
     const { theme,toggleTheme } = useThemeContext()
-    const [toggled, setToggled] = useState(false)
+    const isDarkMode = theme.name === 'dark'
 
     function getPageTitle(path){
         switch(path) {
@@ -44,10 +44,6 @@ export function GlobalHeader() {
         navigate('/login',{ replace: true})
     }
 
-    useEffect(()=>{
-        toggleTheme()
-    },[toggled])
-
   return(
       <StyledGlobalHeaderContainer>
         <StyledGlobalHeaderLeftDiv>
@@ -61,8 +57,8 @@ export function GlobalHeader() {
                     background:theme.panel.a2.backgroundColor,
                     color:theme.textColor,
                     fontSize:'1.5rem'}}
-                toggled={toggled}
-                onClick={()=> setToggled((value) => !value)}
+                toggled={isDarkMode}
+                onClick={()=> toggleTheme()}
             />
             <StyledGlobalHeaderButton
                 onClick={()=>handleLogout()}
