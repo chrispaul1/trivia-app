@@ -3,11 +3,13 @@ import { categoryNames } from "../assets/categories"
 export const modeTypes = [
     {
         value: "Standard",
-        label: "Standard"
+        label: "Standard",
+        description: "Set amount of questions"
     },
     {
         value: "Endless",
         label: "Endless",
+        description: "Play till the time runs out"
     }
 ]
 const anyCategory = {value:null,label:"Randomized Categories"}
@@ -25,19 +27,25 @@ export const updatedCategories = [anyCategory,...categories]
 export const difficulties = [
     {
         value: "Randomized Difficulty",
-        label: "Randomized Difficulty"
+        label: "Randomized Difficulty",
+        description: "A wild card Let the dice roll"
     },
     {
         value: "Easy",
         label: "Easy",
+        description: "Everyday facts. Find your rhythm"
     },
     {
         value: "Medium",
         label: "Medium",
+        description: "A balanced mix. Try your hand"
+
     },
     {
         value: "Hard",
         label: "Hard",
+        description: "Deep cuts. Bring your A-game"
+
     }
 
 ]
@@ -45,15 +53,18 @@ export const difficulties = [
 export const questionTypes = [
     {
         label:"Any Type",
-        value:"any type"
+        value:"any type",
+        description: "Full variety. Test every skill"
     },
     {
         label:"Multiple Choice",
-        value:"multiple"
+        value:"multiple",
+        description: "Options galore. Choose wisely"
     },
     {
         label:"True / False",
-        value:"boolean"
+        value:"boolean",
+        description: "Quick fire. Yes or no"
     }
 ]
 //questions array objets

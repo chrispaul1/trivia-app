@@ -5,9 +5,10 @@ export const StyledGlobalHeaderContainer = styled.div`
   height: 5vh;
   min-height: 75px;
   width: 100vw;
+  min-width: 400px;
   align-items: center;
   justify-content: space-between;
-  ${({ theme }) => theme.panel.a2};
+  ${({ theme }) => theme.panel.a1};
 `
 
 export const StyledGlobalHeaderLeftDiv = styled.div`

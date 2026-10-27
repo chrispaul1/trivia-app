@@ -19,11 +19,12 @@ export const StyledNumberLabel = styled.label`
 export const StyledInput = styled.input`
   display: flex;
   width: 100%;
+  height: 50px;
   color: black;
   background: white;
   padding: .5rem 0 .5rem .5rem;
-  border-radius: .25rem;
-  ${({ theme }) => theme.panel.a4};
+  border-radius: .5rem;
+  ${({ theme }) => theme.panel.a3};
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;

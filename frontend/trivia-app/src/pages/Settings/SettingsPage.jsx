@@ -1,18 +1,22 @@
 import React, { useState, useEffect, use } from "react"
 import {
+    StyledIconWrapper,
+    StyledQuestionOutline,
     StyledParametersBackground,
-    StyledQuestionOutline
 } from '.'
 import { StyledButton } from "../Login"
 import { Form } from "../../components"
 import { questions } from "../../assets/questions"
 import { useNavigate } from "react-router-dom"
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext"
-import Select from 'react-select'
+import Select, {components} from 'react-select'
 import CreatableSelect from 'react-select/creatable'
+import { ButtonGroup } from "../../components/ButtonGroupComponent"
 import { updatedCategories, difficulties, modeTypes, questionTypes } from "../../assets/questions";
 import { useThemeContext } from "../../contexts/theme/themeContext";
 import { NumberQuestion } from "../../components"
+import { border, borderRadius } from "polished"
+import { BiSolidCategoryAlt } from "react-icons/bi";
 
 export function SettingsPage() {
 
@@ -35,19 +39,11 @@ export function SettingsPage() {
     //quiz settings buffer state
     const [bufferSettings, setBufferSettings] = useState({
         category: quizState.settingsState.category || '',
-        difficulty: quizState.settingsState.difficulty || 'medium',
+        difficulty: quizState.settingsState.difficulty || 'easy',
         type: quizState.settingsState.type || "",
         amount: quizState.settingsState.amount || 10,
         mode: quizState.settingsState.mode || 'standard'
     })
-
-    //function to handle the user answers, based on the question id, it changes the answer
-    function handleSettingsAnswer(id, value) {
-        setBufferSettings(prev => ({
-            ...prev,
-            [id]: value
-        }))
-    }
 
     //handles starting the quiz, by dispatching the quiz settings to the reducer
     //and call the fetchQuestions func to retrieve the trivia question and navigate to the quiz
@@ -70,10 +66,19 @@ export function SettingsPage() {
 
     function handleQuestionAnswers(option, questionID) {
         if (option && option != null) {
-            handleSettingsAnswer(questionID, option.value)
+            console.log(option)
+            handleSettingsAnswer(questionID, option)
             return
         }
         handleSettingsAnswer(questionID, "")
+    }
+
+    //function to handle the user answers, based on the question id, it changes the answer
+    function handleSettingsAnswer(id, value) {
+        setBufferSettings(prev => ({
+            ...prev,
+            [id]: value
+        }))
     }
 
     function handleInputChange(inputValue){
@@ -89,24 +94,47 @@ export function SettingsPage() {
             ...base,
             width:'90%',
             height:'10%',
+            minHeight: '75px'
         }),
+
         control: (provided) => ({
             ...provided,
-            color: 'white',
+            color: 'red',
             width: '100%',
             height: '100%',
-            fontSize: 'calc(.75rem + .75vw)',
-            background: theme.panel.a4.backgroundColor,
+            minHeight: '0px',
+            fontSize: 'calc(1.5rem + .75vw)',
+            fontWeight: 'bold',
+            borderRadius: '20px',
+            border: 'solid 1px'+theme.panel.a4.backgroundColor,
+            background: theme.panel.a3.backgroundColor,
         }),
+
+        valueContainer: (base) => ({
+            ...base,
+            height: '100%',
+            display: 'flex',          // Enables flex layout
+            flexDirection: 'row',     // Rows elements horizontally
+            justifyContent: 'flex-start', // Forces everything to stick left right next to each other
+            alignItems: 'center',     // Centers them vertically
+            paddingLeft: '10px',       // Minimal padding to pull text toward your icon wrapper
+        }),
+
         menu: (provided) => ({
             ...provided,
-            background: theme.panel.a4.backgroundColor,
+            background: theme.panel.a3.backgroundColor,
         }),
+
+        menuList: (provided) => ({
+            ...provided,
+            minHeight: '250px',
+        }),
+
         placeholder: (defaultStyles) => ({
             ...defaultStyles,
             color: theme.textColor
-        })
-        ,
+        }),
+
         option: (base, state) => ({
             ...base,
             color: theme.textColor,
@@ -116,14 +144,17 @@ export function SettingsPage() {
                     ? theme.panel.a3.backgroundColor
                     : theme.panel.a4.backgroundColor
         }),
+
         singleValue: (baseStyles) => ({
             ...baseStyles,
             color: theme.textColor
         }),
+
         indicatorSeparator: (base) => ({
             ...base,
             backgroundColor: theme.textColor,
         }),
+
         dropdownIndicator: (base) => ({
             ...base,
             svg : {
@@ -132,8 +163,15 @@ export function SettingsPage() {
         })
     };
 
-    const components = {
-        DropdownIndicatior: null,
+    const CustomControl = ({children, ...props }) =>{
+        return (
+            <components.Control {...props}>
+                <StyledIconWrapper>
+                    <BiSolidCategoryAlt size={32}/>
+                </StyledIconWrapper>
+                {children}
+            </components.Control>
+        )
     };
 
     const isEndless = bufferSettings['mode'].toLowerCase() == 'endless'
@@ -146,7 +184,7 @@ export function SettingsPage() {
         <StyledParametersBackground>
             <StyledQuestionOutline>
                 
-                <Select
+                {/* <Select
                     options={modeTypes}
                     styles={filterStyles}
                     closeMenuOnSelect={true}
@@ -154,23 +192,48 @@ export function SettingsPage() {
                     menuPosition="absolute"
                     menuPortalTarget={document.body}
                     isClearable
-                    placeholder={"Select your game mode"}
+                    placeholder={"Game Mode"}
                     onChange={(option) => handleQuestionAnswers(option, questions['mode'].id)}
-                />
+                /> */}
 
                 <Select
                     options={updatedCategories}
                     styles={filterStyles}
+                    components={{ Control : CustomControl}}
                     closeMenuOnSelect={true}
                     menuPlacement="auto"
                     menuPosition="absolute"
                     menuPortalTarget={document.body}
                     isClearable
-                    placeholder={"Select your category"}
+                    placeholder={"Category"}
                     onChange={(option) => handleQuestionAnswers(option, questions['category'].id)}
                 />
 
-                <Select
+                <ButtonGroup
+                    groupName={"Quiz Difficulty"}
+                    options={difficulties}
+                    selected={bufferSettings.difficulty}
+                    questionID={questions['difficulty'].id}
+                    onSelect={handleQuestionAnswers}
+                />
+
+                <ButtonGroup
+                    groupName={"Quiz Mode"}
+                    options={modeTypes}
+                    selected={bufferSettings.mode}
+                    questionID={questions['mode'].id}
+                    onSelect={handleQuestionAnswers}
+                />
+
+                <ButtonGroup
+                    groupName={"Question Type"}
+                    options={questionTypes}
+                    selected={bufferSettings.type}
+                    questionID={questions['type'].id}
+                    onSelect={handleQuestionAnswers}
+                />
+
+                {/* <Select
                     options={difficulties}
                     styles={filterStyles}
                     closeMenuOnSelect={true}
@@ -178,7 +241,7 @@ export function SettingsPage() {
                     menuPosition="absolute"
                     menuPortalTarget={document.body}
                     isClearable
-                    placeholder={"Select your question difficulty"}
+                    placeholder={"Difficulty"}
                     onChange={(option) => handleQuestionAnswers(option, questions['difficulty'].id)}
                 />
 
@@ -192,7 +255,7 @@ export function SettingsPage() {
                     isClearable
                     placeholder={"Choose your question type"}
                     onChange={(option) => handleQuestionAnswers(option, questions['difficulty'].id)}
-                />
+                /> */}
 
                 <NumberQuestion
                     question={questions['amount']}

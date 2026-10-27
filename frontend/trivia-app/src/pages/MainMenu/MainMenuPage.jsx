@@ -1,9 +1,25 @@
 import React,{ useEffect,useState, useRef} from "react";
 import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useNavigate } from "react-router-dom";
-import { StyledMenuBackground,StyledMenuContainer, StyledButton } from "..";
+import { 
+    StyledPlayIcon,
+    StyledStartText,
+    StyledButtonText,
+    StyledMenuButton,
+    StyledSettingIcon,
+    StyledStartButton, 
+    StyledQuestionIcon,
+    StyledMenuContainer, 
+    StyledMenuBackground,
+    StyledLeaderboardIcon,
+    StyledRandomQuizLeftDiv, 
+    StyledRandomQuizRightDiv, 
+    StyledRandomQuizContainer,
+} from "..";
+
 import { LeaderboardModal } from "../../components/LeaderBoardModalComponent";
 import { useThemeContext } from "../../contexts/theme/themeContext";
+import { updatedCategories, difficulties} from "../../assets/questions";
 
 export function MainMenu(){
 
@@ -31,25 +47,51 @@ export function MainMenu(){
         navigate("/quiz")
     }
 
+    //handle generating a random quiz game for the user, if they click to start playing instantly
+    //number of questions will be 10, its gonna be between easy, medium or hard,
+    function handleGenerateRandomQuiz(){
+
+
+    }
+
     return(
         <StyledMenuBackground>
             <StyledMenuContainer>
-                <StyledButton
+                <StyledRandomQuizContainer>
+                    <StyledRandomQuizLeftDiv>
+
+                    </StyledRandomQuizLeftDiv>
+                    <StyledRandomQuizRightDiv>
+                        <StyledQuestionIcon/>
+                    </StyledRandomQuizRightDiv>
+                </StyledRandomQuizContainer>
+                <StyledStartButton
                     onClick={(e) => handleStartQuiz()}
                 >
-                    Start Quiz
-                </StyledButton>
+                    <StyledPlayIcon />
+                    <StyledStartText>
 
-                <StyledButton
+                        Start Quiz
+                    </StyledStartText>
+                </StyledStartButton>
+
+                <StyledMenuButton
                     onClick={(e) => navigate("/settings")}
                 >
-                    Customize Quiz Settings
-                </StyledButton>
-                <StyledButton
+                    <StyledSettingIcon/>
+                    <StyledButtonText>
+                        Settings
+                    </StyledButtonText>
+                </StyledMenuButton>
+                <StyledMenuButton
                     onClick={()=>setDisplayLeaderboard(true)}
                 >
-                    View Leaderboard
-                </StyledButton>
+                    <StyledLeaderboardIcon/>
+                    <StyledButtonText>
+
+                        View Leaderboard
+                    </StyledButtonText>
+                </StyledMenuButton>
             </StyledMenuContainer>
             {displayleaderboard && 
                 <LeaderboardModal

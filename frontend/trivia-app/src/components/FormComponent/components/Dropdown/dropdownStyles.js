@@ -11,14 +11,17 @@ export const StyledQuestionLabel = styled.label`
   display: flex;
   min-width: fit-content;
   width: 100%;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
   padding: .5rem .25rem .5rem .25rem;
   height: fit-content;
+  min-height: 70px;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
-  box-shadow: 0px 8px 24px rgb(149,157,165,.2);
-  ${({ theme }) => theme.panel.a4}
+  border-radius: 20px;
+  ${({ theme }) => theme.panel.a3};
+  border: solid 1px ${({ theme }) => theme.panel.a4.backgroundColor};
+
 `
 export const StyledDropdownContent = styled.ul`
   display: flex;

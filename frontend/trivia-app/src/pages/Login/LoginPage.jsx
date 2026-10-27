@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
     StyledButton,
     StyledLoginDiv,
-    StyledLoginTitle,
     StyledLoginInput,
+    StyledLoginTitle,
+    StyledLoginWrapper,
+    StyledInfoContainer,
     StyledLoginBackground,
     StyledUserNameInputDiv,
     StyledLoginInputContainer,
@@ -13,6 +15,7 @@ import { useQuizState, useQuizDispatch } from "../../contexts/quiz/quizContext";
 import { useThemeContext } from "../../contexts/theme/themeContext";
 import { Classic } from "@theme-toggles/react";
 import "@theme-toggles/react/styles/classic.css";
+import { useWindowSize } from "../../hooks/SizeHook/windowSize";
 
 export function LoginPage() {
 
@@ -22,6 +25,7 @@ export function LoginPage() {
     const quizDispatch = useQuizDispatch()
     const { theme,toggleTheme } = useThemeContext()
     const isDarkMode = theme.name === 'dark'
+    const windowSize = useWindowSize()
 
     useEffect(() => {
         if (quizState.isLoggedIn) {
@@ -76,27 +80,34 @@ export function LoginPage() {
                         onClick={() => toggleTheme()}
                     />
                 </StyledLoginTitle>
-                <StyledLoginInputContainer>
-                    <StyledUserNameInputDiv>
-                        <StyledLoginInput
-                            type="text"
-                            id="username"
-                            placeholder="Enter your Username"
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
+                <StyledLoginWrapper>
+                    {windowSize.width > 1200 &&
+                    <StyledInfoContainer>
+                        Hello
+                    </StyledInfoContainer>
+                    }
+                    <StyledLoginInputContainer>
+                        <StyledUserNameInputDiv>
+                            <StyledLoginInput
+                                type="text"
+                                id="username"
+                                placeholder="Enter your Username"
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                            <StyledButton
+                                onClick={() => handleLogin(false)}
+                            >
+                                Let's Play
+                            </StyledButton>
+                        </StyledUserNameInputDiv>
                         <StyledButton
-                            onClick={() => handleLogin(false)}
+                            onClick={() => handleLogin(true)}
                         >
-                            Enter
+                            Play as Guest
                         </StyledButton>
-                    </StyledUserNameInputDiv>
-                    <StyledButton
-                        onClick={() => handleLogin(true)}
-                    >
-                        Play as Guest
-                    </StyledButton>
 
-                </StyledLoginInputContainer>
+                    </StyledLoginInputContainer>
+                </StyledLoginWrapper>
             </StyledLoginDiv>
         </StyledLoginBackground>
     )

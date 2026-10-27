@@ -16,21 +16,38 @@ export const StyledLoginDiv = styled.div`
     justify-content: start;
     align-items: center;
     height: 100%;
-    width: 80%;
+    width: 90%;
     min-width: 400px;
 `
 
 export const StyledLoginTitle = styled.h2`
     display: flex;
     height: 10%;
-    width: 100%;
+    width: 90%;
     min-height: 75px;
     font-size: 2.5rem;
     align-items: center;
     justify-content: center;
     ${({ theme }) => theme.panel.a3};
-    border: solid 5px ${({ theme }) => theme.panel.a4};
-    border-radius: 8px;
+    border: solid 1px ${({ theme }) => theme.panel.a4.backgroundColor};
+    //border: solid 2px red;
+    border-radius: 16px;
+`
+export const StyledLoginWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    width: 100%;
+    border: solid 1px white;
+`
+export const StyledInfoContainer = styled.div`
+    dispaly: flex;
+    flex-direction: column;
+    height: 90%;
+    width: 45%;
+    border: solid 1px red;
+    border-radius: 20px;
 `
 
 export const StyledLoginInputContainer = styled.div`
@@ -40,10 +57,12 @@ export const StyledLoginInputContainer = styled.div`
     padding-top: 10vh;
     gap: 10vh;
     align-items: center;
-    height: 100%;
-    width: 100%;
+    height: 80%;
+    max-width: 600px;
+    width: 65%;
     ${({theme}) => theme.panel.a2};
-    border-radius: 8px;
+    border: solid 1px ${({theme}) => theme.panel.a3.backgroundColor};
+    border-radius: 24px;
 `
 
 export const StyledUserNameInputDiv = styled.div`
@@ -62,6 +81,8 @@ export const StyledLoginInput = styled.input`
     border-radius: 4px; 
     width: 70%;
     ${({ theme }) => theme.panel.a4};
+    border: solid 1px ${({ theme }) => theme.panel.a5.backgroundColor};
+    border-radius: 16px;
 `
 
 export const StyledButton = styled.button`
@@ -69,7 +90,7 @@ export const StyledButton = styled.button`
     align-items: center;
     justify-content: center;
     min-width: 250px;
-    min-height: 50px;
+    min-height: 40px;
     width: 70%;
     font-size: calc(.75rem + 1vw);
     ${({theme}) => theme.primaryButton};
